@@ -1,0 +1,9 @@
+# ninja log v5
+0	1155	1663007626959003245	lib/scanner/CMakeFiles/scanner.dir/scanner.cpp.o	202c62ffc55b5e87
+638	647	1663007626450998215	utils/libstring_utils.a	e2243b5bf9f427f9
+0	40	1663013097990113090	build.ninja	67063de0a17b98b4
+0	637	1663007626438998096	utils/CMakeFiles/string_utils.dir/string_utils.cpp.o	aa4d37aa83f61fb3
+1	450	1663012590678320159	tools/CMakeFiles/japc.dir/japc.cpp.o	df385ab1dfdf59f8
+0	500	1663000666788076846	CMakeFiles/japc.dir/tools/japc.cpp.o	8bf3e7a905d550ad
+441	518	1663010814604881517	tools/japc	bbf6d21c91a99ce1
+1155	1165	1663007626967003324	lib/scanner/libscanner.a	ccba1e12364b74fa
