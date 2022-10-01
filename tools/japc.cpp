@@ -3,18 +3,16 @@
 //
 
 #include "scanner.h"
+#include "parser.h"
 #include <iostream>
 int main()
 {
     using namespace Pascal;
-    Scanner scanner = Scanner();
+    Scanner scanner;
     scanner.setSkipTrivia(false);
     scanner.setTextSource("Program{*\"JAPC\"*};");
     TokenType type;
-    do
-    {
-        type = scanner.scan();
-        std::cout << scanner.tokenTypeToStr(type) << std::endl;
-    } while (type != TokenType::END_OF_FILE);
+    Parser parser = Parser(std::make_unique<Scanner>(scanner));
+    parser.parseFile();
     return 0;
 }
