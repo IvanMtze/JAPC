@@ -15,13 +15,13 @@ class FunctionParameter{
   public:
     std::string identifier;
     Types type;
-    std::unique_ptr<AccessModifier> accessModifier;
+    AccessModifier accessModifier;
 };
 class Function
 {
   public:
     std::string identifier;
-    std::unique_ptr<std::vector<std::unique_ptr<FunctionParameter>>> paramList;
+    std::unique_ptr<std::vector<FunctionParameter>> paramList;
     std::unique_ptr<FunctionContext> functionContext;
     Types returnType;
 };

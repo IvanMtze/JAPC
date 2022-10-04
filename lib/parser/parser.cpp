@@ -18,20 +18,22 @@ using namespace Pascal;
 // 'XYZ'        THE TERMNAL SYMBOL XYZ
 //
 
-Parser::Parser(std::unique_ptr<Scanner> scanner)
+Parser::Parser(std::unique_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine)
 {
     this->scanner = std::move(scanner);
+    this->diagnosticsEngine = std::move(diagnosticsEngine);
 }
 void Parser::parseFile()
 {
     currentTokenPos = 0;
     std::vector<Token> vector;
     tokenList = std::make_unique<std::vector<Token>>(vector);
-    do{
-        scanner->scan();
+    do
+    {
+        TokenType t = scanner->scan();
         Token tok = scanner->getCurrentTokenObject();
         tokenList->push_back(tok);
-    }while (scanner->getCurrentTokenObject().getTokenType() != TokenType::END_OF_FILE);
+    } while (scanner->getCurrentTokenObject().getTokenType() != TokenType::END_OF_FILE);
     parseProgram();
 }
 bool Parser::compareAhead(const int num, Pascal::TokenType tokenType)
@@ -39,8 +41,10 @@ bool Parser::compareAhead(const int num, Pascal::TokenType tokenType)
 }
 std::unique_ptr<Token> Parser::advance()
 {
+    std::unique_ptr<Token> old = current();
     if (!isAtEnd())
         currentTokenPos++;
+    return old;
 }
 std::unique_ptr<Token> Parser::current()
 {
@@ -54,9 +58,10 @@ bool Parser::isAtEnd()
 {
     return current()->getTokenType() == TokenType::END_OF_FILE;
 }
-std::unique_ptr<Token> Parser::lookAhead(const int& num)
+std::unique_ptr<Token> Parser::lookAhead(const int num)
 {
-    if(tokenList->size() >= currentTokenPos + num){
+    if (tokenList->size() <= currentTokenPos + num)
+    {
         return nullptr;
     }
     return std::make_unique<Token>(tokenList->at(currentTokenPos + num));
@@ -193,43 +198,56 @@ void Parser::parseMainProgramDeclaration()
     {
         //  TODO: Sync error missing semicolon after program header
     }
+    else
+    {
+        advance();
+    }
+    if (isAtEnd())
+    {
+        // TODO: Error unexpected end of file
+    }
+    parseImportPart();
+    if (isAtEnd())
+    {
+        // TODO: Error unexpected end of file
+    }
     parseMainProgramBlock();
 }
 void Parser::parseProgramHeading(Program &program)
 {
     if (current()->getTokenType() != TokenType::SYMBOL_PROGRAM)
     {
-        //  TODO: Missing program declaration error, sync to semicolon
-        sync();
+        //  TODO: Missing program declaration error, do not sync
         return;
     }
-    advance(); // eat PROGRAM keyword
-    if (current()->getTokenType() != TokenType::IDENTIFIER)
+    else
     {
-        //  TODO: Missing program identifier
-        sync();
-    }
-    program.name = current()->getValue();
-    advance();
-    if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
-    {
-        parseProgramParameterList();
-        if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
+        advance(); // eat PROGRAM keyword
+        if (current()->getTokenType() != TokenType::IDENTIFIER)
         {
-            //  TODO: Error missing paren close of program param list
+            //  TODO: Missing program identifier and sync
             sync();
         }
-        advance();
+        else
+        {
+            program.name = current()->getValue();
+            advance();
+            if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+            {
+                parseProgramParameterList();
+                if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
+                {
+                    //  TODO: Error missing paren close of program param list
+                    sync();
+                }
+                advance();
+            }
+        }
     }
-    return;
 }
 void Parser::parseMainProgramBlock()
 {
-    if (current()->getTokenType() == TokenType::SYMBOL_IMPORT)
-    {
-        parseImportPart();
-    }
-    while (!isAtEnd() || current()->getTokenType() != TokenType::SYMBOL_BEGIN)
+    while (!isAtEnd() && current()->getTokenType() != TokenType::SYMBOL_BEGIN)
     {
         switch (current()->getTokenType())
         {
@@ -244,9 +262,11 @@ void Parser::parseMainProgramBlock()
             break;
         case TokenType::SYMBOL_FUNCTION:
             parseFunction();
+            break;
         default:
             //  TODO: ERROR ??
             sync();
+            break;
         }
     }
     if (isAtEnd())
@@ -257,6 +277,10 @@ void Parser::parseMainProgramBlock()
 }
 void Parser::parseImportPart()
 {
+    while (current()->getTokenType() == TokenType::SYMBOL_IMPORT)
+    {
+        this->parseImportStatement();
+    }
 }
 void Parser::parseConstantDefinitionPart()
 {
@@ -276,7 +300,7 @@ void Parser::parseProcedureDeclaration()
 std::unique_ptr<Function> Parser::parseFunctionDeclaration()
 {
     advance(); // Eat FUNCTION keyword
-    std::unique_ptr<Function> funct;
+    std::unique_ptr<Function> funct{new Function{}};
     if (current()->getTokenType() != TokenType::IDENTIFIER)
     {
         // TODO: throw error function identifier expected,
@@ -360,7 +384,7 @@ void Parser::parseDiscriminantIdentifier()
 }
 std::unique_ptr<VariableAccess> Parser::parseIdentifier()
 {
-    std::unique_ptr<VariableAccess> var;
+    std::unique_ptr<VariableAccess> var{new VariableAccess{}};
     if (current()->getTokenType() == TokenType::END_OF_FILE)
     {
         //  TODO: Error unexpected end of file
@@ -389,6 +413,26 @@ std::unique_ptr<VariableAccess> Parser::parseIdentifier()
 }
 void Parser::parseProgramParameterList()
 {
+    if (current()->getTokenType() == TokenType::IDENTIFIER)
+    {
+        advance(); // eat first identifier
+        while (current()->getTokenType() == TokenType::SYMBOL_COMMA)
+        {
+            advance(); // eat comma;
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
+                advance();
+            }
+            else
+            {
+                //  TODO: Error Expected identifier after comma in programm parameter list
+            }
+        }
+    }
+    else
+    {
+        //  TODO: Error Expected identifier
+    }
 }
 std::unique_ptr<Function> Parser::parseFunction()
 {
@@ -396,38 +440,150 @@ std::unique_ptr<Function> Parser::parseFunction()
     {
         //  TODO: Throw error expected FUNCTION symbol
     }
-    std::unique_ptr<Function> function;
+    std::unique_ptr<Function> function{new Function{}};
     advance();
     if (current()->getTokenType() != TokenType::IDENTIFIER)
     {
         //  TODO: Throw error expected FUNCTION IDENTIFIER
     }
-    function->identifier = current()->getValue();
-    function->paramList = parseFunctionParams();
+    else
+    {
+        function->identifier = current()->getValue();
+        advance(); // eat identifier tokens
+        function->paramList = parseFunctionParams();
+    }
+    if (current()->getTokenType() == TokenType::SYMBOL_BEGIN)
+    {
+        parseFunctionBlock();
+        if (current()->getTokenType() == TokenType::SYMBOL_END)
+        {
+            advance();
+        }
+        else
+        {
+            //  TODO: Error expected end symbol END
+        }
+    }
+    return function;
 }
 void Parser::parseProcedure()
 {
 }
-std::unique_ptr<std::vector<std::unique_ptr<FunctionParameter>>> Parser::parseFunctionParams()
+std::unique_ptr<std::vector<FunctionParameter>> Parser::parseFunctionParams()
 {
-    std::unique_ptr<std::vector<std::unique_ptr<FunctionParameter>>> functionParameterList;
+    std::unique_ptr<std::vector<FunctionParameter>> functionParameterList{new std::vector<FunctionParameter>{}};
     if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
     {
         advance();
+        FunctionParameter functionParameter = parseFunctionParameter();
+        if (functionParameter.identifier != "ERROR")
+        {
+            functionParameterList->push_back(functionParameter);
+            advance();
+            while (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+            {
+                advance(); // eat semicolon
+                functionParameter = parseFunctionParameter();
+                if (functionParameter.identifier != "ERROR")
+                {
+                    //  TODO: Error on parsing function parameter
+                    break;
+                }
+                functionParameterList->push_back(functionParameter);
+            }
+            if (current()->getTokenType() == TokenType::SYMBOL_PAREN_CLOSE)
+            {
+                advance(); // eat paren close
+            }
+            else
+            {
+                // TODO: Error expected paren close
+            }
+        }
+        else
+        {
+            //  TODO: Expected function Parameter
+        }
     }
     return functionParameterList;
 }
-std::unique_ptr<FunctionParameter> Parser::parseFunctionParameter()
+FunctionParameter Parser::parseFunctionParameter()
 {
-    std::unique_ptr<FunctionParameter> param;
-    param->accessModifier = std::make_unique<AccessModifier>(parseFunctionAccessModifier());
-    if (current()->getTokenType() == TokenType::IDENTIFIER)
+    //  ISO 10206 -  6.8.1
+    //  FORMAL-PARAMETER-LIST           =   "(" FORMAL-PARAMETER-SECTION { ";" FORMAL-PARAMETER-SECTION } ")"
+    //  FORMAL-PARAMETER-SECTION        >   VALUE-PARAMETER-SPECIFICATION       |
+    //                                      VARIABLE-PARAMETER-SPECIFICATION    |
+    //                                      PROCEDURAL-PARAMETER-SPECIFICATION  |
+    //                                      FUNCTIONAL-PARAMETER-SPECIFICATION  |
+    //                                      CONFORMANT-ARRAY-PARAMETER-SPECIFICATION
+    //  VALUE-PARAMETER-SPECIFICATION       =   [ 'PROTECTED' ] IDENTIFIER-LIST ':' PARAMETER-FORM
+    //  VARIABLE-PARAMETER-SPECIFICATION    =   [ 'PROTECTED' ] 'VAR' IDENTIFIER-LIST ':' PARAMETER-FORM
+    //  PARAMETER-FORM                      =   TYPE-NAME   |   SCHEMA-NAME |   TYPE-INQUIRY
+    //  TYPE-NAME                           =   [ IMPORTED-INTERFACE-IDENTIFIER '.' ] TYPE-IDENTIFIER
+    //  SCHEMA-NAME                         =   [ IMPORTED-INTERFACE-IDENTIFIER '.' ] SCHEMA-IDENTIFIER
+    //  TYPE-INQUIRY                        =   'TYPE' 'OF' TYPE-INQUIRY-OBJECT
+    //  TYPE-INQUIRY-OBJECT                 =   VARIABLE-NAME   | PARAMETER-IDENTIFIER
+
+    FunctionParameter param;
+    param.accessModifier = parseFunctionAccessModifier();
+    if (current()->getTokenType() == TokenType::SYMBOL_VAR)
     {
-        param->identifier = current()->getValue();
+        //  TODO:
+        advance();
+    }
+    parseIdentifierList();
+    if (current()->getTokenType() == TokenType::SYMBOL_COLON)
+    {
+        advance();
+        switch (current()->getTokenType())
+        {
+        case TokenType::SYMBOL_TYPE:
+            advance();
+            if (current()->getTokenType() == TokenType::SYMBOL_OF)
+            {
+                advance();
+                if (current()->getTokenType() == TokenType::IDENTIFIER)
+                {
+                    advance(); //  TODO: Parse identifier as type of var or param
+                }
+                else
+                {
+                    //  TODO: Expected identifier as variable type
+                }
+            }
+            else
+            {
+                //  TODO: Expected keyword "OF"
+            }
+            break;
+        case TokenType::IDENTIFIER:
+            advance(); // eat identifier
+            if (current()->getTokenType() == TokenType::SYMBOL_DOT)
+            {
+                advance(); // eat dot
+                if (current()->getTokenType() == TokenType::IDENTIFIER)
+                {
+                    advance(); // eat identifier
+                    //  TODO: Parse identifier as type
+                }
+                else
+                {
+                    //  TODO: Error expected identifier after dot.
+                }
+            }
+            else
+            {
+                //  TODO: Parse identifier as type
+            }
+            break;
+        default:
+            //  TODO: Throw error expected param type after
+            break;
+        }
     }
     else
     {
-        // TODO:: Throw expected identifier as param
+        //  TODO: Expected colon error
     }
     return param;
 }
@@ -440,5 +596,105 @@ AccessModifier Parser::parseFunctionAccessModifier()
         return AccessModifier::PROTECTED;
     default:
         return AccessModifier::DEFAULT;
+    }
+}
+void Parser::parseImportStatement()
+{
+    advance(); // eat IMPORT keyword
+    do
+    {
+        if (current()->getTokenType() != TokenType::IDENTIFIER)
+        {
+            //  TODO: expected identifier error
+            return;
+        }
+        std::string importName = current()->getValue();
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_QUALIFIED)
+        {
+            //  TODO: Qualified statement
+            advance(); // eat qualified;
+        }
+        if (current()->getTokenType() == TokenType::SYMBOL_ONLY)
+        {
+            advance();
+            if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+            {
+                advance();
+                parseImportList();
+                if (current()->getTokenType() == TokenType::SYMBOL_PAREN_CLOSE)
+                {
+                    advance();
+                }
+                else
+                {
+                    //  TODO: Error expected open paren
+                    return;
+                }
+            }
+            else
+            {
+                //  TODO: expected open parentesis after only
+                return;
+            }
+        }
+        if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+        {
+            // TODO: Expected semicolon after import identifier
+            return;
+        }
+        else
+        {
+            advance();
+        }
+    } while (current()->getTokenType() == TokenType::IDENTIFIER);
+}
+void Parser::parseImportList()
+{
+    while (true)
+    {
+        if (current()->getTokenType() == TokenType::IDENTIFIER)
+        {
+            advance();
+        }
+        else
+        {
+            //  TODO: Error set missing identifier expected
+            return;
+        }
+        if (current()->getTokenType() != TokenType::SYMBOL_COMMA)
+        {
+            return;
+        }
+        advance();
+    }
+}
+void Parser::parseIdentifierList()
+{
+    //  ISO 10206
+    //  IDENTIFIER-LIST = IDENTIFIER { ',' IDENTIFIER }
+    if (current()->getTokenType() == TokenType::IDENTIFIER)
+    {
+        advance(); // eat first ocurrence of identifier
+        while (current()->getTokenType() == TokenType::SYMBOL_COMMA)
+        {
+            advance(); // eat comma
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
+                current()->getValue();
+                advance();
+            }
+            else
+            {
+                //  TODO: ERROR expected identifier after comma
+                diagnosticsEngine->japc_error_at(current(),
+                                                 "Expected identifier after comma while parsing identifier list");
+            }
+        }
+    }
+    else
+    {
+        //  TODO: ERROR expected identifier
+        diagnosticsEngine->japc_error_at(current(), "Expected identifier in identifier list");
     }
 }

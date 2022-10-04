@@ -9,6 +9,7 @@
 #include <memory>
 #include <regex>
 
+
 namespace Pascal
 {
 enum class TokenFlags : int
@@ -193,7 +194,8 @@ class Scanner
     void setSkipTrivia(bool skipTrivia);
     std::string tokenTypeToStr(TokenType token);
     Token getCurrentTokenObject();
-
+    void setSkipSpaces(bool skipSpaces);
+    void setSkipComments(bool skipComments);
   private:
     std::string source{0};
     int currentPos = 0;
@@ -205,6 +207,8 @@ class Scanner
     int tokenPos;
     int curLine = 1;
     std::string filename;
+    bool skipComments;
+    bool skipSpaces;
     /*
      * UTILS
      */

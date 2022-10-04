@@ -52,6 +52,7 @@ TokenType Scanner::scan()
             {
                 currentPos++;
                 curLine++;
+                startPos = currentPos;
                 continue;
             }
             else
@@ -92,6 +93,7 @@ TokenType Scanner::scan()
             if (skipTrivia)
             {
                 currentPos++;
+                startPos = currentPos;
                 continue;
             }
             else
@@ -129,6 +131,7 @@ TokenType Scanner::scan()
                 }
                 if (skipTrivia)
                 {
+                    startPos = currentPos;
                     continue;
                 }
                 else
@@ -235,7 +238,7 @@ TokenType Scanner::scan()
             }
         case SEMICOLON:
             currentPos++;
-            curToken = TokenType::SYMBOL_COLON;
+            curToken = TokenType::SYMBOL_SEMICOLON;
             return curToken;
         case COMMA:
             currentPos++;
@@ -279,6 +282,7 @@ TokenType Scanner::scan()
             }
             if (skipTrivia)
             {
+                startPos = currentPos;
                 continue;
             }
             else
@@ -1173,4 +1177,12 @@ Token Scanner::getCurrentTokenObject()
     TokenPos tkPos = TokenPos(curLine, charLinePos, filename);
     Token token = Token(curToken, tokenValue, tkPos);
     return token;
+}
+void Scanner::setSkipSpaces(bool skipSpaces)
+{
+    this->skipSpaces;
+}
+void Scanner::setSkipComments(bool skipComments)
+{
+    this->skipComments;
 }

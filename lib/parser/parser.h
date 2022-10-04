@@ -14,6 +14,7 @@
 #include "program.h"
 #include <vector>
 #include "statement.h"
+#include "diagnostics.h"
 
 namespace Pascal
 {
@@ -24,11 +25,12 @@ enum class SyncParserContext{
 class Parser
 {
   public:
-    Parser(std::unique_ptr<Scanner> scanner);
+    Parser(std::unique_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine);
     void parseFile();
   private:
     std::unique_ptr<Scanner> scanner;
     int currentTokenPos;
+    std::unique_ptr<JAPCDiagnostics> diagnosticsEngine;
     std::unique_ptr<std::vector<Token>> tokenList;
     std::unique_ptr<Token> lookAhead(const int num);
     bool compareAhead(const int num, TokenType tokenType);
@@ -57,15 +59,18 @@ class Parser
     void parseMainProgramBlock();
     void parseProgramParameterList();
     void parseImportPart();
+    void parseImportStatement();
+    void parseImportList();
+    void parseIdentifierList();
     void parseConstantDefinitionPart();
     void parseTypeDefinitionPart();
     void parseVariableDeclarationPart();
     void parseProcedureAndDefinitionPart();
     void parseProcedureDeclaration();
     std::unique_ptr<Function> parseFunctionDeclaration();
-    std::unique_ptr<std::vector<std::unique_ptr<FunctionParameter>>> parseFunctionParams();
+    std::unique_ptr<std::vector<FunctionParameter>> parseFunctionParams();
     AccessModifier parseFunctionAccessModifier();
-    std::unique_ptr<FunctionParameter> parseFunctionParameter();
+    FunctionParameter parseFunctionParameter();
     void parseVariableAccess();
     void parseUnsignedConstant();
     void parseSetConstructor();
@@ -77,8 +82,8 @@ class Parser
     void parseStructuredValueConstructor();
     void parseDiscriminantIdentifier();
     std::unique_ptr<Function> parseFunction();
-    std::unique_ptr<Token> lookAhead(const int& num);
     void parseProcedure();
 };
+
 } // namespace Pascal
 #endif // JAPC_PARSER_H
