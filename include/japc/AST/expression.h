@@ -5,7 +5,7 @@
 #ifndef JAPC_STATEMENT_H
 #define JAPC_STATEMENT_H
 
-#include "scanner.h"
+#include "../scanner/scanner.h"
 #include "visitor.h"
 namespace Pascal
 {

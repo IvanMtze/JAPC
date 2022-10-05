@@ -1,7 +1,7 @@
 //
 // Created by wuser on 17/09/22.
 //
-#include "parser.h"
+#include "japc/parser/parser.h"
 using namespace Pascal;
 
 // NOTE:
@@ -44,6 +44,9 @@ std::unique_ptr<Token> Parser::advance()
     std::unique_ptr<Token> old = current();
     if (!isAtEnd())
         currentTokenPos++;
+    else{
+        //  TODO: Error unexpected EOF while parsing
+    }
     return old;
 }
 std::unique_ptr<Token> Parser::current()
@@ -273,7 +276,6 @@ void Parser::parseMainProgramBlock()
     {
         //  TODO: THROW ERROR NO MAIN PROGRAM BLOCK DECLARATION FOUND, END OF FILE REACHED INSTEAD.
     }
-    parseMainProgramBlock();
 }
 void Parser::parseImportPart()
 {
@@ -290,6 +292,31 @@ void Parser::parseTypeDefinitionPart()
 }
 void Parser::parseVariableDeclarationPart()
 {
+    advance();//eat VAR keyword
+    while(current()->getTokenType() == TokenType::IDENTIFIER){
+        parseIdentifierList();
+        advance();
+        if(current()->getTokenType() == TokenType::SYMBOL_COLON){
+            advance();
+            if(current()->getTokenType() == TokenType::IDENTIFIER){
+                advance();
+                if(current()->getTokenType() == TokenType::SYMBOL_SEMICOLON){
+                    advance();
+                }else{
+                    //TODO: Error expected semicolon after variable declaration;
+                    break;
+                }
+            }else{
+                //TODO: Error expected type after colon
+                break;
+            }
+        }else{
+            //TODO: Error expected colon after identier list
+            break;
+        }
+    }
+    advance();
+
 }
 void Parser::parseProcedureAndDefinitionPart()
 {
@@ -454,7 +481,6 @@ std::unique_ptr<Function> Parser::parseFunction()
     }
     if (current()->getTokenType() == TokenType::SYMBOL_BEGIN)
     {
-        parseFunctionBlock();
         if (current()->getTokenType() == TokenType::SYMBOL_END)
         {
             advance();

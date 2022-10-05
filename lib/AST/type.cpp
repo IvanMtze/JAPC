@@ -2,4 +2,4 @@
 // Created by wuser on 25/09/22.
 //
 
-#include "type.h"
+#include "japc/basic/diagnostics.h"

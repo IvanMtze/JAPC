@@ -1,7 +1,7 @@
 //
 // Created by wuser on 3/10/22.
 //
-#include "diagnostics.h";
+#include "../../include/japc/basic/diagnostics.h";
 void JAPCDiagnostics::japc_error_at(std::unique_ptr<Token> tk, const char *error, ...)
 {
     this->setHasErrors(HAS_ERROR);

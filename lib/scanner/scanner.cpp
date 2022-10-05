@@ -2,8 +2,8 @@
 // Created by wuser on 18/07/22.
 //
 
-#include "scanner.h"
-#include "characters.h"
+#include "japc/scanner/scanner.h"
+#include "japc/scanner/characters.h"
 #include "string_utils.h"
 #include <codecvt>
 #include <list>

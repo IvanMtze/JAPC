@@ -4,22 +4,15 @@
 
 #ifndef JAPC_CONTEXT_H
 #define JAPC_CONTEXT_H
-#include "function.h"
-#include "procedure.h"
+#include "japc/AST/function.h"
+#include "japc/AST/procedure.h"
 #include "vector"
 
 namespace Pascal
 {
-class FunctionContext
+class Context
 {
 };
 
-class ModuleContext
-{
-};
-
-class ProgramContext
-{
-};
 } // namespace Pascal
 #endif // JAPC_CONTEXT_H

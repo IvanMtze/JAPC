@@ -4,23 +4,23 @@
 
 #ifndef JAPC_PARSER_H
 #define JAPC_PARSER_H
-#include "expression.h"
-#include "scanner.h"
+#include "japc/AST/expression.h"
+#include "japc/AST/function.h"
+#include "japc/AST/procedure.h"
+#include "japc/AST/program.h"
+#include "japc/AST/statement.h"
+#include "japc/AST/type.h"
+#include "japc/basic/diagnostics.h"
+#include "japc/scanner/scanner.h"
 #include <deque>
 #include <list>
-#include "function.h"
-#include "procedure.h"
-#include "type.h"
-#include "program.h"
 #include <vector>
-#include "statement.h"
-#include "diagnostics.h"
 
 namespace Pascal
 {
 enum class SyncParserContext{
     functionDeclaration,
-    functionParamList
+    functionParamList,
 };
 class Parser
 {

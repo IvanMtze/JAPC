@@ -22,7 +22,7 @@ class Function
   public:
     std::string identifier;
     std::unique_ptr<std::vector<FunctionParameter>> paramList;
-    std::unique_ptr<FunctionContext> functionContext;
+    std::unique_ptr<Context> functionContext;
     Types returnType;
 };
 } // namespace Pascal
