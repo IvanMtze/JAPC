@@ -1,8 +1,9 @@
 //
 // Created by wuser on 3/10/22.
 //
-#include "../../include/japc/basic/diagnostics.h";
-void JAPCDiagnostics::japc_error_at(std::unique_ptr<Token> tk, const char *error, ...)
+#include "japc/basic/diagnostics.h"
+using namespace Pascal;
+void JAPCDiagnostics::japc_error_at(Token tk, const char *error, ...)
 {
     this->setHasErrors(HAS_ERROR);
     va_list args;
@@ -10,7 +11,7 @@ void JAPCDiagnostics::japc_error_at(std::unique_ptr<Token> tk, const char *error
     vprintf(error, args);
     va_end(args);
 }
-void JAPCDiagnostics::japc_warning_at(std::unique_ptr<Token> tk, const char *error, ...)
+void JAPCDiagnostics::japc_warning_at(Token tk, const char *error, ...)
 {
     this->setHasWarnings(HAS_WARNING);
     va_list args;

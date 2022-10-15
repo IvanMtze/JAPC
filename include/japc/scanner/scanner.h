@@ -5,10 +5,10 @@
 #ifndef JAPC_SCANNER_H
 #define JAPC_SCANNER_H
 
+#include "japc/basic/ptr.h"
 #include <map>
 #include <memory>
 #include <regex>
-
 
 namespace Pascal
 {
@@ -137,11 +137,18 @@ enum class TokenType
     UNKNOWN,
 };
 
-class TokenPos
+class Location
 {
   public:
-    TokenPos(const int lineNumber, const int charNumber, std::string file)
+    Location(const int lineNumber, const int charNumber, std::string file)
         : lineNo(lineNumber), charNo(charNumber), fileName(file){};
+    Location() : lineNo(0), charNo(0){};
+    Location(const Location &loc) : charNo(loc.charNo), fileName(loc.fileName), lineNo(loc.lineNo){};
+    Location(Location &loc) : charNo(loc.charNo), fileName(loc.fileName), lineNo(loc.lineNo){};
+    Location &operator=(const Location &loc)
+    {
+        return *this;
+    }
 
   private:
     const int lineNo;
@@ -152,7 +159,7 @@ class TokenPos
 class Token
 {
   public:
-    Token(TokenType tkType, std::string value, TokenPos pos) : tokenType(tkType), tokenValue(value), tokenPos(pos){};
+    Token(TokenType tkType, std::string value, Location pos) : tokenType(tkType), tokenValue(value), tokenPos(pos){};
     TokenType getTokenType()
     {
         return this->tokenType;
@@ -161,7 +168,7 @@ class Token
     {
         return this->tokenValue;
     }
-    TokenPos getTokenPos()
+    Location getTokenPos()
     {
         return this->getTokenPos();
     }
@@ -169,7 +176,7 @@ class Token
   private:
     TokenType tokenType;
     std::string tokenValue;
-    TokenPos tokenPos;
+    Location tokenPos;
 };
 
 class Scanner
@@ -196,6 +203,7 @@ class Scanner
     Token getCurrentTokenObject();
     void setSkipSpaces(bool skipSpaces);
     void setSkipComments(bool skipComments);
+
   private:
     std::string source{0};
     int currentPos = 0;

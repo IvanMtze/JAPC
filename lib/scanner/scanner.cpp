@@ -1174,7 +1174,7 @@ Token Scanner::getCurrentTokenObject()
     const int lastNewLine = source.find_last_of('\n');
     const int lastReturnCar = source.find_last_of('\r');
     const int charLinePos = lastNewLine > lastReturnCar ? currentPos - lastNewLine : currentPos - lastReturnCar;
-    TokenPos tkPos = TokenPos(curLine, charLinePos, filename);
+    Location tkPos = Location(curLine, charLinePos, filename);
     Token token = Token(curToken, tokenValue, tkPos);
     return token;
 }

@@ -13,12 +13,12 @@
 #define OMIT_WARNING    0b00000100
 #define ERROR_AS_WAR    0b00001000
 
-using namespace Pascal;
+namespace Pascal{
 class JAPCDiagnostics{
     //  TODO: there should be a better way to do it.
   public:
-    void japc_error_at(std::unique_ptr<Token> tk, const char* error, ...);
-    void japc_warning_at(std::unique_ptr<Token> tk, const char* error, ...);
+    void japc_error_at(Token tk, const char* error, ...);
+    void japc_warning_at(Token tk, const char* error, ...);
     int shouldEmitWarnings();
     int hasErrors();
     int hasWanings();
@@ -30,4 +30,5 @@ class JAPCDiagnostics{
     void setHasErrors(unsigned int hasErrors);
     void setHasWarnings(unsigned int hasWarnings);
 };
+}
 #endif // JAPC_DIAGNOSTICS_H

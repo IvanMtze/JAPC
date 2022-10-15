@@ -5,20 +5,17 @@
 #ifndef JAPC_PARSER_H
 #define JAPC_PARSER_H
 #include "japc/AST/expression.h"
-#include "japc/AST/function.h"
-#include "japc/AST/procedure.h"
-#include "japc/AST/program.h"
-#include "japc/AST/statement.h"
 #include "japc/AST/type.h"
 #include "japc/basic/diagnostics.h"
-#include "japc/scanner/scanner.h"
+#include "japc/basic/ptr.h"
 #include <deque>
 #include <list>
 #include <vector>
 
 namespace Pascal
 {
-enum class SyncParserContext{
+enum class SyncParserContext
+{
     functionDeclaration,
     functionParamList,
 };
@@ -27,6 +24,7 @@ class Parser
   public:
     Parser(std::unique_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine);
     void parseFile();
+
   private:
     std::unique_ptr<Scanner> scanner;
     int currentTokenPos;
@@ -41,21 +39,21 @@ class Parser
     bool isAtEnd();
     bool match(TokenType tokenType);
     bool match(std::vector<TokenType> tokensToMatch);
-    std::unique_ptr<MainExpression> parseExpression();
-    std::unique_ptr<Factor> parseFactor();
-    std::unique_ptr<SimpleExpression> parseSimpleExpression();
-    std::unique_ptr<Term> parseTerm();
-    std::unique_ptr<Primary> parsePrimary();
+    void parseExpression();
+    void parseFactor();
+    void parseSimpleExpression();
+    void parseTerm();
+    void parsePrimary();
     bool isSign(TokenType tk);
     bool isRelationalOperator(TokenType tk);
     bool isAddingOperator(TokenType tk);
     bool isExponentiatingOperator(TokenType tk);
     bool isMultiplyingOperator(TokenType tk);
     void parseProgram();
-    std::unique_ptr<VariableAccess> parseIdentifier();
+    void parseIdentifier();
     void parseProgramComponent();
     void parseMainProgramDeclaration();
-    void parseProgramHeading(Program& program);
+    void parseProgramHeading();
     void parseMainProgramBlock();
     void parseProgramParameterList();
     void parseImportPart();
@@ -67,10 +65,10 @@ class Parser
     void parseVariableDeclarationPart();
     void parseProcedureAndDefinitionPart();
     void parseProcedureDeclaration();
-    std::unique_ptr<Function> parseFunctionDeclaration();
-    std::unique_ptr<std::vector<FunctionParameter>> parseFunctionParams();
-    AccessModifier parseFunctionAccessModifier();
-    FunctionParameter parseFunctionParameter();
+    void parseFunctionDeclaration();
+    void parseFunctionParams();
+    void parseFunctionAccessModifier();
+    void parseFunctionParameter();
     void parseVariableAccess();
     void parseUnsignedConstant();
     void parseSetConstructor();
@@ -81,7 +79,7 @@ class Parser
     void parseSchemaDiscriminant();
     void parseStructuredValueConstructor();
     void parseDiscriminantIdentifier();
-    std::unique_ptr<Function> parseFunction();
+    void parseFunction();
     void parseProcedure();
 };
 

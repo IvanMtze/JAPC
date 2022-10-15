@@ -36,7 +36,7 @@ void Parser::parseFile()
     } while (scanner->getCurrentTokenObject().getTokenType() != TokenType::END_OF_FILE);
     parseProgram();
 }
-bool Parser::compareAhead(const int num, Pascal::TokenType tokenType)
+bool Parser::compareAhead(const int num, TokenType tokenType)
 {
 }
 std::unique_ptr<Token> Parser::advance()
@@ -44,7 +44,8 @@ std::unique_ptr<Token> Parser::advance()
     std::unique_ptr<Token> old = current();
     if (!isAtEnd())
         currentTokenPos++;
-    else{
+    else
+    {
         //  TODO: Error unexpected EOF while parsing
     }
     return old;
@@ -85,79 +86,71 @@ void Parser::sync()
 bool Parser::match(std::vector<TokenType> tokensToMatch)
 {
 }
-std::unique_ptr<MainExpression> Parser::parseExpression()
+void Parser::parseExpression()
 {
     //  ISO 10206 -  6.8.1
     //  EXPRESSION = SIMPLE-EXPRESSION [ RELATIONAL-OPERATOR SIMPLE-EXPRESSION ]
-    std::unique_ptr<MainExpression> mainExpression;
-    mainExpression->leftSimpleExpression = parseSimpleExpression();
+    parseSimpleExpression();
     if (isRelationalOperator(current()->getTokenType()))
     {
-        mainExpression->relationalOperator = current()->getTokenType();
+        current()->getTokenType();
         advance();
         // TODO: THROW ERROR IF NOT SIMPLE-EXPRESSION
-        mainExpression->rightSimpleExpression = parseSimpleExpression();
+        parseSimpleExpression();
     }
-    return mainExpression;
 }
-std::unique_ptr<Primary> Parser::parsePrimary()
+void Parser::parsePrimary()
 {
-    Primary primaryExpression;
 }
-std::unique_ptr<Factor> Parser::parseFactor()
+void Parser::parseFactor()
 {
     //  ISO 10206 -  6.8.1
     //  FACTOR = PRIMARY [ EXPONENTIATING-OPERATOR PRIMARY ]
-    std::unique_ptr<Factor> factor;
-    factor->leftPrimary = parsePrimary();
+    parsePrimary();
     if (isExponentiatingOperator(current()->getTokenType()))
     {
-        factor->exponentiatingOperator = std::make_unique<TokenType>(current()->getTokenType());
+        std::make_unique<TokenType>(current()->getTokenType());
         advance();
         //  TODO: THROW ERROR IF NOT PRIMARY AND SYNC
-        factor->rightPrimary = parsePrimary();
+        parsePrimary();
     }
-    return factor;
 }
-std::unique_ptr<SimpleExpression> Parser::parseSimpleExpression()
+void Parser::parseSimpleExpression()
 {
     //  ISO 10206 -  6.8.1
     // SIMPLE-EXPRESSION = [ SIGN ] TERM [ ADDING-OPERATOR TERM ]
-    std::unique_ptr<SimpleExpression> simpleExpression;
+
     if (isSign(current()->getTokenType()))
     {
-        simpleExpression->sign = current()->getTokenType();
+        current()->getTokenType();
         advance();
     } //  TODO: May assume positive sign?
 
-    simpleExpression->leftTerm = parseTerm();
+    parseTerm();
     // PARSE OPTINAL [ADDING-OPERATOR TERM]
     if (isAddingOperator(current()->getTokenType()))
     {
         // Consume addingOperator
-        simpleExpression->addingOperator = current()->getTokenType();
+        current()->getTokenType();
         advance();
         // SEARCH FOR TERM
-        std::unique_ptr<Term> rightTerm = parseTerm();
+        parseTerm();
         //  TODO: Throw error if term is not found and sync
     }
-    return simpleExpression;
 }
 
-std::unique_ptr<Term> Parser::parseTerm()
+void Parser::parseTerm()
 {
     //  ISO 10206 -  6.8.1
     // TERM = FACTOR { MULTIPLYING-OPERATOR FACTOR }
-    std::unique_ptr<Term> term;
-    term->leftFactor = parseFactor();
+    parseFactor();
     while (isMultiplyingOperator(current()->getTokenType()))
     {
-        term->multiplyingOperator = current()->getTokenType();
+        current()->getTokenType();
         advance();
         // TODO: THROW error if no factor is found and sync
-        std::unique_ptr<Factor> rightFactor = parseFactor();
+        parseFactor();
     }
-    return term;
 }
 bool Parser::isSign(TokenType tk)
 {
@@ -195,8 +188,7 @@ void Parser::parseProgramComponent()
 }
 void Parser::parseMainProgramDeclaration()
 {
-    Program mainProgram;
-    parseProgramHeading(mainProgram);
+    parseProgramHeading();
     if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
     {
         //  TODO: Sync error missing semicolon after program header
@@ -216,7 +208,7 @@ void Parser::parseMainProgramDeclaration()
     }
     parseMainProgramBlock();
 }
-void Parser::parseProgramHeading(Program &program)
+void Parser::parseProgramHeading()
 {
     if (current()->getTokenType() != TokenType::SYMBOL_PROGRAM)
     {
@@ -233,7 +225,7 @@ void Parser::parseProgramHeading(Program &program)
         }
         else
         {
-            program.name = current()->getValue();
+            current()->getValue();
             advance();
             if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
             {
@@ -292,31 +284,40 @@ void Parser::parseTypeDefinitionPart()
 }
 void Parser::parseVariableDeclarationPart()
 {
-    advance();//eat VAR keyword
-    while(current()->getTokenType() == TokenType::IDENTIFIER){
+    advance(); // eat VAR keyword
+    while (current()->getTokenType() == TokenType::IDENTIFIER)
+    {
         parseIdentifierList();
         advance();
-        if(current()->getTokenType() == TokenType::SYMBOL_COLON){
+        if (current()->getTokenType() == TokenType::SYMBOL_COLON)
+        {
             advance();
-            if(current()->getTokenType() == TokenType::IDENTIFIER){
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
                 advance();
-                if(current()->getTokenType() == TokenType::SYMBOL_SEMICOLON){
+                if (current()->getTokenType() == TokenType::SYMBOL_SEMICOLON)
+                {
                     advance();
-                }else{
-                    //TODO: Error expected semicolon after variable declaration;
+                }
+                else
+                {
+                    // TODO: Error expected semicolon after variable declaration;
                     break;
                 }
-            }else{
-                //TODO: Error expected type after colon
+            }
+            else
+            {
+                // TODO: Error expected type after colon
                 break;
             }
-        }else{
-            //TODO: Error expected colon after identier list
+        }
+        else
+        {
+            // TODO: Error expected colon after identier list
             break;
         }
     }
     advance();
-
 }
 void Parser::parseProcedureAndDefinitionPart()
 {
@@ -324,10 +325,9 @@ void Parser::parseProcedureAndDefinitionPart()
 void Parser::parseProcedureDeclaration()
 {
 }
-std::unique_ptr<Function> Parser::parseFunctionDeclaration()
+void Parser::parseFunctionDeclaration()
 {
     advance(); // Eat FUNCTION keyword
-    std::unique_ptr<Function> funct{new Function{}};
     if (current()->getTokenType() != TokenType::IDENTIFIER)
     {
         // TODO: throw error function identifier expected,
@@ -336,10 +336,10 @@ std::unique_ptr<Function> Parser::parseFunctionDeclaration()
     }
     else
     {
-        funct->identifier = current()->getValue();
+        // funct->identifier = current()->getValue();
     }
     advance();
-    funct->identifier = current()->getValue();
+    // funct->identifier = current()->getValue();
     if (current()->getTokenType() != TokenType::SYMBOL_PAREN_OPEN)
     {
         //  TODO: throw error function expected symbol paren open
@@ -409,34 +409,32 @@ void Parser::parseStructuredValueConstructor()
 void Parser::parseDiscriminantIdentifier()
 {
 }
-std::unique_ptr<VariableAccess> Parser::parseIdentifier()
+void Parser::parseIdentifier()
 {
-    std::unique_ptr<VariableAccess> var{new VariableAccess{}};
     if (current()->getTokenType() == TokenType::END_OF_FILE)
     {
         //  TODO: Error unexpected end of file
     }
-    var->name = current()->getValue();
+    current()->getValue();
     // Eat current TokenType is Identifier
     advance();
     switch (current()->getTokenType())
     {
     case TokenType::SYMBOL_DOT:
         // Is trying to access a member
-        var->variableType = VariableType::MemberAccess;
+
         break;
     case TokenType::SYMBOL_SQUARE_BRACKET_OPEN:
         // Array access
         advance();
-        var->index = parseExpression();
+        parseExpression();
         if (current()->getTokenType() != TokenType::SYMBOL_SQUARE_BRACKET_CLOSE)
         {
             // TODO: Throw error missing square bracket close
-            var->index = parseExpression();
+            parseExpression();
         }
         break;
     }
-    return var;
 }
 void Parser::parseProgramParameterList()
 {
@@ -461,13 +459,12 @@ void Parser::parseProgramParameterList()
         //  TODO: Error Expected identifier
     }
 }
-std::unique_ptr<Function> Parser::parseFunction()
+void Parser::parseFunction()
 {
     if (current()->getTokenType() != TokenType::SYMBOL_FUNCTION)
     {
         //  TODO: Throw error expected FUNCTION symbol
     }
-    std::unique_ptr<Function> function{new Function{}};
     advance();
     if (current()->getTokenType() != TokenType::IDENTIFIER)
     {
@@ -475,9 +472,9 @@ std::unique_ptr<Function> Parser::parseFunction()
     }
     else
     {
-        function->identifier = current()->getValue();
+        // function->identifier = current()->getValue();
         advance(); // eat identifier tokens
-        function->paramList = parseFunctionParams();
+        // function->paramList = parseFunctionParams();
     }
     if (current()->getTokenType() == TokenType::SYMBOL_BEGIN)
     {
@@ -490,50 +487,19 @@ std::unique_ptr<Function> Parser::parseFunction()
             //  TODO: Error expected end symbol END
         }
     }
-    return function;
 }
 void Parser::parseProcedure()
 {
 }
-std::unique_ptr<std::vector<FunctionParameter>> Parser::parseFunctionParams()
+void Parser::parseFunctionParams()
 {
-    std::unique_ptr<std::vector<FunctionParameter>> functionParameterList{new std::vector<FunctionParameter>{}};
     if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
     {
         advance();
-        FunctionParameter functionParameter = parseFunctionParameter();
-        if (functionParameter.identifier != "ERROR")
-        {
-            functionParameterList->push_back(functionParameter);
-            advance();
-            while (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
-            {
-                advance(); // eat semicolon
-                functionParameter = parseFunctionParameter();
-                if (functionParameter.identifier != "ERROR")
-                {
-                    //  TODO: Error on parsing function parameter
-                    break;
-                }
-                functionParameterList->push_back(functionParameter);
-            }
-            if (current()->getTokenType() == TokenType::SYMBOL_PAREN_CLOSE)
-            {
-                advance(); // eat paren close
-            }
-            else
-            {
-                // TODO: Error expected paren close
-            }
-        }
-        else
-        {
-            //  TODO: Expected function Parameter
-        }
+        parseFunctionParameter();
     }
-    return functionParameterList;
 }
-FunctionParameter Parser::parseFunctionParameter()
+void Parser::parseFunctionParameter()
 {
     //  ISO 10206 -  6.8.1
     //  FORMAL-PARAMETER-LIST           =   "(" FORMAL-PARAMETER-SECTION { ";" FORMAL-PARAMETER-SECTION } ")"
@@ -550,8 +516,8 @@ FunctionParameter Parser::parseFunctionParameter()
     //  TYPE-INQUIRY                        =   'TYPE' 'OF' TYPE-INQUIRY-OBJECT
     //  TYPE-INQUIRY-OBJECT                 =   VARIABLE-NAME   | PARAMETER-IDENTIFIER
 
-    FunctionParameter param;
-    param.accessModifier = parseFunctionAccessModifier();
+    ;
+    parseFunctionAccessModifier();
     if (current()->getTokenType() == TokenType::SYMBOL_VAR)
     {
         //  TODO:
@@ -611,9 +577,8 @@ FunctionParameter Parser::parseFunctionParameter()
     {
         //  TODO: Expected colon error
     }
-    return param;
 }
-AccessModifier Parser::parseFunctionAccessModifier()
+void Parser::parseFunctionAccessModifier()
 {
     switch (current()->getTokenType())
     {
@@ -713,7 +678,7 @@ void Parser::parseIdentifierList()
             else
             {
                 //  TODO: ERROR expected identifier after comma
-                diagnosticsEngine->japc_error_at(current(),
+                diagnosticsEngine->japc_error_at((*current().get()),
                                                  "Expected identifier after comma while parsing identifier list");
             }
         }
@@ -721,6 +686,6 @@ void Parser::parseIdentifierList()
     else
     {
         //  TODO: ERROR expected identifier
-        diagnosticsEngine->japc_error_at(current(), "Expected identifier in identifier list");
+        diagnosticsEngine->japc_error_at((*current().get()), "Expected identifier in identifier list");
     }
 }
