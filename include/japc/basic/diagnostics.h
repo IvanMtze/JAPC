@@ -27,6 +27,7 @@ class JAPCDiagnostics{
     void setEmitWarningsAsErrors(unsigned int emitWarningsAsErrors);
   private:
     unsigned int state : 4;
+    const char *getPreformattedMessage(const char* message, const char *error,Token tk);
     void setHasErrors(unsigned int hasErrors);
     void setHasWarnings(unsigned int hasWarnings);
 };

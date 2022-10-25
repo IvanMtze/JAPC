@@ -5,11 +5,12 @@
 #ifndef JAPC_EXPRESSION_H
 #define JAPC_EXPRESSION_H
 #include "japc/AST/builtin.h"
+#include "japc/AST/named_object.h"
 #include "japc/AST/type.h"
 #include "japc/AST/visitor.h"
 #include "japc/scanner/scanner.h"
-#include "japc/AST/named_object.h"
 #include <llvm/IR/Value.h>
+#include <memory>
 #include <set>
 
 namespace Pascal
@@ -101,7 +102,7 @@ class ExpressionAST : public Visitable<ExpressionAST>
     {
         return typeDeclaration;
     }
-    void EnsureSized() const;
+    void ensureSized() const;
     const Location getLocation() const
     {
         return location;
@@ -118,8 +119,8 @@ class ExpressionAST : public Visitable<ExpressionAST>
 class RealExpression : public ExpressionAST
 {
   public:
-    RealExpression(const Location &loc, double value, TypeDeclaration *typeDec)
-        : ExpressionAST(loc, ExpressionType::TYPE_REAL_EXPRE, std::make_shared<TypeDeclaration>(typeDec)), value(value)
+    RealExpression(const Location &loc, double value, std::shared_ptr<TypeDeclaration> typeDec)
+        : ExpressionAST(loc, ExpressionType::TYPE_REAL_EXPRE, typeDec), value(value)
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
@@ -135,12 +136,13 @@ class RealExpression : public ExpressionAST
 class IntegerExpression : public ExpressionAST
 {
   public:
-    IntegerExpression(const Location &loc, int64_t value, TypeDeclaration *typeDec)
-        : ExpressionAST(loc, ExpressionType::TYPE_INTEGER_EXPRE, typeDec), value(value)
+    IntegerExpression(const Location &loc, int64_t value, std::shared_ptr<TypeDeclaration> typeDec)
+        : value(value), ExpressionAST(loc, ExpressionType::TYPE_INTEGER_EXPRE, typeDec)
     {
     }
-    IntegerExpression(const Location &loc, ExpressionType expressionType, int64_t value, TypeDeclaration *typeDec)
-        : ExpressionAST(loc, expressionType, typeDec), value(value)
+    IntegerExpression(const Location &loc, ExpressionType expressionType, int64_t value,
+                      std::shared_ptr<TypeDeclaration> typeDec)
+        : value(value), ExpressionAST(loc, expressionType, typeDec)
     {
     }
     int64_t getValue()
@@ -161,7 +163,7 @@ class IntegerExpression : public ExpressionAST
 class CharExpression : public IntegerExpression
 {
   public:
-    CharExpression(const Location &loc, char values, TypeDeclaration *typeDeclaration)
+    CharExpression(const Location &loc, char values, std::shared_ptr<TypeDeclaration> typeDeclaration)
         : IntegerExpression(loc, ExpressionType::TYPE_CHAR_EXPRE, values, typeDeclaration)
     {
     }
@@ -188,7 +190,8 @@ class NullExpression : public ExpressionAST
 class AddressableExpression : public ExpressionAST
 {
   public:
-    AddressableExpression(const Location &location, ExpressionType expressionType, TypeDeclaration *typeDeclaration)
+    AddressableExpression(const Location &location, ExpressionType expressionType,
+                          std::shared_ptr<TypeDeclaration> typeDeclaration)
         : ExpressionAST(location, expressionType, typeDeclaration)
     {
     }
@@ -212,9 +215,9 @@ class AddressableExpression : public ExpressionAST
 class StringExpression : public AddressableExpression
 {
   public:
-    StringExpression(const Location &location, ExpressionType expressionType, TypeDeclaration *typeDeclaration,
-                     const std::string &value)
-        : AddressableExpression(location, expressionType, typeDeclaration), value(value)
+    StringExpression(const Location &location, ExpressionType expressionType,
+                     std::shared_ptr<TypeDeclaration> typeDeclaration, const std::string &value)
+        : value(value), AddressableExpression(location, expressionType, typeDeclaration)
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
@@ -235,9 +238,10 @@ class StringExpression : public AddressableExpression
 class SetExpression : public AddressableExpression
 {
   public:
-    SetExpression(const Location &location, ExpressionType expressionType, TypeDeclaration *typeDeclaration,
-                  const std::vector<ExpressionAST *> &values)
-        : AddressableExpression(location, expressionType, typeDeclaration), values(values)
+    SetExpression(const Location &location, ExpressionType expressionType,
+                  std::shared_ptr<TypeDeclaration> typeDeclaration,
+                  const std::vector<std::shared_ptr<ExpressionAST>> &values)
+        : values(values), AddressableExpression(location, expressionType, typeDeclaration)
     {
     }
     std::shared_ptr<llvm::Value> getAddress() override;
@@ -248,24 +252,26 @@ class SetExpression : public AddressableExpression
     }
 
   private:
-    std::vector<ExpressionAST *> values;
+    std::vector<std::shared_ptr<ExpressionAST>> values;
 };
 
 class VariableExpression : public AddressableExpression
 {
   public:
-    VariableExpression(const Location &location, const std::string &name, TypeDeclaration *typeDeclaration)
+    VariableExpression(const Location &location, const std::string &name,
+                       std::shared_ptr<TypeDeclaration> typeDeclaration)
         : AddressableExpression(location, ExpressionType::TYPE_VARIABLE_EXPRE, typeDeclaration), name(name)
     {
     }
     VariableExpression(const Location &location, ExpressionType expressionType, const std::string &name,
-                       TypeDeclaration *typeDeclaration)
+                       std::shared_ptr<TypeDeclaration> typeDeclaration)
         : AddressableExpression(location, expressionType, typeDeclaration), name(name)
     {
     }
-    VariableExpression(const Location &location, ExpressionType expressionType, const VariableExpression *variableExpre,
-                       TypeDeclaration *typeDeclaration)
-        : AddressableExpression(location, expressionType, typeDeclaration), name(variableExpre->name)
+    VariableExpression(const Location &location, ExpressionType expressionType,
+                       std::shared_ptr<VariableExpression> variableExpre,
+                       std::shared_ptr<TypeDeclaration> typeDeclaration)
+        : name(variableExpre->name), AddressableExpression(location, expressionType, typeDeclaration)
     {
     }
     const std::string getName() const override
@@ -286,10 +292,10 @@ class VariableExpression : public AddressableExpression
 class ArrayExpression : public VariableExpression
 {
   public:
-    ArrayExpression(const Location &loc, VariableExpression *v, const std::vector<ExpressionAST *> &inds,
-                    const std::vector<RangeDeclaration *> &rangeDeclaration, TypeDeclaration *typeDeclaration)
-    {
-    }
+    ArrayExpression(const Location &loc, std::shared_ptr<VariableExpression> v,
+                    const std::vector<std::shared_ptr<ExpressionAST>> &inds,
+                    const std::vector<std::shared_ptr<RangeDeclaration>> &rangeDeclaration,
+                    std::shared_ptr<TypeDeclaration> typeDeclaration);
     std::shared_ptr<llvm::Value> getAddress() override;
     static bool isClassOf(const ExpressionAST *expressionAst)
     {
@@ -308,9 +314,10 @@ class ArrayExpression : public VariableExpression
 class PointerExpression : public VariableExpression
 {
   public:
-    PointerExpression(const Location &location, VariableExpression *variableExpre, TypeDeclaration *typeDeclaration)
-        : VariableExpression(location, ExpressionType::TYPE_POINTER_EXPRE, variableExpre, typeDeclaration),
-          pointer(variableExpre)
+    PointerExpression(const Location &location, std::shared_ptr<VariableExpression> variableExpre,
+                      std::shared_ptr<TypeDeclaration> typeDeclaration)
+        : pointer(variableExpre),
+          VariableExpression(location, ExpressionType::TYPE_POINTER_EXPRE, variableExpre, typeDeclaration)
     {
     }
     std::shared_ptr<llvm::Value> getAddress() override;
@@ -321,14 +328,15 @@ class PointerExpression : public VariableExpression
     void accept(ExpressionVisitor &visitor) override;
 
   private:
-    ExpressionAST *pointer;
+    std::shared_ptr<ExpressionAST> pointer;
 };
 
 class FilePointerExpression : public VariableExpression
 {
   public:
-    FilePointerExpression(const Location &loc, VariableExpression *varExpre, TypeDeclaration *typeDeclaration)
-        : VariableExpression(loc, ExpressionType::TYPE_FILE_POINTER_EXPRE, varExpre, typeDeclaration), pointer(varExpre)
+    FilePointerExpression(const Location &loc, std::shared_ptr<VariableExpression> varExpre,
+                          std::shared_ptr<TypeDeclaration> typeDeclaration)
+        : pointer(varExpre), VariableExpression(loc, ExpressionType::TYPE_FILE_POINTER_EXPRE, varExpre, typeDeclaration)
     {
     }
     std::shared_ptr<llvm::Value> getAddress() override;
@@ -339,16 +347,16 @@ class FilePointerExpression : public VariableExpression
     void accept(ExpressionVisitor &visitor) override;
 
   private:
-    ExpressionAST *pointer;
+    std::shared_ptr<ExpressionAST> pointer;
 };
 
 class FieldExpression : public VariableExpression
 {
   public:
-    FieldExpression(const Location &loc, VariableExpression *variableExpression, int element,
-                    TypeDeclaration *typeDeclaration)
-        : VariableExpression(loc, ExpressionType::TYPE_FIELD_EXPRE, variableExpression, typeDeclaration),
-          expression(variableExpression), element(element)
+    FieldExpression(const Location &loc, std::shared_ptr<VariableExpression> variableExpression, int element,
+                    std::shared_ptr<TypeDeclaration> typeDeclaration)
+        : element(element), expression(variableExpression),
+          VariableExpression(loc, ExpressionType::TYPE_FIELD_EXPRE, variableExpression, typeDeclaration)
     {
     }
     std::shared_ptr<llvm::Value> getAddress() override;
@@ -359,17 +367,17 @@ class FieldExpression : public VariableExpression
     void accept(ExpressionVisitor &visitor) override;
 
   private:
-    VariableExpression *expression;
+    std::shared_ptr<VariableExpression> expression;
     int element;
 };
 
 class VariantFieldExpression : public VariableExpression
 {
   public:
-    VariantFieldExpression(const Location &loc, VariableExpression *variableExpression, int element,
-                           TypeDeclaration *typeDeclaration)
-        : VariableExpression(loc, ExpressionType::TYPE_VARIANT_EXPRE, variableExpression, typeDeclaration),
-          expre(variableExpression), element(element)
+    VariantFieldExpression(const Location &loc, std::shared_ptr<VariableExpression> variableExpression, int element,
+                           std::shared_ptr<TypeDeclaration> typeDeclaration)
+        : element(element), expre(variableExpression),
+          VariableExpression(loc, ExpressionType::TYPE_VARIANT_EXPRE, variableExpression, typeDeclaration)
     {
     }
     std::shared_ptr<llvm::Value> getAddress() override;
@@ -379,7 +387,7 @@ class VariantFieldExpression : public VariableExpression
     }
 
   private:
-    VariableExpression *expre;
+    std::shared_ptr<VariableExpression> expre;
     int element;
 };
 
@@ -550,8 +558,9 @@ class PrototypeExpression : public ExpressionAST
 {
   public:
     PrototypeExpression(const Location &loc, const std::string &name,
-                        const std::vector<std::shared_ptr<VariableDefinition>> args, TypeDeclaration *resultType)
-        : ExpressionAST(loc, ExpressionType::TYPE_PROTOTYPE, typeDeclaration), args(args), name(name), function(0),
+                        const std::vector<std::shared_ptr<VariableDefinition>> args,
+                        std::shared_ptr<TypeDeclaration> resultType)
+        : ExpressionAST(loc, ExpressionType::TYPE_PROTOTYPE, resultType), args(args), name(name), function(0),
           isForward(false), llvmFunction(0)
     {
     }
@@ -607,7 +616,7 @@ class Function : public ExpressionAST
     Function(const Location &loc, std::shared_ptr<PrototypeExpression> prototype,
              const std::vector<std::shared_ptr<VariableDeclarationExpression>> variablesDecl,
              std::shared_ptr<BlockExpression> block);
-    std::shared_ptr<llvm::Function> codeGen() override;
+    std::shared_ptr<llvm::Function> codeGen() const;
     std::shared_ptr<llvm::Function> codeGen(const std::string &namePrefix);
     const std::shared_ptr<PrototypeExpression> getPrototype() const
     {
@@ -657,7 +666,7 @@ class Function : public ExpressionAST
     std::vector<std::shared_ptr<VariableDeclarationExpression>> variablesDecl;
     std::shared_ptr<BlockExpression> body;
     std::vector<std::shared_ptr<Function>> subFunctions;
-    std::set<VariableDefition> usedVariables;
+    std::set<VariableDefinition> usedVariables;
     std::shared_ptr<Function> parent;
     std::shared_ptr<TypeDeclaration> returnType;
     Location endLoc;
@@ -667,8 +676,8 @@ class FunctionExpression : public VariableExpression
 {
   public:
     FunctionExpression(const Location &loc, const std::shared_ptr<PrototypeExpression> p)
-        : VariableExpression(loc, ExpressionType::TYPE_FUNCTION_EXPRE, p->getName(), p->getTypeDeclaration()),
-          prototype(p)
+        : prototype(p),
+          VariableExpression(loc, ExpressionType::TYPE_FUNCTION_EXPRE, p->getName(), p->getTypeDeclaration())
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
@@ -722,8 +731,9 @@ class SizeOfExpression : public ExpressionAST
 class TypeCastExpression : public AddressableExpression
 {
   public:
-    TypeCastExpression(const Location &loc, ExpressionAST *expressionAst, TypeDeclaration *typeDeclaration)
-        : AddressableExpression(loc, ExpressionType::TYPE_TYPE_CAST_EXPRE, typeDeclaration), expr(expressionAst){};
+    TypeCastExpression(const Location &loc, ExpressionAST *expressionAst,
+                       std::shared_ptr<TypeDeclaration> typeDeclaration)
+        : expr(expressionAst), AddressableExpression(loc, ExpressionType::TYPE_TYPE_CAST_EXPRE, typeDeclaration){};
     std::shared_ptr<llvm::Value> codeGen() override;
     std::shared_ptr<llvm::Value> getAddress() override;
     std::shared_ptr<ExpressionAST> getExpressionn()
@@ -764,7 +774,7 @@ class RangeReduceExpression : public ExpressionAST
         expr->accept(v);
         v.visit(this);
     }
-    static bool classof(const ExpressionAST *expressionAst)
+    static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return (expressionAst->getExpressionType() == ExpressionType::TYPE_RANGE_REDUCE_EXPRE) ||
                (expressionAst->getExpressionType() == ExpressionType::TYPE_RANGE_CHECK_EXPRE);
@@ -782,7 +792,7 @@ class RangeCheckExpression : public RangeReduceExpression
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
-    static bool classof(const ExpressionAST *expressionAst)
+    static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_RANGE_CHECK_EXPRE;
     }
@@ -1003,7 +1013,7 @@ class BuiltInExpression : public ExpressionAST
 {
   public:
     BuiltInExpression(const Location &loc, std::shared_ptr<FunctionBaseBuiltin> builtin)
-        : ExpressionAST(loc, ExpressionType::TYPE_BUILTIN_EXPRE, builtin->), builtin(builtin)
+        : ExpressionAST(loc, ExpressionType::TYPE_BUILTIN_EXPRE, builtin->getType()), builtin(builtin)
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
@@ -1043,6 +1053,16 @@ class CallFunctExpression : public ExpressionAST
     const std::shared_ptr<PrototypeExpression> prototypeExpression;
     std::shared_ptr<ExpressionAST> callee;
     std::vector<std::shared_ptr<ExpressionAST>> args;
+};
+
+class UnitExpression : public ExpressionAST
+{
+  public:
+    std::shared_ptr<llvm::Value> codeGen() override;
+    static bool isClassOf(const ExpressionAST *expressionAst)
+    {
+        return expressionAst->getExpressionType() == ExpressionType::TYPE_UNIT;
+    }
 };
 } // namespace Pascal
 #endif // JAPC_EXPRESSION_H

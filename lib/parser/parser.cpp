@@ -82,6 +82,17 @@ std::unique_ptr<Token> Parser::previous()
 }
 void Parser::sync()
 {
+    while (!ParserUtils::isAnyOf(*current().get(),
+                                 {TokenType::SYMBOL_SEMICOLON, TokenType::SYMBOL_CONST, TokenType::SYMBOL_VAR,
+                                  TokenType::SYMBOL_FUNCTION, TokenType ::SYMBOL_PROCEDURE, TokenType::SYMBOL_FILE}))
+    {
+        advance();
+        if (current()->getTokenType() == TokenType::END_OF_FILE)
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+            break;
+        }
+    }
 }
 bool Parser::match(std::vector<TokenType> tokensToMatch)
 {
@@ -192,6 +203,7 @@ void Parser::parseMainProgramDeclaration()
     if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
     {
         //  TODO: Sync error missing semicolon after program header
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected semicolon");
     }
     else
     {
@@ -200,11 +212,13 @@ void Parser::parseMainProgramDeclaration()
     if (isAtEnd())
     {
         // TODO: Error unexpected end of file
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
     }
     parseImportPart();
     if (isAtEnd())
     {
         // TODO: Error unexpected end of file
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
     }
     parseMainProgramBlock();
 }
@@ -225,7 +239,7 @@ void Parser::parseProgramHeading()
         }
         else
         {
-            current()->getValue();
+            this->moduleName = current()->getValue();
             advance();
             if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
             {
@@ -247,10 +261,13 @@ void Parser::parseMainProgramBlock()
         switch (current()->getTokenType())
         {
         case TokenType::SYMBOL_LABEL:
-            break;
+            parseLabel();
         case TokenType::SYMBOL_TYPE:
             break;
         case TokenType::SYMBOL_VAR:
+            break;
+        case TokenType::SYMBOL_CONST:
+            parseConstantDefinition();
             break;
         case TokenType::SYMBOL_PROCEDURE:
             parseProcedure();
@@ -276,13 +293,10 @@ void Parser::parseImportPart()
         this->parseImportStatement();
     }
 }
-void Parser::parseConstantDefinitionPart()
-{
-}
 void Parser::parseTypeDefinitionPart()
 {
 }
-void Parser::parseVariableDeclarationPart()
+VariableDeclarationExpression *Parser::parseVariableDeclarationPart()
 {
     advance(); // eat VAR keyword
     while (current()->getTokenType() == TokenType::IDENTIFIER)
@@ -325,33 +339,6 @@ void Parser::parseProcedureAndDefinitionPart()
 void Parser::parseProcedureDeclaration()
 {
 }
-void Parser::parseFunctionDeclaration()
-{
-    advance(); // Eat FUNCTION keyword
-    if (current()->getTokenType() != TokenType::IDENTIFIER)
-    {
-        // TODO: throw error function identifier expected,
-        //      as it is safe to continue parsing we can
-        //      continue with the declaration parsing.
-    }
-    else
-    {
-        // funct->identifier = current()->getValue();
-    }
-    advance();
-    // funct->identifier = current()->getValue();
-    if (current()->getTokenType() != TokenType::SYMBOL_PAREN_OPEN)
-    {
-        //  TODO: throw error function expected symbol paren open
-    }
-    //  TODO: parse arg list.
-    advance();
-    if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
-    {
-        //  TODO: throw error function expected symbol paren close
-    }
-    advance();
-}
 void Parser::parseVariableAccess()
 {
     //  ISO 10206 -  6.8.1
@@ -383,9 +370,6 @@ void Parser::parseVariableAccess()
     }
 }
 void Parser::parseUnsignedConstant()
-{
-}
-void Parser::parseSetConstructor()
 {
 }
 void Parser::parseFunctionAccess()
@@ -438,14 +422,21 @@ void Parser::parseIdentifier()
 }
 void Parser::parseProgramParameterList()
 {
+    int totalParams = 0;
+    std::string inputVariableName;
+    std::string outputVariableName;
     if (current()->getTokenType() == TokenType::IDENTIFIER)
     {
+        totalParams++;
+        inputVariableName = current()->getValue();
         advance(); // eat first identifier
         while (current()->getTokenType() == TokenType::SYMBOL_COMMA)
         {
             advance(); // eat comma;
             if (current()->getTokenType() == TokenType::IDENTIFIER)
             {
+                totalParams++;
+                outputVariableName = current()->getValue();
                 advance();
             }
             else
@@ -456,50 +447,61 @@ void Parser::parseProgramParameterList()
     }
     else
     {
-        //  TODO: Error Expected identifier
+        VariableDefinition input("input", getTextType(), VariableDefinitionFlags::EXTERNAL);
+        VariableDefinition output("output", getTextType(), VariableDefinitionFlags::EXTERNAL);
+
+        this->objects->insert("input", std::make_shared<VariableDefinition>(VariableDefinition(input)));
+        this->objects->insert("output", std::make_shared<VariableDefinition>(VariableDefinition(output)));
     }
-}
-void Parser::parseFunction()
-{
-    if (current()->getTokenType() != TokenType::SYMBOL_FUNCTION)
+    if (totalParams > 2)
     {
-        //  TODO: Throw error expected FUNCTION symbol
-    }
-    advance();
-    if (current()->getTokenType() != TokenType::IDENTIFIER)
-    {
-        //  TODO: Throw error expected FUNCTION IDENTIFIER
+        //  TODO: Error more than 2 variables, expected 0 or 2 variables.
     }
     else
     {
-        // function->identifier = current()->getValue();
-        advance(); // eat identifier tokens
-        // function->paramList = parseFunctionParams();
+        VariableDefinition input(inputVariableName, getTextType(), VariableDefinitionFlags::EXTERNAL);
+        VariableDefinition output(outputVariableName, getTextType(), VariableDefinitionFlags::EXTERNAL);
+        this->objects->insert(inputVariableName, std::make_shared<VariableDefinition>(VariableDefinition(input)));
+        this->objects->insert(outputVariableName, std::make_shared<VariableDefinition>(VariableDefinition(output)));
     }
-    if (current()->getTokenType() == TokenType::SYMBOL_BEGIN)
+}
+std::shared_ptr<FunctionPointerDeclaration> Parser::parseFunctionType()
+{
+    std::string name;
+    if (current()->getTokenType() != TokenType::SYMBOL_FUNCTION)
     {
-        if (current()->getTokenType() == TokenType::SYMBOL_END)
-        {
-            advance();
-        }
-        else
-        {
-            //  TODO: Error expected end symbol END
-        }
+        this->diagnosticsEngine->japc_error_at(*current().get(), "I was expecting to see FUNCTION keyword");
     }
+    std::shared_ptr<PrototypeExpression> prototype = parseFunctionHeader();
+    // TODO: FIX ME
 }
 void Parser::parseProcedure()
 {
 }
-void Parser::parseFunctionParams()
+std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParams()
 {
+
+    std::vector<std::shared_ptr<VariableDefinition>> defs;
     if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
     {
+        std::vector<std::string> paramNames;
         advance();
-        parseFunctionParameter();
+        VariableDefinitionFlags flags = VariableDefinitionFlags::NONE;
+        while (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
+        {
+            std::vector<std::shared_ptr<VariableDefinition>> parsedDefs = parseFunctionParameter(flags, paramNames);
+            defs.insert(defs.end(), parsedDefs.begin(), parsedDefs.end());
+        }
+        advance();
     }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '(' in a function or procedure definition");
+    }
+    return defs;
 }
-void Parser::parseFunctionParameter()
+std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(VariableDefinitionFlags &flags,
+                                                                                std::vector<std::string> &names)
 {
     //  ISO 10206 -  6.8.1
     //  FORMAL-PARAMETER-LIST           =   "(" FORMAL-PARAMETER-SECTION { ";" FORMAL-PARAMETER-SECTION } ")"
@@ -517,77 +519,57 @@ void Parser::parseFunctionParameter()
     //  TYPE-INQUIRY-OBJECT                 =   VARIABLE-NAME   | PARAMETER-IDENTIFIER
 
     ;
-    parseFunctionAccessModifier();
-    if (current()->getTokenType() == TokenType::SYMBOL_VAR)
+    // parseFunctionAccessModifier();
+    std::vector<std::shared_ptr<VariableDefinition>> varDefs;
+    if (current()->getTokenType() == TokenType::SYMBOL_PROTECTED)
     {
-        //  TODO:
+        flags |= VariableDefinitionFlags::PROTECTED;
         advance();
     }
-    parseIdentifierList();
+    if (current()->getTokenType() == TokenType::SYMBOL_VAR)
+    {
+        flags |= VariableDefinitionFlags::REFERENCE;
+        advance();
+    }
+    if (current()->getTokenType() == TokenType::IDENTIFIER)
+    {
+        names.push_back(current()->getValue());
+        advance();
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected IDENTIFIER as parameter");
+        return varDefs;
+    }
     if (current()->getTokenType() == TokenType::SYMBOL_COLON)
     {
         advance();
-        switch (current()->getTokenType())
+        if (std::shared_ptr<TypeDeclaration> type = parseType())
         {
-        case TokenType::SYMBOL_TYPE:
-            advance();
-            if (current()->getTokenType() == TokenType::SYMBOL_OF)
+            for (auto name : names)
             {
-                advance();
-                if (current()->getTokenType() == TokenType::IDENTIFIER)
-                {
-                    advance(); //  TODO: Parse identifier as type of var or param
-                }
-                else
-                {
-                    //  TODO: Expected identifier as variable type
-                }
+                VariableDefinition argDef(name, type, flags);
+                varDefs.push_back(std::make_shared<VariableDefinition>(argDef));
             }
-            else
-            {
-                //  TODO: Expected keyword "OF"
-            }
-            break;
-        case TokenType::IDENTIFIER:
-            advance(); // eat identifier
-            if (current()->getTokenType() == TokenType::SYMBOL_DOT)
-            {
-                advance(); // eat dot
-                if (current()->getTokenType() == TokenType::IDENTIFIER)
-                {
-                    advance(); // eat identifier
-                    //  TODO: Parse identifier as type
-                }
-                else
-                {
-                    //  TODO: Error expected identifier after dot.
-                }
-            }
-            else
-            {
-                //  TODO: Parse identifier as type
-            }
-            break;
-        default:
-            //  TODO: Throw error expected param type after
-            break;
+            flags = VariableDefinitionFlags::NONE;
+            names.clear();
+            return varDefs;
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting a type expression after colon.");
+            return varDefs;
         }
     }
     else
     {
-        //  TODO: Expected colon error
+        if (current()->getTokenType() != TokenType::SYMBOL_COMMA)
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected IDENTIFIER as parameter");
+            return varDefs;
+        }
     }
-}
-void Parser::parseFunctionAccessModifier()
-{
-    switch (current()->getTokenType())
-    {
-    case TokenType::SYMBOL_PROTECTED:
-        advance();
-        return AccessModifier::PROTECTED;
-    default:
-        return AccessModifier::DEFAULT;
-    }
+    return varDefs;
 }
 void Parser::parseImportStatement()
 {
@@ -688,4 +670,780 @@ void Parser::parseIdentifierList()
         //  TODO: ERROR expected identifier
         diagnosticsEngine->japc_error_at((*current().get()), "Expected identifier in identifier list");
     }
+}
+std::shared_ptr<TypeDeclaration> Parser::parseType()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_PACKED)
+    {
+        advance();
+        if (current()->getTokenType() != TokenType::SYMBOL_ARRAY &&
+            current()->getTokenType() != TokenType::SYMBOL_RECORD &&
+            current()->getTokenType() != TokenType::SYMBOL_SET && current()->getTokenType() != TokenType::SYMBOL_FILE)
+        {
+            diagnosticsEngine->japc_error_at(*current().get(), "Expected any of array, record, set or file!");
+            // TODO Sync
+        }
+        else
+        {
+            advance();
+        }
+    }
+    if (current()->getTokenType() == TokenType::SYMBOL_BINDABLE)
+    {
+        diagnosticsEngine->japc_warning_at(*current().get(), "Bindable is not supported yet!");
+        advance();
+    }
+    switch (current()->getTokenType())
+    {
+    case TokenType::SYMBOL_TYPE:
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_OF)
+        {
+            advance();
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
+                std::string varName = current()->getValue();
+                const std::shared_ptr<NamedObject> namedObject = this->objects->find(varName);
+                if (namedObject)
+                {
+                    if (!llvm::isa<VariableDefinition>(*namedObject.get()))
+                    {
+                        diagnosticsEngine->japc_error_at(*current().get(), "%s value is not a variable or const",
+                                                         varName.c_str());
+                    }
+                    else
+                    {
+                        advance();
+                        return namedObject->getTypeDeclaration();
+                    }
+                }
+                else
+                {
+                    diagnosticsEngine->japc_error_at(*current().get(), "%s is not declared in this scope.",
+                                                     varName.c_str());
+                    //  TODO: Sync
+                }
+            }
+            else
+            {
+                diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier after TYPE OF expression.");
+                //  TODO: Sync
+            }
+        }
+        else
+        {
+            diagnosticsEngine->japc_error_at(
+                *current().get(),
+                "Expected OF keyword! I could simply add it by my self but I'm tired now, do it by yourself please");
+            //  TODO: Sync
+        }
+        break;
+    case TokenType::IDENTIFIER:
+        break;
+    case TokenType::NUMERIC_LITERAL:
+    case TokenType::SYMBOL_MINUS:
+    case TokenType::STRING_LITERAL: {
+        if (current()->getTokenType() == TokenType::STRING_LITERAL && current()->getValue().size() > 1)
+        {
+            //  TODO: parse String const
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting char, got a string instead");
+        }
+        else
+        {
+            std::shared_ptr<RangeDeclaration> range;
+            std::shared_ptr<TypeDeclaration> type;
+            range = this->parseRangeDeclaration(type, TokenType::SYMBOL_SEMICOLON, TokenType::SYMBOL_OF);
+            if (range)
+            {
+                return range;
+            }
+            return nullptr;
+        }
+    }
+    case TokenType::SYMBOL_STRING_KEYWORD:
+        return parseStringDeclaration();
+    case TokenType::SYMBOL_SET:
+        return parseSetDeclaration();
+    case TokenType::SYMBOL_FILE:
+        return parseFileDeclaration();
+    case TokenType::SYMBOL_ARRAY:
+        return parseArrayDeclaration();
+    case TokenType::SYMBOL_PAREN_OPEN:
+        return parseEnumDefinition();
+    case TokenType::SYMBOL_PROCEDURE:
+    case TokenType::SYMBOL_FUNCTION: {
+        parseFunctionType();
+    }
+    default:
+        this->diagnosticsEngine->japc_error_at(*current().get(),
+                                               "Huh ? I was expecting a declaration here... a %s was a complete "
+                                               "surprise to me at this point in your program!",
+                                               Scanner::tokenTypeToStr(current()->getTokenType()).c_str());
+    }
+}
+std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<TypeDeclaration> type, TokenType end,
+                                                                TokenType alternative)
+{
+    std::shared_ptr<ConstantDeclaration> startConstantDec = parseConstantExpression({TokenType::SYMBOL_DOT_DOT});
+    if (!startConstantDec)
+    {
+        return nullptr;
+    }
+    if (current()->getTokenType() == TokenType::SYMBOL_DOT_DOT)
+    {
+        advance();
+        std::shared_ptr<ConstantDeclaration> endConstantDec = parseConstantExpression({end, alternative});
+        if (!endConstantDec)
+        {
+            return nullptr;
+        }
+        if (startConstantDec->getType() != endConstantDec->getType())
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                   "Both expressions in range declaration must be the same type");
+        }
+        u_int64_t startVal = ParserUtils::constantDeclarationToInteger(startConstantDec.get());
+        u_int64_t endVal = ParserUtils::constantDeclarationToInteger(endConstantDec.get());
+        if (startVal > endVal)
+        {
+            this->diagnosticsEngine->japc_error_at(
+                *current().get(),
+                "Start expression must have a lower value than end expression, ISO says so, do not ask me please.");
+        }
+        else
+        {
+            if (startVal == endVal)
+            {
+                this->diagnosticsEngine->japc_warning_at(*current().get(),
+                                                         "Expressions have the same value in range declaration. Call "
+                                                         "me paranoid but it may not be what you wan    t as a range.");
+            }
+            else
+            {
+                std::shared_ptr<Range> rangeDeclaration = std::make_shared<Range>(Range(startVal, endVal));
+                return std::shared_ptr<RangeDeclaration>(new RangeDeclaration(rangeDeclaration, type));
+            }
+        }
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '..' after constant in range declaration.");
+        //  TODO: Sync
+    }
+    return nullptr;
+}
+std::shared_ptr<ConstantDeclaration> Parser::parseConstantExpression(std::vector<TokenType> terminator)
+{
+    std::shared_ptr<ConstantDeclaration> cd;
+    do
+    {
+        cd = this->parseConstantTerm();
+        if (!cd)
+        {
+            return nullptr;
+        }
+        if (!ParserUtils::isAnyOf(*current().get(), terminator))
+        {
+            cd = parseConstantRightSide(0, cd);
+            if (!cd)
+            {
+                return nullptr;
+            }
+        }
+    } while (!ParserUtils::isAnyOf(*current().get(), terminator));
+    return cd;
+}
+std::shared_ptr<ConstantDeclaration> Parser::parseConstantTerm()
+{
+    int multiplicative = 1;
+    TokenType tk;
+    std::shared_ptr<ConstantDeclaration> constantTerm;
+    switch (current()->getTokenType())
+    {
+    case TokenType::SYMBOL_MINUS:
+        multiplicative = -1;
+    case TokenType::SYMBOL_PLUS:
+    case TokenType::SYMBOL_NOT:
+        tk = current()->getTokenType();
+        advance();
+        break;
+    default:
+        break;
+    }
+}
+std::shared_ptr<ConstantDeclaration> Parser::parseConstantRightSide(int precedence,
+                                                                    std::shared_ptr<ConstantDeclaration> leftSide)
+{
+    while (true)
+    {
+        TokenType tkType = current()->getTokenType();
+        int tkPrecedence = ParserUtils::getPrecedence(tkType);
+        if (tkPrecedence < precedence)
+        {
+            return leftSide;
+        }
+        advance();
+        std::shared_ptr<ConstantDeclaration> rightSide = this->parseConstantTerm();
+        if (!rightSide)
+        {
+            return nullptr;
+        }
+        int tkNextPrecedence = ParserUtils::getPrecedence(current()->getTokenType());
+        if (tkPrecedence < tkNextPrecedence)
+        {
+            if (!(rightSide = this->parseConstantRightSide(tkPrecedence + 1, rightSide)))
+            {
+                return nullptr;
+            }
+        }
+        leftSide = ParserUtils::evaluateConstant(leftSide, tkType, rightSide);
+    }
+}
+std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
+{
+    std::string name;
+    bool isForwarded = false;
+    advance();
+    if (current()->getTokenType() != TokenType::IDENTIFIER)
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Missing function identifier");
+    }
+    else
+    {
+        name = current()->getValue();
+        FunctionDefinition *functionDefinition;
+        advance();
+        if (std::shared_ptr<NamedObject> def = objects->find(name))
+        {
+            functionDefinition = llvm::dyn_cast_or_null<FunctionDefinition>(def.get());
+            if (functionDefinition && functionDefinition->getPrototype() &&
+                functionDefinition->getPrototype()->isForwarded())
+            {
+                functionDefinition->getPrototype()->setIsForward(false);
+                if (current()->getTokenType() == TokenType::SYMBOL_SEMICOLON)
+                    return std::make_shared<PrototypeExpression>(*functionDefinition->getPrototype().get());
+            }
+        }
+        std::vector<std::shared_ptr<VariableDefinition>> vars = parseFunctionParams();
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_COLON)
+        {
+            advance();
+            std::shared_ptr<TypeDeclaration> typeDeclaration;
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
+                typeDeclaration = getTypeDeclaration(current()->getValue());
+                if (functionDefinition)
+                {
+                    if (functionDefinition->getTypeDeclaration() != typeDeclaration)
+                    {
+                        this->diagnosticsEngine->japc_error_at(
+                            *current().get(), "This function was already declared with a different type "
+                                              "and I will not change my mind about it, so fix it.");
+                    }
+                    return std::make_shared<PrototypeExpression>(*functionDefinition->getPrototype().get());
+                }
+                PrototypeExpression prototypeExpression =
+                    PrototypeExpression(current()->getTokenPos(), name, vars, typeDeclaration);
+                return std::make_shared<PrototypeExpression>(prototypeExpression);
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                       "Expected type identifier as function return type");
+            }
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                   "Expected ':' after ')' in a function or procedure declaration");
+        }
+    }
+}
+void Parser::parseFunction()
+{
+}
+std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_STRING_KEYWORD)
+    {
+        unsigned size = 255;
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_OPEN)
+        {
+            advance();
+            if (current()->getTokenType() == TokenType::NUMERIC_LITERAL)
+            {
+                if (ParserUtils::numericLiteralIsInteger(*current().get()))
+                {
+                    size = stoi(current()->getValue());
+                    if (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_CLOSE)
+                    {
+                        advance();
+                    }
+                    else
+                    {
+                        this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting ']'.");
+                    }
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           "Expecting integer, but got other type instead.");
+                }
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                       "Expecting number, but got other type instead.");
+            }
+        }
+        else
+        {
+            if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+            {
+                advance();
+                if (current()->getTokenType() == TokenType::NUMERIC_LITERAL)
+                {
+                    if (ParserUtils::numericLiteralIsInteger(*current().get()))
+                    {
+                        size = stoi(current()->getValue());
+                        if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+                        {
+                            advance();
+                        }
+                        else
+                        {
+                            this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting ']'.");
+                        }
+                    }
+                    else
+                    {
+                        this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                               "Expecting integer, but got other type instead.");
+                    }
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           "Expecting number, but got other type instead.");
+                }
+            }
+        }
+        if (size == 0)
+        {
+            this->diagnosticsEngine->japc_warning_at(*current().get(), "Huh? String with size 0 ?");
+        }
+        return std::make_shared<StringDeclaration>(StringDeclaration(size));
+    }
+    else
+    {
+    }
+}
+std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_OPEN)
+    {
+        advance();
+        std::vector<std::shared_ptr<RangeDeclaration>> rangeVector;
+        std::shared_ptr<TypeDeclaration> typeDeclaration;
+        while (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_CLOSE)
+        {
+            advance();
+            std::shared_ptr<RangeDeclaration> rangeDeclaration = this->parseArrayDeclarationRange();
+            if (!rangeDeclaration)
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "I was expecting to see a type here");
+            }
+            else
+            {
+                rangeVector.push_back(rangeDeclaration);
+            }
+            if (current()->getTokenType() == TokenType::SYMBOL_COMMA)
+            {
+                advance();
+            }
+        }
+        if (rangeVector.empty())
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected size of array now");
+            return nullptr;
+        }
+        if (current()->getTokenType() == TokenType::SYMBOL_OF)
+        {
+            std::shared_ptr<TypeDeclaration> typeDeclaration = this->parseType();
+            return std::make_shared<ArrayDeclaration>(ArrayDeclaration(typeDeclaration, rangeVector));
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected OF keyword");
+            return nullptr;
+        }
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '[' after array keyword");
+        return nullptr;
+    }
+}
+std::shared_ptr<RangeDeclaration> Parser::parseArrayDeclarationRange()
+{
+    std::shared_ptr<TypeDeclaration> typeDeclaration;
+    if (current()->getTokenType() == TokenType::IDENTIFIER)
+    {
+        typeDeclaration = getTypeDeclaration(current()->getValue());
+        if (typeDeclaration)
+        {
+            if (!typeDeclaration->isIntegral())
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                       "Array declaration must be sized of integral type");
+                return nullptr;
+            }
+            return std::make_shared<RangeDeclaration>(RangeDeclaration(typeDeclaration->getRange(), typeDeclaration));
+        }
+    }
+    return this->parseRangeDeclaration(typeDeclaration, TokenType::SYMBOL_SQUARE_BRACKET_CLOSE,
+                                       TokenType::SYMBOL_COMMA);
+}
+std::shared_ptr<TypeDeclaration> Parser::getTypeDeclaration(std::string nameToSearch)
+{
+    std::shared_ptr<NamedObject> findedTypeDef = this->objects->find(nameToSearch);
+    if (TypeDefinition *typeDef = llvm::dyn_cast_or_null<TypeDefinition>(findedTypeDef.get()))
+    {
+        return typeDef->getTypeDeclaration();
+    }
+    return nullptr;
+}
+std::shared_ptr<FileDeclaration> Parser::parseFileDeclaration()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_FILE)
+    {
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_FILE)
+        {
+            std::shared_ptr<TypeDeclaration> type = parseType();
+            if (type)
+            {
+                return std::make_shared<FileDeclaration>(FileDeclaration(type));
+            }
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected OF keyword now");
+        }
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected FILE keyword now");
+    }
+    return nullptr;
+}
+std::shared_ptr<SetDeclaration> Parser::parseSetDeclaration()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_SET)
+    {
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_OF)
+        {
+            advance();
+            std::shared_ptr<TypeDeclaration> typeDeclaration;
+            std::shared_ptr<RangeDeclaration> rangeDeclaration;
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
+                typeDeclaration = getTypeDeclaration(current()->getValue());
+                if (typeDeclaration)
+                {
+                    if (!typeDeclaration->isIntegral())
+                    {
+                        this->diagnosticsEngine->japc_error_at(*current().get(), "Given type is not an integral type");
+                        return nullptr;
+                    }
+                    rangeDeclaration = std::make_shared<RangeDeclaration>(
+                        RangeDeclaration(typeDeclaration->getRange(), typeDeclaration));
+                }
+                else
+                {
+                    rangeDeclaration =
+                        parseRangeDeclaration(typeDeclaration, TokenType::SYMBOL_SEMICOLON, TokenType::UNKNOWN);
+                }
+                if (typeDeclaration)
+                {
+                    if (typeDeclaration->getRange()->getSize() > __MAX__SET__SIZE__)
+                    {
+                        this->diagnosticsEngine->japc_error_at(*current().get(), "Set is too large...");
+                    }
+                    else
+                    {
+                        return std::make_shared<SetDeclaration>(SetDeclaration(rangeDeclaration, typeDeclaration));
+                    }
+                }
+            }
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected OF keyword now");
+        }
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected SET keyword now");
+    }
+    return nullptr;
+}
+std::shared_ptr<EnumDeclaration> Parser::parseEnumDefinition()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+    {
+        advance();
+        std::vector<std::string> names;
+        do
+        {
+            if (current()->getTokenType() != TokenType::IDENTIFIER)
+            {
+                names.push_back(current()->getValue());
+                advance();
+                if (current()->getTokenType() == TokenType::SYMBOL_COMMA)
+                {
+                    advance();
+                }
+                else if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ',' of ')' in enum declaration");
+                }
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in enum declaration");
+            }
+        } while (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE);
+        if (names.empty())
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Enum declaration cannot be empty");
+        }
+        else
+        {
+            std::shared_ptr<EnumDeclaration> enumDeclaration =
+                std::make_shared<EnumDeclaration>(names, getIntegerType());
+            for (auto value : enumDeclaration->getValues())
+            {
+                if (!this->objects->insert(value.name, std::make_shared<EnumDefinition>(
+                                                           EnumDefinition(value.name, enumDeclaration, value.value))))
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           ("Value " + value.name + "already declared").c_str());
+                    return nullptr;
+                }
+            }
+            return enumDeclaration;
+        }
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '(' for enum declaration");
+    }
+    return nullptr;
+}
+void Parser::parseConstantDefinition()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_CONST)
+    {
+        advance();
+        do
+        {
+            if (current()->getTokenType() == TokenType::IDENTIFIER)
+            {
+                advance();
+                std::string name = current()->getValue();
+                if (current()->getTokenType() == TokenType::SYMBOL_COLON_EQUAL)
+                {
+                    advance();
+                    std::shared_ptr<ConstantDeclaration> constantDeclaration =
+                        parseConstantExpression({TokenType::SYMBOL_SEMICOLON});
+                    if (!constantDeclaration)
+                    {
+                        this->diagnosticsEngine->japc_error_at(*current().get(), "Constant is not well defined");
+                    }
+                    else
+                    {
+                        if (!this->objects->insert(name,
+                                                   std::make_shared<ConstantDefinition>(name, constantDeclaration)))
+                        {
+                            this->diagnosticsEngine->japc_error_at(*current().get(), "Is already defined.");
+                        }
+                        else
+                        {
+                            if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+                            {
+                                this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                                       "Expected ';' after a constant definition");
+                            }
+                            else
+                            {
+                                advance();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           "Constants must be initialized at definition time.");
+                }
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in constant definition.");
+            }
+        } while (current()->getTokenType() == TokenType::IDENTIFIER);
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected CONST keyword in constant definition.");
+    }
+}
+void Parser::sync(std::vector<TokenType> tokensToFind)
+{
+    while (!ParserUtils::isAnyOf(*current().get(), tokensToFind))
+    {
+        advance();
+        if (current()->getTokenType() == TokenType::END_OF_FILE)
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+        }
+    }
+}
+void Parser::parseLabel()
+{
+    std::vector<int64_t> labelsNames;
+    if (current()->getTokenType() == TokenType::SYMBOL_LABEL)
+    {
+        advance();
+        do
+        {
+            if (current()->getTokenType() == TokenType::NUMERIC_LITERAL)
+            {
+                if (ParserUtils::numericLiteralIsInteger(*current()))
+                {
+                    labelsNames.push_back(atoi(current()->getValue().c_str()));
+                    advance();
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           "%s is not a integer or cannot be converted to one",
+                                                           current()->getValue().c_str());
+                    this->sync();
+                }
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Expected integer label");
+                this->sync();
+            }
+            if (current()->getTokenType() == TokenType::SYMBOL_COMMA)
+            {
+                advance();
+            }
+        } while (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON);
+        advance(); // eat semicolon;
+        for (auto n : labelsNames)
+        {
+            if (!this->objects->insert(std::to_string(n), std::make_shared<LabelDefinition>(n)))
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "%d label was already declared.", n);
+            }
+        }
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected LABEL keywword");
+        this->sync();
+    }
+}
+std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_VAR)
+    {
+        advance();
+        std::vector<std::shared_ptr<VariableDefinition>> varDefs;
+        do
+        {
+            std::vector<std::string> names;
+            do
+            {
+                if (current()->getTokenType() == TokenType::IDENTIFIER)
+                {
+                    names.push_back(current()->getValue());
+                    advance();
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in var definition");
+                }
+            } while (current()->getTokenType() == TokenType::SYMBOL_COMMA);
+            advance();
+            if (current()->getTokenType() == TokenType::SYMBOL_COLON)
+            {
+                advance();
+                std::shared_ptr<TypeDeclaration> typeDeclaration = parseType();
+                if (typeDeclaration)
+                {
+                    for (auto n : names)
+                    {
+                        std::shared_ptr<VariableDefinition> varDef =
+                            std::make_shared<VariableDefinition>(n, typeDeclaration);
+                        varDefs.push_back(varDef);
+                        if (!this->objects->insert(n, varDef))
+                        {
+                            this->diagnosticsEngine->japc_error_at(*current().get(), "%s is already defined",
+                                                                   varDef->getName().c_str());
+                        }
+                    }
+                    advance();
+                    if (current()->getTokenType() == TokenType::SYMBOL_VALUE)
+                    {
+                        advance();
+                        std::shared_ptr<InitValue> initValue = parseInitValue(typeDeclaration);
+                        if (initValue)
+                        {
+                            varDefs.back()->setInitValue(initValue);
+                            advance();
+                        }
+                        else
+                        {
+                            this->diagnosticsEngine->japc_error_at(
+                                *current().get(), "Expected variable initialization after VALUE keyword");
+                        }
+                    }
+                    if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+                    {
+                        this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                               "Expected ';' after variable initialization");
+                        this->sync();
+                    }
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           "Expected type to be defined after variable declaration");
+                    this->sync();
+                }
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ':' in after variable identifier");
+                this->sync();
+            }
+        } while (current()->getTokenType() == TokenType::IDENTIFIER);
+    }
+    else
+    {
+        this->sync();
+        return nullptr;
+    }
+}
+std::shared_ptr<InitValue> Parser::parseInitValue(std::shared_ptr<TypeDeclaration> typeOfInitialization)
+{
+    return std::shared_ptr<InitValue>();
 }

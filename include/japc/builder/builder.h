@@ -32,12 +32,6 @@ class Builder
     }
     virtual Builder *createChildBuilder() = 0;
 
-    virtual Pascal::ResultExpr *emitFuncCall(Pascal::Context &context, Pascal::FuncCall *funcCall) = 0;
-    virtual Pascal::ResultExpr *emitStrConst(Pascal::Context &context, Pascal::StrConst *strConst) = 0;
-    virtual Pascal::ResultExpr *emitIntConst(Pascal::Context &context, Pascal::IntConst *val) = 0;
-    virtual Pascal::ResultExpr *emitFloatConst(Pascal::Context &context, Pascal::FloatConst *var) = 0;
-    virtual Pascal::ResultExpr *emitNull(Pascal::Context &context, Pascal::VoidConst *var) = 0;
-
 };
 } // namespace Builder
 #endif // JAPC_BUILDER_H

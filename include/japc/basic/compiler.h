@@ -5,62 +5,38 @@
 #ifndef JAPC_COMPILER_H
 #define JAPC_COMPILER_H
 
-#include "japc/AST/context.h"
-#include "japc/AST/moduledef.h"
+#include "japc/AST/named_object.h"
+#include "japc/AST/stack.h"
 #include "japc/builder/builder.h"
+#include "japc/parser/parser.h"
+#include "japc/scanner/scanner.h"
+#include "japc/AST/type.h"
+
 #include <memory>
 #include <vector>
 
 namespace Pascal
 {
+
 class Compiler
 {
   private:
-    static Compiler *instance;
-    std::shared_ptr<Context> rootContext;
-    std::shared_ptr<Builder> rootBuilder;
-    typedef std::map<std::string, ModuleDef> ModuleMap;
-    ModuleMap moduleCache;
-    std::vector<ModuleDef *> loadedModules;
-    bool initialized;
-    Compiler();
-    bool init();
-
+    std::shared_ptr<Stack<NamedObject>> stack;
+    std::shared_ptr<Scanner> scanner;
+    std::shared_ptr<Parser> parser;
+    void initCompiler();
+    void addBuiltinType(std::string name, std::shared_ptr<TypeDeclaration> type);
   public:
-    typedef std::vector<std::string> StringVec;
-    typedef StringVec::const_iterator StringVecIter;
-
-    struct ModulePath
+    Compiler();
+    enum Status
     {
-        std::string path;
-        bool found, isDir;
-        ModulePath(std::string &path, bool found, bool isDir) : path(path), found(found), isDir(isDir)
-        {
-        }
+        FAILED_WITH_ERROR,
+        FAILED_WITH_WARNINGS,
+        FAILED_UNKNOWN,
+        COMPILED_WITH__WARNINGS,
+        COMPILED_SUCCESS,
     };
-
-    std::vector<std::string> sourceLibPath;
-    bool dump;
-    int optimizeLevel;
-    bool emitDebugInfo;
-    bool noBootstrap;
-    bool useGlobalLibs;
-
-    static std::string joinName(const std::string &base, StringVecIter pathBegin, StringVecIter pathEnd,
-                                const std::string &ext);
-    static bool isFile(const std::string &name);
-    static bool isDir(const std::string &name);
-    static ModulePath searchPath(const StringVec &path, StringVecIter moduleNameBegin, StringVecIter modulePathEnd,
-                                 const std::string &extension);
-    static Compiler &getInstance();
-    void addSourceToLibPath(const std::string &path);
-    void parseModule(Context &moduleContext, ModuleDef *module, const std::string &path, std::istream &src);
-    ModuleDef loadModule(StringVecIter moduleNameBegin, StringVecIter moduleNameEnd, std::string &canonicalName);
-    bool loadBootstrapModules();
-    void setArgv(int argc, char **argv);
-    int run(std::istream &src, const std::string &name);
-    static ModuleDef loadModule(const std::vector<std::string> &moduleName, std::string &canonicalName);
-    void callModuleDestructors();
+    Status compile();
 };
 } // namespace Pascal
 #endif // JAPC_COMPILER_H

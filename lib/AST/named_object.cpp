@@ -3,21 +3,6 @@
 //
 #include "japc/AST/named_object.h"
 using namespace Pascal;
-constexpr VariableDefinitionFlags operator&(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
-{
-    return static_cast<VariableDefinitionFlags>(static_cast<const int>(lhs) & static_cast<const int>(rhs));
-}
-
-constexpr VariableDefinitionFlags operator|(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
-{
-    return static_cast<VariableDefinitionFlags>(static_cast<const int>(lhs) | static_cast<const int>(rhs));
-}
-
-constexpr VariableDefinitionFlags operator|=(VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
-{
-    lhs = lhs | rhs;
-    return lhs;
-}
 
 bool VariableDefinition::isReference() const
 {
@@ -37,9 +22,4 @@ bool VariableDefinition::isProtected() const
 bool VariableDefinition::isClosure() const
 {
     return (this->flags & VariableDefinitionFlags::CLOSURE) != VariableDefinitionFlags::NONE;
-}
-
-bool operator<(const VariableDefinition &lhs, const VariableDefinition &rhs)
-{
-    return lhs.getName() < rhs.getName();
 }

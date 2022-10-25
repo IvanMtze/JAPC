@@ -11,9 +11,10 @@
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Value.h>
 
-class ExpressionAST;
 namespace Pascal
 {
+class ExpressionAST;
+
 class FunctionBaseBuiltin
 {
   public:

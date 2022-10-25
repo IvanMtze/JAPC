@@ -21,6 +21,7 @@ enum class VariableDefinitionFlags
     NONE = 0,
     ALL = REFERENCE | EXTERNAL | PROTECTED | CLOSURE,
 };
+
 enum NamedObjectType
 {
     VARIABLE,
@@ -97,12 +98,21 @@ class VariableDefinition : public NamedObject
     }
     static bool isClassOf(NamedObject *namedObject)
     {
-        return namedObject->getNamedObjectType() == NamedObjectType::VARIABLE;
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
     }
 
   private:
     VariableDefinitionFlags flags;
     std::shared_ptr<InitValue> initValue;
+    const static NamedObjectType namedObjectType = NamedObjectType::VARIABLE;
 };
 
 class FunctionDefinition :public  NamedObject
@@ -119,11 +129,22 @@ class FunctionDefinition :public  NamedObject
     }
     static bool isClassOf(NamedObject *namedObject)
     {
-        return namedObject->getNamedObjectType() == NamedObjectType::FUNCTION;
+        return namedObject->getNamedObjectType() == namedObjectType;
     }
-
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
+    }
+    static bool classof(const std::shared_ptr<NamedObject> namedObject){
+        return isClassOf(namedObject.get());
+    }
   private:
     std::shared_ptr<PrototypeExpression> prototype;
+    const static NamedObjectType namedObjectType = NamedObjectType::FUNCTION;
 };
 
 class TypeDefinition : public NamedObject
@@ -133,27 +154,55 @@ class TypeDefinition : public NamedObject
         : NamedObject(NamedObjectType::TYPE, name, typeDeclaration), restricted(restricted)
     {
     }
-    static bool isClassOf(NamedObject *namedObject)
-    {
-        namedObject->getNamedObjectType() == NamedObjectType::TYPE;
-    }
     bool isRestricted() const
     {
         return restricted;
     }
-
+    static bool isClassOf(NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
+    }
   private:
     bool restricted;
+    const static NamedObjectType namedObjectType = NamedObjectType::TYPE;
 };
 
-class ConstDefinition : public NamedObject
+class ConstantDefinition : public NamedObject
 {
+  public:
+    ConstantDefinition(const std::string& nm, const std::shared_ptr<ConstantDeclaration> cv)
+        : NamedObject(NamedObjectType::CONST, nm, 0), constValue(cv)
+    {
+    }
+    static bool isClassOf(NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
+    }
+  private:
+    const static NamedObjectType namedObjectType = NamedObjectType::CONST;
+    std::shared_ptr<ConstantDeclaration> constValue;
 };
 
 class EnumDefinition : public NamedObject
 {
   public:
-    EnumDefinition(const std::string &name, const std::shared_ptr<TypeDeclaration> &typeDeclaration, int value)
+    EnumDefinition(const std::string name, const std::shared_ptr<TypeDeclaration> &typeDeclaration, int value)
         : NamedObject(NamedObjectType::ENUM, name, typeDeclaration), value(value)
     {
     }
@@ -163,11 +212,20 @@ class EnumDefinition : public NamedObject
     }
     static bool isClassOf(NamedObject *namedObject)
     {
-        return namedObject->getNamedObjectType() == NamedObjectType::ENUM;
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
     }
 
   private:
     int value;
+    const static NamedObjectType namedObjectType = NamedObjectType::ENUM;
 };
 
 class WithDefinition : public NamedObject
@@ -184,11 +242,20 @@ class WithDefinition : public NamedObject
     }
     static bool isClassOf(NamedObject *namedObject)
     {
-        return namedObject->getNamedObjectType() == NamedObjectType::WITH;
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
     }
 
   private:
     std::shared_ptr<ExpressionAST> expression;
+    const static NamedObjectType namedObjectType = NamedObjectType::WITH;
 };
 
 class MemberFunctionDefinition : public NamedObject
@@ -205,11 +272,19 @@ class MemberFunctionDefinition : public NamedObject
     }
     static bool isClassOf(NamedObject *namedObject)
     {
-        return namedObject->getNamedObjectType() == NamedObjectType::WITH;
+        return namedObject->getNamedObjectType() == namedObjectType;
     }
-
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
+    }
   private:
     int index;
+    const static NamedObjectType namedObjectType = NamedObjectType::MEMBER_FUNCTION;
 };
 
 class LabelDefinition : public NamedObject
@@ -220,8 +295,39 @@ class LabelDefinition : public NamedObject
     }
     static bool isClassOf(NamedObject *namedObject)
     {
-        return namedObject->getNamedObjectType() == NamedObjectType::LABEL;
+        return namedObject->getNamedObjectType() == namedObjectType;
     }
+    static bool isClassOf(const NamedObject *namedObject)
+    {
+        return namedObject->getNamedObjectType() == namedObjectType;
+    }
+    //used by llvm:isa and dyn_cast, faster and secure casting
+    static bool classof(const NamedObject *namedObject){
+        return isClassOf(namedObject);
+    }
+  private:
+    const static NamedObjectType namedObjectType = NamedObjectType::LABEL;
 };
+
+bool operator<(const VariableDefinition &lhs, const VariableDefinition &rhs)
+{
+    return lhs.getName() < rhs.getName();
+}
+constexpr VariableDefinitionFlags operator&(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
+{
+    return static_cast<VariableDefinitionFlags>(static_cast<const int>(lhs) & static_cast<const int>(rhs));
+}
+
+constexpr VariableDefinitionFlags operator|(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
+{
+    return static_cast<VariableDefinitionFlags>(static_cast<const int>(lhs) | static_cast<const int>(rhs));
+}
+
+constexpr VariableDefinitionFlags operator|=(VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
+{
+    lhs = lhs | rhs;
+    return lhs;
+}
+
 } // namespace Pascal
 #endif // JAPC_NAMED_OBJECT_H

@@ -110,6 +110,7 @@ enum class TokenType
     SYMBOL_BRACE_OPEN,
     SYMBOL_BRACE_CLOSE,
     SYMBOL_POWER,
+    SYMBOL_STRING_KEYWORD,
 
     /*
      * One or more characters SPECIAL-SYMBOLS
@@ -148,6 +149,22 @@ class Location
     Location &operator=(const Location &loc)
     {
         return *this;
+    }
+    const int getLineNo() const
+    {
+        return lineNo;
+    }
+    const int getCharNo() const
+    {
+        return charNo;
+    }
+    const std::string &getFileName() const
+    {
+        return fileName;
+    }
+    void setFileName(const std::string &fileName)
+    {
+        Location::fileName = fileName;
     }
 
   private:
@@ -199,7 +216,7 @@ class Scanner
     std::string getTextSource();
     void setTextSource(std::string source);
     void setSkipTrivia(bool skipTrivia);
-    std::string tokenTypeToStr(TokenType token);
+    static std::string tokenTypeToStr(TokenType token);
     Token getCurrentTokenObject();
     void setSkipSpaces(bool skipSpaces);
     void setSkipComments(bool skipComments);
@@ -296,6 +313,7 @@ class Scanner
         {"WHILE", TokenType::SYMBOL_WHILE},
         {"WITH", TokenType::SYMBOL_WITH},
         {"EXTERNAL", TokenType::SYMBOL_EXTERNAL},
+        {"STRING", TokenType::SYMBOL_STRING_KEYWORD}
     };
 };
 } // namespace Pascal
