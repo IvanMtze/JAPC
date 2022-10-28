@@ -39,9 +39,8 @@ jobs:
           git clone https://github.com/IvanMtze/JAPC.git
           mkdir JAPC/build && cd JAPC/build
           cmake -DBUILD_DOC=ON ..
-          make internal-docs  
-      - name: Move and clean
-        run: mv ../docs ../../docs
+          make internal-docs
+          mv ../docs ../../docs
       - name: Upload documentation
         uses: actions/upload-pages-artifact@v1
         with:
