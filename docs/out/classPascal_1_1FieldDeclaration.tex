@@ -1,0 +1,89 @@
+\hypertarget{classPascal_1_1FieldDeclaration}{}\doxysection{Pascal\+::Field\+Declaration Class Reference}
+\label{classPascal_1_1FieldDeclaration}\index{Pascal::FieldDeclaration@{Pascal::FieldDeclaration}}
+Inheritance diagram for Pascal\+::Field\+Declaration\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classPascal_1_1FieldDeclaration}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a1f9a2f2b8f8fb1ec6860b47222e5d751}\label{classPascal_1_1FieldDeclaration_a1f9a2f2b8f8fb1ec6860b47222e5d751}} 
+{\bfseries Field\+Declaration} (const std\+::string \&nm, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ ty, bool stat, Access ac=Public)
+\item 
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a073fd0649df9f9b7ae15c8d984634996}\label{classPascal_1_1FieldDeclaration_a073fd0649df9f9b7ae15c8d984634996}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ {\bfseries get\+Field\+Type} () const
+\item 
+bool \mbox{\hyperlink{classPascal_1_1FieldDeclaration_a086544d12ed0490ff0d0d77571aadc36}{is\+Integral}} () const override
+\item 
+bool \mbox{\hyperlink{classPascal_1_1FieldDeclaration_a86d277c780d55fb667510aa1aaf7059a}{is\+Compound}} () const override
+\item 
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_ad66336d0ac25c75f4acfb0c4f081e9d2}\label{classPascal_1_1FieldDeclaration_ad66336d0ac25c75f4acfb0c4f081e9d2}} 
+bool {\bfseries is\+Static} () const
+\item 
+bool \mbox{\hyperlink{classPascal_1_1FieldDeclaration_a4e699e90d5be4a3623a43449b42041a7}{is\+Same\+As}} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$ty) const override
+\item 
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a1152be8e6a20cba717d216d5b61fa685}\label{classPascal_1_1FieldDeclaration_a1152be8e6a20cba717d216d5b61fa685}} 
+{\bfseries operator Access} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a1ddd2808be89fd27acfa78d2b00c168b}\label{classPascal_1_1FieldDeclaration_a1ddd2808be89fd27acfa78d2b00c168b}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$e)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Type $>$ \mbox{\hyperlink{classPascal_1_1FieldDeclaration_af1d3f40aa5a77003b2deed23fee1eb73}{get\+Llvm\+Type}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_af1d3f40aa5a77003b2deed23fee1eb73}\label{classPascal_1_1FieldDeclaration_af1d3f40aa5a77003b2deed23fee1eb73}} 
+\index{Pascal::FieldDeclaration@{Pascal::FieldDeclaration}!getLlvmType@{getLlvmType}}
+\index{getLlvmType@{getLlvmType}!Pascal::FieldDeclaration@{Pascal::FieldDeclaration}}
+\doxysubsubsection{\texorpdfstring{getLlvmType()}{getLlvmType()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Type $>$ Pascal\+::\+Field\+Declaration\+::get\+Llvm\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a86d277c780d55fb667510aa1aaf7059a}\label{classPascal_1_1FieldDeclaration_a86d277c780d55fb667510aa1aaf7059a}} 
+\index{Pascal::FieldDeclaration@{Pascal::FieldDeclaration}!isCompound@{isCompound}}
+\index{isCompound@{isCompound}!Pascal::FieldDeclaration@{Pascal::FieldDeclaration}}
+\doxysubsubsection{\texorpdfstring{isCompound()}{isCompound()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Field\+Declaration\+::is\+Compound (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{Pascal\+::\+Compound\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a086544d12ed0490ff0d0d77571aadc36}\label{classPascal_1_1FieldDeclaration_a086544d12ed0490ff0d0d77571aadc36}} 
+\index{Pascal::FieldDeclaration@{Pascal::FieldDeclaration}!isIntegral@{isIntegral}}
+\index{isIntegral@{isIntegral}!Pascal::FieldDeclaration@{Pascal::FieldDeclaration}}
+\doxysubsubsection{\texorpdfstring{isIntegral()}{isIntegral()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Field\+Declaration\+::is\+Integral (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1FieldDeclaration_a4e699e90d5be4a3623a43449b42041a7}\label{classPascal_1_1FieldDeclaration_a4e699e90d5be4a3623a43449b42041a7}} 
+\index{Pascal::FieldDeclaration@{Pascal::FieldDeclaration}!isSameAs@{isSameAs}}
+\index{isSameAs@{isSameAs}!Pascal::FieldDeclaration@{Pascal::FieldDeclaration}}
+\doxysubsubsection{\texorpdfstring{isSameAs()}{isSameAs()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Field\+Declaration\+::is\+Same\+As (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$}]{ty }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{Pascal\+::\+Compound\+Declaration}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/type.\+h\end{DoxyCompactItemize}

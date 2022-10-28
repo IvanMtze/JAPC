@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1FilePointerExpression}{}\doxysection{Pascal\+::File\+Pointer\+Expression Class Reference}
+\label{classPascal_1_1FilePointerExpression}\index{Pascal::FilePointerExpression@{Pascal::FilePointerExpression}}
+Inheritance diagram for Pascal\+::File\+Pointer\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classPascal_1_1FilePointerExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1FilePointerExpression_a16d40184fb8e89ee9e693db79fea286a}\label{classPascal_1_1FilePointerExpression_a16d40184fb8e89ee9e693db79fea286a}} 
+{\bfseries File\+Pointer\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableExpression}{Variable\+Expression}} $>$ var\+Expre, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1FilePointerExpression_ad7275ecd59bab4f045bd702654444afb}{get\+Address}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1FilePointerExpression_a3b910ea9be9b59506246cf967b5d55a4}\label{classPascal_1_1FilePointerExpression_a3b910ea9be9b59506246cf967b5d55a4}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&visitor) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1FilePointerExpression_a46a723a9639e64c26fc51f941e125bcd}\label{classPascal_1_1FilePointerExpression_a46a723a9639e64c26fc51f941e125bcd}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1FilePointerExpression_ad7275ecd59bab4f045bd702654444afb}\label{classPascal_1_1FilePointerExpression_ad7275ecd59bab4f045bd702654444afb}} 
+\index{Pascal::FilePointerExpression@{Pascal::FilePointerExpression}!getAddress@{getAddress}}
+\index{getAddress@{getAddress}!Pascal::FilePointerExpression@{Pascal::FilePointerExpression}}
+\doxysubsubsection{\texorpdfstring{getAddress()}{getAddress()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ File\+Pointer\+Expression\+::get\+Address (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1VariableExpression}{Pascal\+::\+Variable\+Expression}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

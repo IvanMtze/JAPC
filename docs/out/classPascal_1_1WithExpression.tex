@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1WithExpression}{}\doxysection{Pascal\+::With\+Expression Class Reference}
+\label{classPascal_1_1WithExpression}\index{Pascal::WithExpression@{Pascal::WithExpression}}
+Inheritance diagram for Pascal\+::With\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1WithExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1WithExpression_a9a4dfbd7aaafff21993e35d74a68cfaf}\label{classPascal_1_1WithExpression_a9a4dfbd7aaafff21993e35d74a68cfaf}} 
+{\bfseries With\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$body)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1WithExpression_ab97e114be883c528433bdae8e58bd65e}{code\+Gen}} ()
+\item 
+\mbox{\Hypertarget{classPascal_1_1WithExpression_a9991e4f102a30656b08c93af357ea0ba}\label{classPascal_1_1WithExpression_a9991e4f102a30656b08c93af357ea0ba}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&visitor) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1WithExpression_ae2822bdff773c4509f576f2f06b81530}\label{classPascal_1_1WithExpression_ae2822bdff773c4509f576f2f06b81530}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1WithExpression_ab97e114be883c528433bdae8e58bd65e}\label{classPascal_1_1WithExpression_ab97e114be883c528433bdae8e58bd65e}} 
+\index{Pascal::WithExpression@{Pascal::WithExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::WithExpression@{Pascal::WithExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ With\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

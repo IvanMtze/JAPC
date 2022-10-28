@@ -1,0 +1,48 @@
+\hypertarget{compiler_8h_source}{}\doxysection{compiler.\+h}
+\label{compiler_8h_source}\index{include/japc/basic/compiler.h@{include/japc/basic/compiler.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 10/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_COMPILER\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_COMPILER\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}japc/AST/named\_object.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}japc/AST/stack.h"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}japc/builder/builder.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}japc/parser/parser.h"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}japc/scanner/scanner.h"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}japc/AST/type.h"{}}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{namespace }Pascal}
+\DoxyCodeLine{19 \{}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Compiler}{Compiler}}}
+\DoxyCodeLine{22 \{}
+\DoxyCodeLine{23   \textcolor{keyword}{private}:}
+\DoxyCodeLine{24     std::shared\_ptr<Stack<NamedObject>> stack;}
+\DoxyCodeLine{25     std::shared\_ptr<Scanner> scanner;}
+\DoxyCodeLine{26     std::shared\_ptr<Parser> parser;}
+\DoxyCodeLine{27     \textcolor{keywordtype}{void} initCompiler();}
+\DoxyCodeLine{28     \textcolor{keywordtype}{void} addBuiltinType(std::string name, std::shared\_ptr<TypeDeclaration> type);}
+\DoxyCodeLine{29   \textcolor{keyword}{public}:}
+\DoxyCodeLine{30     \mbox{\hyperlink{classPascal_1_1Compiler}{Compiler}}();}
+\DoxyCodeLine{31     \textcolor{keyword}{enum} Status}
+\DoxyCodeLine{32     \{}
+\DoxyCodeLine{33         FAILED\_WITH\_ERROR,}
+\DoxyCodeLine{34         FAILED\_WITH\_WARNINGS,}
+\DoxyCodeLine{35         FAILED\_UNKNOWN,}
+\DoxyCodeLine{36         COMPILED\_WITH\_\_WARNINGS,}
+\DoxyCodeLine{37         COMPILED\_SUCCESS,}
+\DoxyCodeLine{38     \};}
+\DoxyCodeLine{39     Status compile();}
+\DoxyCodeLine{40 \};}
+\DoxyCodeLine{41 \} \textcolor{comment}{// namespace Pascal}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_COMPILER\_H}}
+
+\end{DoxyCode}

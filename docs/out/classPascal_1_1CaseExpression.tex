@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1CaseExpression}{}\doxysection{Pascal\+::Case\+Expression Class Reference}
+\label{classPascal_1_1CaseExpression}\index{Pascal::CaseExpression@{Pascal::CaseExpression}}
+Inheritance diagram for Pascal\+::Case\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1CaseExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1CaseExpression_afe66d38c97212e9ac69705927262fa66}\label{classPascal_1_1CaseExpression_afe66d38c97212e9ac69705927262fa66}} 
+{\bfseries Case\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ expr, const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1LabelExpression}{Label\+Expression}} $>$ $>$ \&labels, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ other)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1CaseExpression_aa2e5b7a18981bbb68cfdf8c6d78c4221}{code\+Gen}} ()
+\item 
+\mbox{\Hypertarget{classPascal_1_1CaseExpression_ac59d60108f6775d2a7ff5e2c0efe3592}\label{classPascal_1_1CaseExpression_ac59d60108f6775d2a7ff5e2c0efe3592}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&visitor) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1CaseExpression_a0aca66824538d37185b61ee912626b09}\label{classPascal_1_1CaseExpression_a0aca66824538d37185b61ee912626b09}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1CaseExpression_aa2e5b7a18981bbb68cfdf8c6d78c4221}\label{classPascal_1_1CaseExpression_aa2e5b7a18981bbb68cfdf8c6d78c4221}} 
+\index{Pascal::CaseExpression@{Pascal::CaseExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::CaseExpression@{Pascal::CaseExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Case\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

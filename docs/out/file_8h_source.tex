@@ -1,0 +1,48 @@
+\hypertarget{file_8h_source}{}\doxysection{file.\+h}
+\label{file_8h_source}\index{include/japc/basic/file.h@{include/japc/basic/file.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 19/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_FILE\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_FILE\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <sys/stat.h>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <sstream>}}
+\DoxyCodeLine{16 \textcolor{keyword}{class }\mbox{\hyperlink{classFile}{File}}\{}
+\DoxyCodeLine{17   \textcolor{keyword}{public}:}
+\DoxyCodeLine{18     \textcolor{keyword}{enum} FileType\{}
+\DoxyCodeLine{19         MAIN\_PROGRAM,}
+\DoxyCodeLine{20         DEPENDENCY}
+\DoxyCodeLine{21     \};}
+\DoxyCodeLine{22     \mbox{\hyperlink{classFile}{File}}(\textcolor{keyword}{const} std::string \&pathToSource, FileType fileType);}
+\DoxyCodeLine{23     std::string readFile();}
+\DoxyCodeLine{24     std::string getContent();}
+\DoxyCodeLine{25     \textcolor{keywordtype}{bool} verifyFile();}
+\DoxyCodeLine{26     FileType getFileType();}
+\DoxyCodeLine{27   \textcolor{keyword}{private}:}
+\DoxyCodeLine{28     std::string source;}
+\DoxyCodeLine{29     std::string pathToSource;}
+\DoxyCodeLine{30     FileType fileType;}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{class }\mbox{\hyperlink{classSourceManager}{SourceManager}}\{}
+\DoxyCodeLine{34   \textcolor{keyword}{public}:}
+\DoxyCodeLine{35     \mbox{\hyperlink{classSourceManager}{SourceManager}}();}
+\DoxyCodeLine{36     \textcolor{keywordtype}{void} insertFile(std::string path, File::FileType fileType);}
+\DoxyCodeLine{37     \textcolor{keywordtype}{void} getFile(std::string name);}
+\DoxyCodeLine{38     \textcolor{keyword}{typedef} std::map<std::shared\_ptr<File>, std::string> SourcesMap;}
+\DoxyCodeLine{39   \textcolor{keyword}{private}:}
+\DoxyCodeLine{40     SourcesMap sourcesMap;}
+\DoxyCodeLine{41 \};}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_FILE\_H}}
+
+\end{DoxyCode}

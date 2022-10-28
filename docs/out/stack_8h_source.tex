@@ -1,0 +1,40 @@
+\hypertarget{stack_8h_source}{}\doxysection{stack.\+h}
+\label{stack_8h_source}\index{include/japc/AST/stack.h@{include/japc/AST/stack.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 15/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_STACK\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_STACK\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <deque>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }Pascal}
+\DoxyCodeLine{12 \{}
+\DoxyCodeLine{13 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T> \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Stack}{Stack}}}
+\DoxyCodeLine{14 \{}
+\DoxyCodeLine{15   \textcolor{keyword}{public}:}
+\DoxyCodeLine{16     \textcolor{keywordtype}{void} addLevel()}
+\DoxyCodeLine{17     \{}
+\DoxyCodeLine{18         stack.push\_back(std::map<std::string, T>());}
+\DoxyCodeLine{19     \}}
+\DoxyCodeLine{20     std::vector<T> getLevelValues();}
+\DoxyCodeLine{21     \textcolor{keywordtype}{void} deleteLevel();}
+\DoxyCodeLine{22     T findAtTop(std::string \&name);}
+\DoxyCodeLine{23     T find(std::string \&name);}
+\DoxyCodeLine{24     T findFirstLevel(std::string \&name);}
+\DoxyCodeLine{25     T findAtLevel(std::string \&name, \textcolor{keywordtype}{size\_t} level);}
+\DoxyCodeLine{26     \textcolor{keywordtype}{size\_t} getSize();}
+\DoxyCodeLine{27     \textcolor{keywordtype}{bool} insert(std::string name,T t);}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29   \textcolor{keyword}{private}:}
+\DoxyCodeLine{30     std::deque<std::map<std::string, T>> stack;}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \} \textcolor{comment}{// namespace Pascal}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_STACK\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,40 @@
+\hypertarget{builtin_8h_source}{}\doxysection{builtin.\+h}
+\label{builtin_8h_source}\index{include/japc/AST/builtin.h@{include/japc/AST/builtin.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 13/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_BUILTIN\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_BUILTIN\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}japc/AST/expression.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}japc/AST/type.h"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}japc/AST/visitor.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <llvm/IR/IRBuilder.h>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <llvm/IR/Value.h>}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }Pascal}
+\DoxyCodeLine{15 \{}
+\DoxyCodeLine{16 \textcolor{keyword}{class }ExpressionAST;}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FunctionBaseBuiltin}{FunctionBaseBuiltin}}}
+\DoxyCodeLine{19 \{}
+\DoxyCodeLine{20   \textcolor{keyword}{public}:}
+\DoxyCodeLine{21     \mbox{\hyperlink{classPascal_1_1FunctionBaseBuiltin}{FunctionBaseBuiltin}}(\textcolor{keyword}{const} std::vector<std::shared\_ptr<ExpressionAST>> \&args) : args(args)}
+\DoxyCodeLine{22     \{}
+\DoxyCodeLine{23     \}}
+\DoxyCodeLine{24     \textcolor{keyword}{virtual} std::shared\_ptr<llvm::Value> codeGen(llvm::IRBuilder<> \&builder) = 0;}
+\DoxyCodeLine{25     \textcolor{keyword}{virtual} std::shared\_ptr<TypeDeclaration> getType() \textcolor{keyword}{const} = 0;}
+\DoxyCodeLine{26     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} semantics() = 0;}
+\DoxyCodeLine{27     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&expressionVisitor);}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{30     std::vector<std::shared\_ptr<ExpressionAST>> args;}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \} \textcolor{comment}{// namespace Pascal}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_BUILTIN\_H}}
+
+\end{DoxyCode}

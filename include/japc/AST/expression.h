@@ -64,6 +64,7 @@ class ExpressionAST : public Visitable<ExpressionAST>
         TYPE_SIZE_OF_EXPRE,
         TYPE_V_TABLE_EXPRE,
         TYPE_VIRT_FUNCTION,
+        TYPE_INIT_VALUE,
         TYPE_GOTO,
         TYPE_UNIT,
         TYPE_CLOSURE,
@@ -476,6 +477,23 @@ class RangeExpression : public ExpressionAST
   private:
     ExpressionAST *low;
     ExpressionAST *high;
+};
+
+class InitValue : public ExpressionAST
+{
+  public:
+    InitValue(const Location &loc, const std::vector<std::shared_ptr<ExpressionAST>> &v)
+        : values(v), ExpressionAST(loc, ExpressionType::TYPE_INIT_VALUE)
+    {
+    }
+    std::shared_ptr<llvm::Value> codeGen() override;
+    std::shared_ptr<TypeDeclaration> getTypeDeclaration() const override
+    {
+        return values[0]->getTypeDeclaration();
+    }
+
+  private:
+    std::vector<std::shared_ptr<ExpressionAST>> values;
 };
 
 class BlockExpression : public ExpressionAST

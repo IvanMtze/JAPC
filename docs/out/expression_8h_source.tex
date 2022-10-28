@@ -1,0 +1,1092 @@
+\hypertarget{expression_8h_source}{}\doxysection{expression.\+h}
+\label{expression_8h_source}\index{include/japc/AST/expression.h@{include/japc/AST/expression.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 12/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_EXPRESSION\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_EXPRESSION\_H}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}japc/AST/builtin.h"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}japc/AST/named\_object.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}japc/AST/type.h"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}japc/AST/visitor.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}japc/scanner/scanner.h"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <llvm/IR/Value.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <set>}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{namespace }Pascal}
+\DoxyCodeLine{17 \{}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1Visitable}{Visitable}}<ExpressionAST>}
+\DoxyCodeLine{20 \{}
+\DoxyCodeLine{21   \textcolor{keyword}{public}:}
+\DoxyCodeLine{22     \textcolor{keyword}{enum} ExpressionType}
+\DoxyCodeLine{23     \{}
+\DoxyCodeLine{24         TYPE\_EXPRE,}
+\DoxyCodeLine{25         TYPE\_REAL\_EXPRE,}
+\DoxyCodeLine{26         TYPE\_INTEGER\_EXPRE,}
+\DoxyCodeLine{27         TYPE\_CHAR\_EXPRE,}
+\DoxyCodeLine{28         TYPE\_NIL\_EXPRE,}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30         TYPE\_ADDRESSABLE\_EXPRE,}
+\DoxyCodeLine{31         TYPE\_STRING\_EXPRE,}
+\DoxyCodeLine{32         TYPE\_SET\_EXPRE,}
+\DoxyCodeLine{33         TYPE\_VARIABLE\_EXPRE,}
+\DoxyCodeLine{34         TYPE\_ARRAY\_EXPRE,}
+\DoxyCodeLine{35         TYPE\_POINTER\_EXPRE,}
+\DoxyCodeLine{36         TYPE\_FILE\_POINTER\_EXPRE,}
+\DoxyCodeLine{37         TYPE\_FIELD\_EXPRE,}
+\DoxyCodeLine{38         TYPE\_VARIANT\_EXPRE,}
+\DoxyCodeLine{39         TYPE\_FUNCTION\_EXPRE,}
+\DoxyCodeLine{40         TYPE\_TYPE\_CAST\_EXPRE,}
+\DoxyCodeLine{41         TYPE\_LAST\_ADDRESSABLE,}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43         TYPE\_BINARY\_EXPRE,}
+\DoxyCodeLine{44         TYPE\_UNARY\_EXPRE,}
+\DoxyCodeLine{45         TYPE\_RANGE\_EXPRE,}
+\DoxyCodeLine{46         TYPE\_BLOCK\_EXPRE,}
+\DoxyCodeLine{47         TYPE\_ASSIGN\_EXPRE,}
+\DoxyCodeLine{48         TYPE\_VAR\_DECL\_EXPRE,}
+\DoxyCodeLine{49         TYPE\_FUNCTION,}
+\DoxyCodeLine{50         TYPE\_PROTOTYPE,}
+\DoxyCodeLine{51         TYPE\_CALL\_EXPRE,}
+\DoxyCodeLine{52         TYPE\_BUILTIN\_EXPRE,}
+\DoxyCodeLine{53         TYPE\_IF\_EXPRE,}
+\DoxyCodeLine{54         TYPE\_FOR\_EXPRE,}
+\DoxyCodeLine{55         TYPE\_WHILE\_EXPRE,}
+\DoxyCodeLine{56         TYPE\_REPEAT\_EXPRE,}
+\DoxyCodeLine{57         TYPE\_WRITE,}
+\DoxyCodeLine{58         TYPE\_READ,}
+\DoxyCodeLine{59         TYPE\_LABEL\_EXPRE,}
+\DoxyCodeLine{60         TYPE\_CASE\_EXPRE,}
+\DoxyCodeLine{61         TYPE\_WITH\_EXPRE,}
+\DoxyCodeLine{62         TYPE\_RANGE\_REDUCE\_EXPRE,}
+\DoxyCodeLine{63         TYPE\_RANGE\_CHECK\_EXPRE,}
+\DoxyCodeLine{64         TYPE\_SIZE\_OF\_EXPRE,}
+\DoxyCodeLine{65         TYPE\_V\_TABLE\_EXPRE,}
+\DoxyCodeLine{66         TYPE\_VIRT\_FUNCTION,}
+\DoxyCodeLine{67         TYPE\_INIT\_VALUE,}
+\DoxyCodeLine{68         TYPE\_GOTO,}
+\DoxyCodeLine{69         TYPE\_UNIT,}
+\DoxyCodeLine{70         TYPE\_CLOSURE,}
+\DoxyCodeLine{71         TYPE\_TRAMPOLINE,}
+\DoxyCodeLine{72     \};}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74   \textcolor{keyword}{public}:}
+\DoxyCodeLine{75     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType)}
+\DoxyCodeLine{76         : location(location), expressionType(expressionType), typeDeclaration(0)}
+\DoxyCodeLine{77     \{}
+\DoxyCodeLine{78     \}}
+\DoxyCodeLine{79     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType,}
+\DoxyCodeLine{80                   std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{81         : location(location), expressionType(expressionType), typeDeclaration(typeDeclaration)}
+\DoxyCodeLine{82     \{}
+\DoxyCodeLine{83     \}}
+\DoxyCodeLine{84     \textcolor{keyword}{virtual} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{\string~ExpressionAST}}();}
+\DoxyCodeLine{85     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor)\textcolor{keyword}{ override}}
+\DoxyCodeLine{86 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{87         visitor.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{88     \}}
+\DoxyCodeLine{89     \textcolor{keyword}{virtual} std::shared\_ptr<llvm::Value> codeGen()}
+\DoxyCodeLine{90     \{}
+\DoxyCodeLine{91         assert(0 \&\& \textcolor{stringliteral}{"{}WHAT?!"{}});}
+\DoxyCodeLine{92         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{93     \};}
+\DoxyCodeLine{94     ExpressionType getExpressionType()\textcolor{keyword}{ const}}
+\DoxyCodeLine{95 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{96         \textcolor{keywordflow}{return} expressionType;}
+\DoxyCodeLine{97     \}}
+\DoxyCodeLine{98     \textcolor{keywordtype}{void} setTypeDeclaration(std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{99     \{}
+\DoxyCodeLine{100         this-\/>typeDeclaration = typeDeclaration;}
+\DoxyCodeLine{101     \}}
+\DoxyCodeLine{102     \textcolor{keyword}{virtual} std::shared\_ptr<TypeDeclaration> getTypeDeclaration()\textcolor{keyword}{ const}}
+\DoxyCodeLine{103 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{104         \textcolor{keywordflow}{return} typeDeclaration;}
+\DoxyCodeLine{105     \}}
+\DoxyCodeLine{106     \textcolor{keywordtype}{void} ensureSized() \textcolor{keyword}{const};}
+\DoxyCodeLine{107     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} getLocation()\textcolor{keyword}{ const}}
+\DoxyCodeLine{108 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{109         \textcolor{keywordflow}{return} location;}
+\DoxyCodeLine{110     \}}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112   \textcolor{keyword}{private}:}
+\DoxyCodeLine{113     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} location;}
+\DoxyCodeLine{114     \textcolor{keyword}{const} ExpressionType expressionType;}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{117     std::shared\_ptr<TypeDeclaration> typeDeclaration;}
+\DoxyCodeLine{118 \};}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RealExpression}{RealExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{121 \{}
+\DoxyCodeLine{122   \textcolor{keyword}{public}:}
+\DoxyCodeLine{123     \mbox{\hyperlink{classPascal_1_1RealExpression}{RealExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keywordtype}{double} value, std::shared\_ptr<TypeDeclaration> typeDec)}
+\DoxyCodeLine{124         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_REAL\_EXPRE, typeDec), value(value)}
+\DoxyCodeLine{125     \{}
+\DoxyCodeLine{126     \}}
+\DoxyCodeLine{127     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{128     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{129     \{}
+\DoxyCodeLine{130         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_REAL\_EXPRE;}
+\DoxyCodeLine{131     \};}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133   \textcolor{keyword}{private}:}
+\DoxyCodeLine{134     \textcolor{keywordtype}{double} value;}
+\DoxyCodeLine{135 \};}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1IntegerExpression}{IntegerExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{138 \{}
+\DoxyCodeLine{139   \textcolor{keyword}{public}:}
+\DoxyCodeLine{140     \mbox{\hyperlink{classPascal_1_1IntegerExpression}{IntegerExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, int64\_t value, std::shared\_ptr<TypeDeclaration> typeDec)}
+\DoxyCodeLine{141         : value(value), \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_INTEGER\_EXPRE, typeDec)}
+\DoxyCodeLine{142     \{}
+\DoxyCodeLine{143     \}}
+\DoxyCodeLine{144     \mbox{\hyperlink{classPascal_1_1IntegerExpression}{IntegerExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, ExpressionType expressionType, int64\_t value,}
+\DoxyCodeLine{145                       std::shared\_ptr<TypeDeclaration> typeDec)}
+\DoxyCodeLine{146         : value(value), \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, expressionType, typeDec)}
+\DoxyCodeLine{147     \{}
+\DoxyCodeLine{148     \}}
+\DoxyCodeLine{149     int64\_t getValue()}
+\DoxyCodeLine{150     \{}
+\DoxyCodeLine{151         \textcolor{keywordflow}{return} this-\/>value;}
+\DoxyCodeLine{152     \}}
+\DoxyCodeLine{153     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{154     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{155     \{}
+\DoxyCodeLine{156         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_INTEGER\_EXPRE ||}
+\DoxyCodeLine{157                expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_CHAR\_EXPRE;}
+\DoxyCodeLine{158     \}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{161     int64\_t value;}
+\DoxyCodeLine{162 \};}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1CharExpression}{CharExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1IntegerExpression}{IntegerExpression}}}
+\DoxyCodeLine{165 \{}
+\DoxyCodeLine{166   \textcolor{keyword}{public}:}
+\DoxyCodeLine{167     \mbox{\hyperlink{classPascal_1_1CharExpression}{CharExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keywordtype}{char} values, std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{168         : \mbox{\hyperlink{classPascal_1_1IntegerExpression}{IntegerExpression}}(loc, ExpressionType::TYPE\_CHAR\_EXPRE, values, typeDeclaration)}
+\DoxyCodeLine{169     \{}
+\DoxyCodeLine{170     \}}
+\DoxyCodeLine{171     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{172     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{173     \{}
+\DoxyCodeLine{174         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_CHAR\_EXPRE;}
+\DoxyCodeLine{175     \}}
+\DoxyCodeLine{176 \};}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1NullExpression}{NullExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{179 \{}
+\DoxyCodeLine{180   \textcolor{keyword}{public}:}
+\DoxyCodeLine{181     \mbox{\hyperlink{classPascal_1_1NullExpression}{NullExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc) : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_NIL\_EXPRE)}
+\DoxyCodeLine{182     \{}
+\DoxyCodeLine{183     \} \textcolor{comment}{// TODO: Add ExpreType}}
+\DoxyCodeLine{184     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{185     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{186     \{}
+\DoxyCodeLine{187         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_NIL\_EXPRE;}
+\DoxyCodeLine{188     \}}
+\DoxyCodeLine{189 \};}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{192 \{}
+\DoxyCodeLine{193   \textcolor{keyword}{public}:}
+\DoxyCodeLine{194     \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType,}
+\DoxyCodeLine{195                           std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{196         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(location, expressionType, typeDeclaration)}
+\DoxyCodeLine{197     \{}
+\DoxyCodeLine{198     \}}
+\DoxyCodeLine{199     \textcolor{keyword}{virtual} std::shared\_ptr<llvm::Value> getAddress()}
+\DoxyCodeLine{200     \{}
+\DoxyCodeLine{201         assert(0 \&\& \textcolor{stringliteral}{"{}What?!"{}});}
+\DoxyCodeLine{202         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{203     \}}
+\DoxyCodeLine{204     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{205     \textcolor{keyword}{virtual} \textcolor{keyword}{const} std::string getName()\textcolor{keyword}{ const}}
+\DoxyCodeLine{206 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{207         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{208     \}}
+\DoxyCodeLine{209     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{210     \{}
+\DoxyCodeLine{211         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() >= ExpressionType::TYPE\_ADDRESSABLE\_EXPRE \&\&}
+\DoxyCodeLine{212                expressionAst-\/>getExpressionType() <= ExpressionType::TYPE\_LAST\_ADDRESSABLE;}
+\DoxyCodeLine{213     \}}
+\DoxyCodeLine{214 \};}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1StringExpression}{StringExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}}
+\DoxyCodeLine{217 \{}
+\DoxyCodeLine{218   \textcolor{keyword}{public}:}
+\DoxyCodeLine{219     \mbox{\hyperlink{classPascal_1_1StringExpression}{StringExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType,}
+\DoxyCodeLine{220                      std::shared\_ptr<TypeDeclaration> typeDeclaration, \textcolor{keyword}{const} std::string \&value)}
+\DoxyCodeLine{221         : value(value), \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(location, expressionType, typeDeclaration)}
+\DoxyCodeLine{222     \{}
+\DoxyCodeLine{223     \}}
+\DoxyCodeLine{224     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{225     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{226     \textcolor{keyword}{const} std::string \&getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{227 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{228         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{229     \}}
+\DoxyCodeLine{230     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{231     \{}
+\DoxyCodeLine{232         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_STRING\_EXPRE;}
+\DoxyCodeLine{233     \}}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235   \textcolor{keyword}{private}:}
+\DoxyCodeLine{236     std::string value;}
+\DoxyCodeLine{237 \};}
+\DoxyCodeLine{238 }
+\DoxyCodeLine{239 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1SetExpression}{SetExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}}
+\DoxyCodeLine{240 \{}
+\DoxyCodeLine{241   \textcolor{keyword}{public}:}
+\DoxyCodeLine{242     \mbox{\hyperlink{classPascal_1_1SetExpression}{SetExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType,}
+\DoxyCodeLine{243                   std::shared\_ptr<TypeDeclaration> typeDeclaration,}
+\DoxyCodeLine{244                   \textcolor{keyword}{const} std::vector<std::shared\_ptr<ExpressionAST>> \&values)}
+\DoxyCodeLine{245         : values(values), \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(location, expressionType, typeDeclaration)}
+\DoxyCodeLine{246     \{}
+\DoxyCodeLine{247     \}}
+\DoxyCodeLine{248     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{249     std::shared\_ptr<llvm::Value> makeConstantSet(\mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *type);}
+\DoxyCodeLine{250     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{251     \{}
+\DoxyCodeLine{252         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_SET\_EXPRE;}
+\DoxyCodeLine{253     \}}
+\DoxyCodeLine{254 }
+\DoxyCodeLine{255   \textcolor{keyword}{private}:}
+\DoxyCodeLine{256     std::vector<std::shared\_ptr<ExpressionAST>> values;}
+\DoxyCodeLine{257 \};}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}}
+\DoxyCodeLine{260 \{}
+\DoxyCodeLine{261   \textcolor{keyword}{public}:}
+\DoxyCodeLine{262     \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, \textcolor{keyword}{const} std::string \&name,}
+\DoxyCodeLine{263                        std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{264         : \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(location, ExpressionType::TYPE\_VARIABLE\_EXPRE, typeDeclaration), name(name)}
+\DoxyCodeLine{265     \{}
+\DoxyCodeLine{266     \}}
+\DoxyCodeLine{267     \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType, \textcolor{keyword}{const} std::string \&name,}
+\DoxyCodeLine{268                        std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{269         : \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(location, expressionType, typeDeclaration), name(name)}
+\DoxyCodeLine{270     \{}
+\DoxyCodeLine{271     \}}
+\DoxyCodeLine{272     \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, ExpressionType expressionType,}
+\DoxyCodeLine{273                        std::shared\_ptr<VariableExpression> variableExpre,}
+\DoxyCodeLine{274                        std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{275         : name(variableExpre-\/>name), \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(location, expressionType, typeDeclaration)}
+\DoxyCodeLine{276     \{}
+\DoxyCodeLine{277     \}}
+\DoxyCodeLine{278     \textcolor{keyword}{const} std::string getName()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{279 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{280         \textcolor{keywordflow}{return} name;}
+\DoxyCodeLine{281     \}}
+\DoxyCodeLine{282     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{283     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{284     \{}
+\DoxyCodeLine{285         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() >= ExpressionType::TYPE\_VARIABLE\_EXPRE \&\&}
+\DoxyCodeLine{286                expressionAst-\/>getExpressionType() <= ExpressionType::TYPE\_LAST\_ADDRESSABLE;}
+\DoxyCodeLine{287     \}}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{290     std::string name;}
+\DoxyCodeLine{291 \};}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{293 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ArrayExpression}{ArrayExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}}
+\DoxyCodeLine{294 \{}
+\DoxyCodeLine{295   \textcolor{keyword}{public}:}
+\DoxyCodeLine{296     \mbox{\hyperlink{classPascal_1_1ArrayExpression}{ArrayExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> v,}
+\DoxyCodeLine{297                     \textcolor{keyword}{const} std::vector<std::shared\_ptr<ExpressionAST>> \&inds,}
+\DoxyCodeLine{298                     \textcolor{keyword}{const} std::vector<std::shared\_ptr<RangeDeclaration>> \&rangeDeclaration,}
+\DoxyCodeLine{299                     std::shared\_ptr<TypeDeclaration> typeDeclaration);}
+\DoxyCodeLine{300     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{301     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{302     \{}
+\DoxyCodeLine{303         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_ARRAY\_EXPRE;}
+\DoxyCodeLine{304     \}}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&v) \textcolor{keyword}{override};}
+\DoxyCodeLine{307 }
+\DoxyCodeLine{308   \textcolor{keyword}{private}:}
+\DoxyCodeLine{309     std::shared\_ptr<VariableExpression> expression;}
+\DoxyCodeLine{310     std::vector<std::shared\_ptr<ExpressionAST>> indices;}
+\DoxyCodeLine{311     std::vector<std::shared\_ptr<RangeDeclaration>> ranges;}
+\DoxyCodeLine{312     std::vector<size\_t> indexmul;}
+\DoxyCodeLine{313 \};}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1PointerExpression}{PointerExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}}
+\DoxyCodeLine{316 \{}
+\DoxyCodeLine{317   \textcolor{keyword}{public}:}
+\DoxyCodeLine{318     \mbox{\hyperlink{classPascal_1_1PointerExpression}{PointerExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, std::shared\_ptr<VariableExpression> variableExpre,}
+\DoxyCodeLine{319                       std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{320         : pointer(variableExpre),}
+\DoxyCodeLine{321           \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(location, ExpressionType::TYPE\_POINTER\_EXPRE, variableExpre, typeDeclaration)}
+\DoxyCodeLine{322     \{}
+\DoxyCodeLine{323     \}}
+\DoxyCodeLine{324     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{325     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{326     \{}
+\DoxyCodeLine{327         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_POINTER\_EXPRE;}
+\DoxyCodeLine{328     \}}
+\DoxyCodeLine{329     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{330 }
+\DoxyCodeLine{331   \textcolor{keyword}{private}:}
+\DoxyCodeLine{332     std::shared\_ptr<ExpressionAST> pointer;}
+\DoxyCodeLine{333 \};}
+\DoxyCodeLine{334 }
+\DoxyCodeLine{335 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FilePointerExpression}{FilePointerExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}}
+\DoxyCodeLine{336 \{}
+\DoxyCodeLine{337   \textcolor{keyword}{public}:}
+\DoxyCodeLine{338     \mbox{\hyperlink{classPascal_1_1FilePointerExpression}{FilePointerExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> varExpre,}
+\DoxyCodeLine{339                           std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{340         : pointer(varExpre), \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(loc, ExpressionType::TYPE\_FILE\_POINTER\_EXPRE, varExpre, typeDeclaration)}
+\DoxyCodeLine{341     \{}
+\DoxyCodeLine{342     \}}
+\DoxyCodeLine{343     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{344     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{345     \{}
+\DoxyCodeLine{346         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_FILE\_POINTER\_EXPRE;}
+\DoxyCodeLine{347     \}}
+\DoxyCodeLine{348     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{349 }
+\DoxyCodeLine{350   \textcolor{keyword}{private}:}
+\DoxyCodeLine{351     std::shared\_ptr<ExpressionAST> pointer;}
+\DoxyCodeLine{352 \};}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FieldExpression}{FieldExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}}
+\DoxyCodeLine{355 \{}
+\DoxyCodeLine{356   \textcolor{keyword}{public}:}
+\DoxyCodeLine{357     \mbox{\hyperlink{classPascal_1_1FieldExpression}{FieldExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> variableExpression, \textcolor{keywordtype}{int} element,}
+\DoxyCodeLine{358                     std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{359         : element(element), expression(variableExpression),}
+\DoxyCodeLine{360           \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(loc, ExpressionType::TYPE\_FIELD\_EXPRE, variableExpression, typeDeclaration)}
+\DoxyCodeLine{361     \{}
+\DoxyCodeLine{362     \}}
+\DoxyCodeLine{363     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{364     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{365     \{}
+\DoxyCodeLine{366         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_FIELD\_EXPRE;}
+\DoxyCodeLine{367     \}}
+\DoxyCodeLine{368     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{369 }
+\DoxyCodeLine{370   \textcolor{keyword}{private}:}
+\DoxyCodeLine{371     std::shared\_ptr<VariableExpression> expression;}
+\DoxyCodeLine{372     \textcolor{keywordtype}{int} element;}
+\DoxyCodeLine{373 \};}
+\DoxyCodeLine{374 }
+\DoxyCodeLine{375 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1VariantFieldExpression}{VariantFieldExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}}
+\DoxyCodeLine{376 \{}
+\DoxyCodeLine{377   \textcolor{keyword}{public}:}
+\DoxyCodeLine{378     \mbox{\hyperlink{classPascal_1_1VariantFieldExpression}{VariantFieldExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> variableExpression, \textcolor{keywordtype}{int} element,}
+\DoxyCodeLine{379                            std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{380         : element(element), expre(variableExpression),}
+\DoxyCodeLine{381           \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(loc, ExpressionType::TYPE\_VARIANT\_EXPRE, variableExpression, typeDeclaration)}
+\DoxyCodeLine{382     \{}
+\DoxyCodeLine{383     \}}
+\DoxyCodeLine{384     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{385     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{386     \{}
+\DoxyCodeLine{387         expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_VARIANT\_EXPRE;}
+\DoxyCodeLine{388     \}}
+\DoxyCodeLine{389 }
+\DoxyCodeLine{390   \textcolor{keyword}{private}:}
+\DoxyCodeLine{391     std::shared\_ptr<VariableExpression> expre;}
+\DoxyCodeLine{392     \textcolor{keywordtype}{int} element;}
+\DoxyCodeLine{393 \};}
+\DoxyCodeLine{394 }
+\DoxyCodeLine{395 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1BinaryExpression}{BinaryExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{396 \{}
+\DoxyCodeLine{397   \textcolor{keyword}{public}:}
+\DoxyCodeLine{398     \mbox{\hyperlink{classPascal_1_1BinaryExpression}{BinaryExpression}}(\mbox{\hyperlink{classPascal_1_1Token}{Token}} tok, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *lhs, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *rhs)}
+\DoxyCodeLine{399         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(tok.getTokenPos(), ExpressionType::TYPE\_BINARY\_EXPRE), oper(tok), lhs(lhs), rhs(rhs)}
+\DoxyCodeLine{400     \{}
+\DoxyCodeLine{401     \}}
+\DoxyCodeLine{402     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{403     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{404     \{}
+\DoxyCodeLine{405         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_BINARY\_EXPRE;}
+\DoxyCodeLine{406     \}}
+\DoxyCodeLine{407     std::shared\_ptr<TypeDeclaration> getTypeDeclaration() \textcolor{keyword}{const override};}
+\DoxyCodeLine{408     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor)\textcolor{keyword}{ override}}
+\DoxyCodeLine{409 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{410         rhs-\/>accept(visitor);}
+\DoxyCodeLine{411         lhs-\/>accept(visitor);}
+\DoxyCodeLine{412         visitor.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{413     \}}
+\DoxyCodeLine{414 }
+\DoxyCodeLine{415   \textcolor{keyword}{private}:}
+\DoxyCodeLine{416     std::shared\_ptr<llvm::Value> setCodeGen();}
+\DoxyCodeLine{417     std::shared\_ptr<llvm::Value> inlineSetFunc(\textcolor{keyword}{const} std::string \&name);}
+\DoxyCodeLine{418     std::shared\_ptr<llvm::Value> callSetFunc(\textcolor{keyword}{const} std::string \&name, \textcolor{keywordtype}{bool} resultTypeIsSet);}
+\DoxyCodeLine{419     std::shared\_ptr<llvm::Value> callStrFunc(\textcolor{keyword}{const} std::string \&name);}
+\DoxyCodeLine{420     std::shared\_ptr<llvm::Value> callArrFunc(\textcolor{keyword}{const} std::string \&name, \textcolor{keywordtype}{size\_t} size);}
+\DoxyCodeLine{421     \mbox{\hyperlink{classPascal_1_1Token}{Token}} oper;}
+\DoxyCodeLine{422     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *lhs;}
+\DoxyCodeLine{423     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *rhs;}
+\DoxyCodeLine{424 \};}
+\DoxyCodeLine{425 }
+\DoxyCodeLine{426 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1UnaryExpression}{UnaryExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{427 \{}
+\DoxyCodeLine{428   \textcolor{keyword}{public}:}
+\DoxyCodeLine{429     \mbox{\hyperlink{classPascal_1_1UnaryExpression}{UnaryExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1Token}{Token}} tk, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{430         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_UNARY\_EXPRE), op(tk), rhs(expressionAst)\{\};}
+\DoxyCodeLine{431     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{432     std::shared\_ptr<TypeDeclaration> getTypeDeclaration()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{433 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{434         \textcolor{keywordflow}{return} rhs-\/>getTypeDeclaration();}
+\DoxyCodeLine{435     \}}
+\DoxyCodeLine{436     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{437     \{}
+\DoxyCodeLine{438         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_UNARY\_EXPRE;}
+\DoxyCodeLine{439     \}}
+\DoxyCodeLine{440     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor)\textcolor{keyword}{ override}}
+\DoxyCodeLine{441 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{442         rhs-\/>accept(visitor);}
+\DoxyCodeLine{443         visitor.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{444     \}}
+\DoxyCodeLine{445 }
+\DoxyCodeLine{446   \textcolor{keyword}{private}:}
+\DoxyCodeLine{447     \mbox{\hyperlink{classPascal_1_1Token}{Token}} op;}
+\DoxyCodeLine{448     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *rhs;}
+\DoxyCodeLine{449 \};}
+\DoxyCodeLine{450 }
+\DoxyCodeLine{451 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RangeExpression}{RangeExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{452 \{}
+\DoxyCodeLine{453   \textcolor{keyword}{public}:}
+\DoxyCodeLine{454     \mbox{\hyperlink{classPascal_1_1RangeExpression}{RangeExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *lhs, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *rhs)}
+\DoxyCodeLine{455         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_RANGE\_EXPRE), low(lhs), high(rhs)}
+\DoxyCodeLine{456     \{}
+\DoxyCodeLine{457     \}}
+\DoxyCodeLine{458     std::shared\_ptr<TypeDeclaration> getTypeDeclaration()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{459 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{460         \textcolor{keywordflow}{return} low-\/>getTypeDeclaration();}
+\DoxyCodeLine{461     \}}
+\DoxyCodeLine{462     std::shared\_ptr<llvm::Value> getLow();}
+\DoxyCodeLine{463     std::shared\_ptr<llvm::Value> getHigh();}
+\DoxyCodeLine{464     std::shared\_ptr<ExpressionAST> getLowExpression();}
+\DoxyCodeLine{465     std::shared\_ptr<ExpressionAST> getHighExpression();}
+\DoxyCodeLine{466     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{467     \{}
+\DoxyCodeLine{468         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_RANGE\_EXPRE;}
+\DoxyCodeLine{469     \}}
+\DoxyCodeLine{470     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor)\textcolor{keyword}{ override}}
+\DoxyCodeLine{471 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{472         low-\/>accept(visitor);}
+\DoxyCodeLine{473         high-\/>accept(visitor);}
+\DoxyCodeLine{474         visitor.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{475     \}}
+\DoxyCodeLine{476 }
+\DoxyCodeLine{477   \textcolor{keyword}{private}:}
+\DoxyCodeLine{478     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *low;}
+\DoxyCodeLine{479     \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *high;}
+\DoxyCodeLine{480 \};}
+\DoxyCodeLine{481 }
+\DoxyCodeLine{482 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1InitValue}{InitValue}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{483 \{}
+\DoxyCodeLine{484   \textcolor{keyword}{public}:}
+\DoxyCodeLine{485     \mbox{\hyperlink{classPascal_1_1InitValue}{InitValue}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keyword}{const} std::vector<std::shared\_ptr<ExpressionAST>> \&v)}
+\DoxyCodeLine{486         : values(v), \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_INIT\_VALUE)}
+\DoxyCodeLine{487     \{}
+\DoxyCodeLine{488     \}}
+\DoxyCodeLine{489     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{490     std::shared\_ptr<TypeDeclaration> getTypeDeclaration()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{491 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{492         \textcolor{keywordflow}{return} values[0]-\/>getTypeDeclaration();}
+\DoxyCodeLine{493     \}}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{495   \textcolor{keyword}{private}:}
+\DoxyCodeLine{496     std::vector<std::shared\_ptr<ExpressionAST>> values;}
+\DoxyCodeLine{497 \};}
+\DoxyCodeLine{498 }
+\DoxyCodeLine{499 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1BlockExpression}{BlockExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{500 \{}
+\DoxyCodeLine{501   \textcolor{keyword}{public}:}
+\DoxyCodeLine{502     \mbox{\hyperlink{classPascal_1_1BlockExpression}{BlockExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::vector<std::shared\_ptr<ExpressionAST>> body)}
+\DoxyCodeLine{503         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_BLOCK\_EXPRE), content(body)}
+\DoxyCodeLine{504     \{}
+\DoxyCodeLine{505     \}}
+\DoxyCodeLine{506     \textcolor{keywordtype}{bool} isEmpty()}
+\DoxyCodeLine{507     \{}
+\DoxyCodeLine{508         \textcolor{keywordflow}{return} this-\/>content.empty();}
+\DoxyCodeLine{509     \}}
+\DoxyCodeLine{510     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{511     std::vector<std::shared\_ptr<ExpressionAST>> \&getBody()}
+\DoxyCodeLine{512     \{}
+\DoxyCodeLine{513         \textcolor{keywordflow}{return} this-\/>content;}
+\DoxyCodeLine{514     \}}
+\DoxyCodeLine{515     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{516     \{}
+\DoxyCodeLine{517         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_BLOCK\_EXPRE;}
+\DoxyCodeLine{518     \}}
+\DoxyCodeLine{519     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{520 }
+\DoxyCodeLine{521   \textcolor{keyword}{private}:}
+\DoxyCodeLine{522     std::vector<std::shared\_ptr<ExpressionAST>> content;}
+\DoxyCodeLine{523 \};}
+\DoxyCodeLine{524 }
+\DoxyCodeLine{525 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1AssignExpression}{AssignExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{526 \{}
+\DoxyCodeLine{527   \textcolor{keyword}{public}:}
+\DoxyCodeLine{528     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{529     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{530     \{}
+\DoxyCodeLine{531         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_ASSIGN\_EXPRE;}
+\DoxyCodeLine{532     \}}
+\DoxyCodeLine{533     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor)\textcolor{keyword}{ override}}
+\DoxyCodeLine{534 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{535         lhs-\/>accept(visitor);}
+\DoxyCodeLine{536         visitor.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{537         rhs-\/>accept(visitor);}
+\DoxyCodeLine{538     \}}
+\DoxyCodeLine{539 }
+\DoxyCodeLine{540   \textcolor{keyword}{private}:}
+\DoxyCodeLine{541     std::shared\_ptr<llvm::Value> assignStr();}
+\DoxyCodeLine{542     std::shared\_ptr<llvm::Value> assignSet();}
+\DoxyCodeLine{543     std::shared\_ptr<ExpressionAST> lhs;}
+\DoxyCodeLine{544     std::shared\_ptr<ExpressionAST> rhs;}
+\DoxyCodeLine{545 \};}
+\DoxyCodeLine{546 }
+\DoxyCodeLine{547 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Function}{Function}};}
+\DoxyCodeLine{548 }
+\DoxyCodeLine{549 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1VariableDeclarationExpression}{VariableDeclarationExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{550 \{}
+\DoxyCodeLine{551   \textcolor{keyword}{public}:}
+\DoxyCodeLine{552     \mbox{\hyperlink{classPascal_1_1VariableDeclarationExpression}{VariableDeclarationExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::vector<std::shared\_ptr<VariableDefinition>> vars)}
+\DoxyCodeLine{553         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_VAR\_DECL\_EXPRE), vars(vars), function(0)}
+\DoxyCodeLine{554     \{}
+\DoxyCodeLine{555     \}}
+\DoxyCodeLine{556     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{557     \textcolor{keywordtype}{void} setFunction(std::shared\_ptr<Function> function)}
+\DoxyCodeLine{558     \{}
+\DoxyCodeLine{559         this-\/>function = function;}
+\DoxyCodeLine{560     \}}
+\DoxyCodeLine{561     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{562     \{}
+\DoxyCodeLine{563         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_VAR\_DECL\_EXPRE;}
+\DoxyCodeLine{564     \}}
+\DoxyCodeLine{565     \textcolor{keyword}{const} std::vector<std::shared\_ptr<VariableDefinition>> getVars()}
+\DoxyCodeLine{566     \{}
+\DoxyCodeLine{567         \textcolor{keywordflow}{return} this-\/>vars;}
+\DoxyCodeLine{568     \}}
+\DoxyCodeLine{569 }
+\DoxyCodeLine{570   \textcolor{keyword}{private}:}
+\DoxyCodeLine{571     std::vector<std::shared\_ptr<VariableDefinition>> vars;}
+\DoxyCodeLine{572     std::shared\_ptr<Function> function;}
+\DoxyCodeLine{573 \};}
+\DoxyCodeLine{574 }
+\DoxyCodeLine{575 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{576 \{}
+\DoxyCodeLine{577   \textcolor{keyword}{public}:}
+\DoxyCodeLine{578     \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keyword}{const} std::string \&name,}
+\DoxyCodeLine{579                         \textcolor{keyword}{const} std::vector<std::shared\_ptr<VariableDefinition>> args,}
+\DoxyCodeLine{580                         std::shared\_ptr<TypeDeclaration> resultType)}
+\DoxyCodeLine{581         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_PROTOTYPE, resultType), args(args), name(name), function(0),}
+\DoxyCodeLine{582           isForward(\textcolor{keyword}{false}), llvmFunction(0)}
+\DoxyCodeLine{583     \{}
+\DoxyCodeLine{584     \}}
+\DoxyCodeLine{585     std::shared\_ptr<llvm::Function> create(\textcolor{keyword}{const} std::string \&namePrefix);}
+\DoxyCodeLine{586     std::shared\_ptr<llvm::Function> getLlvmFunction()\textcolor{keyword}{ const}}
+\DoxyCodeLine{587 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{588         \textcolor{keywordflow}{return} llvmFunction;}
+\DoxyCodeLine{589     \}}
+\DoxyCodeLine{590     \textcolor{keywordtype}{void} createArgumentsAlloca();}
+\DoxyCodeLine{591     std::string getName()\textcolor{keyword}{ const}}
+\DoxyCodeLine{592 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{593         \textcolor{keywordflow}{return} this-\/>name;}
+\DoxyCodeLine{594     \}}
+\DoxyCodeLine{595     \textcolor{keyword}{const} std::vector<std::shared\_ptr<VariableDefinition>> getArgs()}
+\DoxyCodeLine{596     \{}
+\DoxyCodeLine{597         \textcolor{keywordflow}{return} this-\/>args;}
+\DoxyCodeLine{598     \}}
+\DoxyCodeLine{599     \textcolor{keywordtype}{bool} isForwarded()\textcolor{keyword}{ const}}
+\DoxyCodeLine{600 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{601         \textcolor{keywordflow}{return} this-\/>isForward;}
+\DoxyCodeLine{602     \}}
+\DoxyCodeLine{603     \textcolor{keywordtype}{void} setIsForward(\textcolor{keywordtype}{bool} forward)}
+\DoxyCodeLine{604     \{}
+\DoxyCodeLine{605         this-\/>isForward = forward;}
+\DoxyCodeLine{606     \}}
+\DoxyCodeLine{607     \textcolor{keywordtype}{void} setFunction(std::shared\_ptr<Function> function)}
+\DoxyCodeLine{608     \{}
+\DoxyCodeLine{609         this-\/>function = function;}
+\DoxyCodeLine{610     \}}
+\DoxyCodeLine{611     std::shared\_ptr<Function> getFunction()\textcolor{keyword}{ const}}
+\DoxyCodeLine{612 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{613         \textcolor{keywordflow}{return} this-\/>function;}
+\DoxyCodeLine{614     \}}
+\DoxyCodeLine{615     \textcolor{keywordtype}{void} addExtraArgsFirst(std::vector<std::shared\_ptr<VariableDefinition>> vars);}
+\DoxyCodeLine{616     \textcolor{keywordtype}{bool} operator==(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}} \&rhs) \textcolor{keyword}{const};}
+\DoxyCodeLine{617     \textcolor{keywordtype}{bool} isMatchWithoutClosure(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}} *rhs) \textcolor{keyword}{const};}
+\DoxyCodeLine{618     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{619     \{}
+\DoxyCodeLine{620         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_PROTOTYPE;}
+\DoxyCodeLine{621     \}}
+\DoxyCodeLine{622 }
+\DoxyCodeLine{623   \textcolor{keyword}{private}:}
+\DoxyCodeLine{624     std::string name;}
+\DoxyCodeLine{625     std::vector<std::shared\_ptr<VariableDefinition>> args;}
+\DoxyCodeLine{626     std::shared\_ptr<Function> function;}
+\DoxyCodeLine{627     \textcolor{keywordtype}{bool} isForward;}
+\DoxyCodeLine{628     std::shared\_ptr<llvm::Function> llvmFunction;}
+\DoxyCodeLine{629 \};}
+\DoxyCodeLine{630 }
+\DoxyCodeLine{631 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Function}{Function}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{632 \{}
+\DoxyCodeLine{633   \textcolor{keyword}{public}:}
+\DoxyCodeLine{634     \mbox{\hyperlink{classPascal_1_1Function}{Function}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<PrototypeExpression> prototype,}
+\DoxyCodeLine{635              \textcolor{keyword}{const} std::vector<std::shared\_ptr<VariableDeclarationExpression>> variablesDecl,}
+\DoxyCodeLine{636              std::shared\_ptr<BlockExpression> block);}
+\DoxyCodeLine{637     std::shared\_ptr<llvm::Function> codeGen() \textcolor{keyword}{const};}
+\DoxyCodeLine{638     std::shared\_ptr<llvm::Function> codeGen(\textcolor{keyword}{const} std::string \&namePrefix);}
+\DoxyCodeLine{639     \textcolor{keyword}{const} std::shared\_ptr<PrototypeExpression> getPrototype()\textcolor{keyword}{ const}}
+\DoxyCodeLine{640 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{641         \textcolor{keywordflow}{return} this-\/>prototype;}
+\DoxyCodeLine{642     \}}
+\DoxyCodeLine{643     \textcolor{keywordtype}{void} addSubFunctions(\textcolor{keyword}{const} std::vector<std::shared\_ptr<Function>> subs)}
+\DoxyCodeLine{644     \{}
+\DoxyCodeLine{645         subFunctions = subs;}
+\DoxyCodeLine{646     \}}
+\DoxyCodeLine{647     \textcolor{keywordtype}{void} setParent(std::shared\_ptr<Function> parent)}
+\DoxyCodeLine{648     \{}
+\DoxyCodeLine{649         this-\/>parent = parent;}
+\DoxyCodeLine{650     \}}
+\DoxyCodeLine{651     \textcolor{keyword}{const} std::shared\_ptr<Function> getParent()}
+\DoxyCodeLine{652     \{}
+\DoxyCodeLine{653         \textcolor{keywordflow}{return} this-\/>parent;}
+\DoxyCodeLine{654     \}}
+\DoxyCodeLine{655     \textcolor{keyword}{const} std::vector<std::shared\_ptr<Function>> getSubFunctions()}
+\DoxyCodeLine{656     \{}
+\DoxyCodeLine{657         \textcolor{keywordflow}{return} subFunctions;}
+\DoxyCodeLine{658     \}}
+\DoxyCodeLine{659     \textcolor{keywordtype}{void} setUsedVars(\textcolor{keyword}{const} std::set<VariableDefinition> \&usedVariables)}
+\DoxyCodeLine{660     \{}
+\DoxyCodeLine{661         this-\/>usedVariables = usedVariables;}
+\DoxyCodeLine{662     \}}
+\DoxyCodeLine{663     \textcolor{keyword}{const} std::set<VariableDefinition> \&getUsedVars()}
+\DoxyCodeLine{664     \{}
+\DoxyCodeLine{665         \textcolor{keywordflow}{return} this-\/>usedVariables;}
+\DoxyCodeLine{666     \}}
+\DoxyCodeLine{667     std::shared\_ptr<TypeDeclaration> getReturnType();}
+\DoxyCodeLine{668     \textcolor{keyword}{const} std::string closureName()}
+\DoxyCodeLine{669     \{}
+\DoxyCodeLine{670         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}\$\$CLOSURE"{}};}
+\DoxyCodeLine{671     \}}
+\DoxyCodeLine{672     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{673     \{}
+\DoxyCodeLine{674         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_FUNCTION;}
+\DoxyCodeLine{675     \}}
+\DoxyCodeLine{676     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&v) \textcolor{keyword}{override};}
+\DoxyCodeLine{677     \textcolor{keywordtype}{void} setEndLoc(\mbox{\hyperlink{classPascal_1_1Location}{Location}} loc)}
+\DoxyCodeLine{678     \{}
+\DoxyCodeLine{679         this-\/>endLoc = loc;}
+\DoxyCodeLine{680     \}}
+\DoxyCodeLine{681 }
+\DoxyCodeLine{682   \textcolor{keyword}{private}:}
+\DoxyCodeLine{683     std::shared\_ptr<PrototypeExpression> prototype;}
+\DoxyCodeLine{684     std::vector<std::shared\_ptr<VariableDeclarationExpression>> variablesDecl;}
+\DoxyCodeLine{685     std::shared\_ptr<BlockExpression> body;}
+\DoxyCodeLine{686     std::vector<std::shared\_ptr<Function>> subFunctions;}
+\DoxyCodeLine{687     std::set<VariableDefinition> usedVariables;}
+\DoxyCodeLine{688     std::shared\_ptr<Function> parent;}
+\DoxyCodeLine{689     std::shared\_ptr<TypeDeclaration> returnType;}
+\DoxyCodeLine{690     \mbox{\hyperlink{classPascal_1_1Location}{Location}} endLoc;}
+\DoxyCodeLine{691 \};}
+\DoxyCodeLine{692 }
+\DoxyCodeLine{693 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FunctionExpression}{FunctionExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}}
+\DoxyCodeLine{694 \{}
+\DoxyCodeLine{695   \textcolor{keyword}{public}:}
+\DoxyCodeLine{696     \mbox{\hyperlink{classPascal_1_1FunctionExpression}{FunctionExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keyword}{const} std::shared\_ptr<PrototypeExpression> p)}
+\DoxyCodeLine{697         : prototype(p),}
+\DoxyCodeLine{698           \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}}(loc, ExpressionType::TYPE\_FUNCTION\_EXPRE, p-\/>getName(), p-\/>getTypeDeclaration())}
+\DoxyCodeLine{699     \{}
+\DoxyCodeLine{700     \}}
+\DoxyCodeLine{701     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{702     \textcolor{keyword}{const} std::shared\_ptr<PrototypeExpression> getPrototype()\textcolor{keyword}{ const}}
+\DoxyCodeLine{703 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{704         \textcolor{keywordflow}{return} this-\/>prototype;}
+\DoxyCodeLine{705     \}}
+\DoxyCodeLine{706     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{707     \{}
+\DoxyCodeLine{708         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_FUNCTION\_EXPRE;}
+\DoxyCodeLine{709     \}}
+\DoxyCodeLine{710 }
+\DoxyCodeLine{711   \textcolor{keyword}{private}:}
+\DoxyCodeLine{712     \textcolor{keyword}{const} std::shared\_ptr<PrototypeExpression> prototype;}
+\DoxyCodeLine{713 \};}
+\DoxyCodeLine{714 }
+\DoxyCodeLine{715 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1GotoExpression}{GotoExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{716 \{}
+\DoxyCodeLine{717   \textcolor{keyword}{public}:}
+\DoxyCodeLine{718     \mbox{\hyperlink{classPascal_1_1GotoExpression}{GotoExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keywordtype}{int} pos) : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_GOTO), pos(pos)}
+\DoxyCodeLine{719     \{}
+\DoxyCodeLine{720     \}}
+\DoxyCodeLine{721     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{722     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{723     \{}
+\DoxyCodeLine{724         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_GOTO;}
+\DoxyCodeLine{725     \}}
+\DoxyCodeLine{726 }
+\DoxyCodeLine{727   \textcolor{keyword}{private}:}
+\DoxyCodeLine{728     \textcolor{keywordtype}{int} pos;}
+\DoxyCodeLine{729 \};}
+\DoxyCodeLine{730 }
+\DoxyCodeLine{731 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1SizeOfExpression}{SizeOfExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{732 \{}
+\DoxyCodeLine{733   \textcolor{keyword}{public}:}
+\DoxyCodeLine{734     \mbox{\hyperlink{classPascal_1_1SizeOfExpression}{SizeOfExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{735         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_SIZE\_OF\_EXPRE, typeDeclaration)}
+\DoxyCodeLine{736     \{}
+\DoxyCodeLine{737     \}}
+\DoxyCodeLine{738     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{739     std::shared\_ptr<TypeDeclaration> getTypeDeclaration()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{740 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{741         \textcolor{keywordflow}{return} getIntegerType();}
+\DoxyCodeLine{742     \}}
+\DoxyCodeLine{743     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{744     \{}
+\DoxyCodeLine{745         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_SIZE\_OF\_EXPRE;}
+\DoxyCodeLine{746     \}}
+\DoxyCodeLine{747 \};}
+\DoxyCodeLine{748 }
+\DoxyCodeLine{749 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1TypeCastExpression}{TypeCastExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}}
+\DoxyCodeLine{750 \{}
+\DoxyCodeLine{751   \textcolor{keyword}{public}:}
+\DoxyCodeLine{752     \mbox{\hyperlink{classPascal_1_1TypeCastExpression}{TypeCastExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst,}
+\DoxyCodeLine{753                        std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{754         : expr(expressionAst), \mbox{\hyperlink{classPascal_1_1AddressableExpression}{AddressableExpression}}(loc, ExpressionType::TYPE\_TYPE\_CAST\_EXPRE, typeDeclaration)\{\};}
+\DoxyCodeLine{755     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{756     std::shared\_ptr<llvm::Value> getAddress() \textcolor{keyword}{override};}
+\DoxyCodeLine{757     std::shared\_ptr<ExpressionAST> getExpressionn()}
+\DoxyCodeLine{758     \{}
+\DoxyCodeLine{759         \textcolor{keywordflow}{return} expr;}
+\DoxyCodeLine{760     \}}
+\DoxyCodeLine{761     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{762     \{}
+\DoxyCodeLine{763         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_TYPE\_CAST\_EXPRE;}
+\DoxyCodeLine{764     \}}
+\DoxyCodeLine{765     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&v)\textcolor{keyword}{ override}}
+\DoxyCodeLine{766 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{767         expr-\/>accept(v);}
+\DoxyCodeLine{768         v.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{769     \}}
+\DoxyCodeLine{770 }
+\DoxyCodeLine{771   \textcolor{keyword}{private}:}
+\DoxyCodeLine{772     std::shared\_ptr<ExpressionAST> expr;}
+\DoxyCodeLine{773 \};}
+\DoxyCodeLine{774 }
+\DoxyCodeLine{775 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RangeReduceExpression}{RangeReduceExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{776 \{}
+\DoxyCodeLine{777   \textcolor{keyword}{public}:}
+\DoxyCodeLine{778     \mbox{\hyperlink{classPascal_1_1RangeReduceExpression}{RangeReduceExpression}}(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst, \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{RangeDeclaration}} *r)}
+\DoxyCodeLine{779         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(expressionAst-\/>getLocation(), ExpressionType::TYPE\_RANGE\_REDUCE\_EXPRE,}
+\DoxyCodeLine{780                         expressionAst-\/>getTypeDeclaration()),}
+\DoxyCodeLine{781           expr(expressionAst), range(r)}
+\DoxyCodeLine{782     \{}
+\DoxyCodeLine{783     \}}
+\DoxyCodeLine{784     \mbox{\hyperlink{classPascal_1_1RangeReduceExpression}{RangeReduceExpression}}(ExpressionType expressionType, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst, \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{RangeDeclaration}} *r)}
+\DoxyCodeLine{785         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(expressionAst-\/>getLocation(), expressionType, expressionAst-\/>getTypeDeclaration()),}
+\DoxyCodeLine{786           expr(expressionAst), range(r)}
+\DoxyCodeLine{787     \{}
+\DoxyCodeLine{788     \}}
+\DoxyCodeLine{789     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{790     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&v)\textcolor{keyword}{ override}}
+\DoxyCodeLine{791 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{792         expr-\/>accept(v);}
+\DoxyCodeLine{793         v.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{794     \}}
+\DoxyCodeLine{795     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{796     \{}
+\DoxyCodeLine{797         \textcolor{keywordflow}{return} (expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_RANGE\_REDUCE\_EXPRE) ||}
+\DoxyCodeLine{798                (expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_RANGE\_CHECK\_EXPRE);}
+\DoxyCodeLine{799     \}}
+\DoxyCodeLine{800 }
+\DoxyCodeLine{801   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{802     std::shared\_ptr<ExpressionAST> expr;}
+\DoxyCodeLine{803     std::shared\_ptr<RangeDeclaration> range;}
+\DoxyCodeLine{804 \};}
+\DoxyCodeLine{805 }
+\DoxyCodeLine{806 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RangeCheckExpression}{RangeCheckExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1RangeReduceExpression}{RangeReduceExpression}}}
+\DoxyCodeLine{807 \{}
+\DoxyCodeLine{808     \mbox{\hyperlink{classPascal_1_1RangeCheckExpression}{RangeCheckExpression}}(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst, \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{RangeDeclaration}} *rangeDecl)}
+\DoxyCodeLine{809         : \mbox{\hyperlink{classPascal_1_1RangeReduceExpression}{RangeReduceExpression}}(ExpressionType::TYPE\_RANGE\_CHECK\_EXPRE, expressionAst, rangeDecl)}
+\DoxyCodeLine{810     \{}
+\DoxyCodeLine{811     \}}
+\DoxyCodeLine{812     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{813     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{814     \{}
+\DoxyCodeLine{815         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_RANGE\_CHECK\_EXPRE;}
+\DoxyCodeLine{816     \}}
+\DoxyCodeLine{817 \};}
+\DoxyCodeLine{818 }
+\DoxyCodeLine{819 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1LabelExpression}{LabelExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{820 \{}
+\DoxyCodeLine{821   \textcolor{keyword}{public}:}
+\DoxyCodeLine{822     \mbox{\hyperlink{classPascal_1_1LabelExpression}{LabelExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keyword}{const} std::vector<std::pair<int, int>> \&lab,}
+\DoxyCodeLine{823                     std::shared\_ptr<ExpressionAST> stmt)}
+\DoxyCodeLine{824         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_LABEL\_EXPRE), labelsValues(lab), statement(stmt)}
+\DoxyCodeLine{825     \{}
+\DoxyCodeLine{826     \}}
+\DoxyCodeLine{827     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{828     std::shared\_ptr<llvm::Value> codeGen(std::shared\_ptr<llvm::BasicBlock> casebb,}
+\DoxyCodeLine{829                                          std::shared\_ptr<llvm::BasicBlock> afterbb);}
+\DoxyCodeLine{830     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{831     \{}
+\DoxyCodeLine{832         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_LABEL\_EXPRE;}
+\DoxyCodeLine{833     \}}
+\DoxyCodeLine{834     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{835     std::vector<std::pair<int, int>> \&getLabels()}
+\DoxyCodeLine{836     \{}
+\DoxyCodeLine{837         \textcolor{keywordflow}{return} this-\/>labelsValues;}
+\DoxyCodeLine{838     \};}
+\DoxyCodeLine{839 }
+\DoxyCodeLine{840   \textcolor{keyword}{private}:}
+\DoxyCodeLine{841     std::vector<std::pair<int, int>> labelsValues;}
+\DoxyCodeLine{842     std::shared\_ptr<ExpressionAST> statement;}
+\DoxyCodeLine{843 \};}
+\DoxyCodeLine{844 }
+\DoxyCodeLine{845 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1WithExpression}{WithExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{846 \{}
+\DoxyCodeLine{847   \textcolor{keyword}{public}:}
+\DoxyCodeLine{848     \mbox{\hyperlink{classPascal_1_1WithExpression}{WithExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *body)}
+\DoxyCodeLine{849         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_WITH\_EXPRE), body(body)}
+\DoxyCodeLine{850     \{}
+\DoxyCodeLine{851     \}}
+\DoxyCodeLine{852     std::shared\_ptr<llvm::Value> codeGen();}
+\DoxyCodeLine{853     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{854     \{}
+\DoxyCodeLine{855         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_WITH\_EXPRE;}
+\DoxyCodeLine{856     \}}
+\DoxyCodeLine{857     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor)\textcolor{keyword}{ override}}
+\DoxyCodeLine{858 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{859         body-\/>accept(visitor);}
+\DoxyCodeLine{860         visitor.visit(\textcolor{keyword}{this});}
+\DoxyCodeLine{861     \}}
+\DoxyCodeLine{862 }
+\DoxyCodeLine{863   \textcolor{keyword}{private}:}
+\DoxyCodeLine{864     std::shared\_ptr<ExpressionAST> body;}
+\DoxyCodeLine{865 \};}
+\DoxyCodeLine{866 }
+\DoxyCodeLine{867 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1CaseExpression}{CaseExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{868 \{}
+\DoxyCodeLine{869   \textcolor{keyword}{public}:}
+\DoxyCodeLine{870     \mbox{\hyperlink{classPascal_1_1CaseExpression}{CaseExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<ExpressionAST> expr,}
+\DoxyCodeLine{871                    \textcolor{keyword}{const} std::vector<std::shared\_ptr<LabelExpression>> \&labels, std::shared\_ptr<ExpressionAST> other)}
+\DoxyCodeLine{872         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_CASE\_EXPRE), expre(expr), labels(labels), otherwise(other)}
+\DoxyCodeLine{873     \{}
+\DoxyCodeLine{874     \}}
+\DoxyCodeLine{875     std::shared\_ptr<llvm::Value> codeGen();}
+\DoxyCodeLine{876 }
+\DoxyCodeLine{877     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{878     \{}
+\DoxyCodeLine{879         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_CASE\_EXPRE;}
+\DoxyCodeLine{880     \}}
+\DoxyCodeLine{881     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{882 }
+\DoxyCodeLine{883   \textcolor{keyword}{private}:}
+\DoxyCodeLine{884     std::shared\_ptr<ExpressionAST> expre;}
+\DoxyCodeLine{885     std::vector<std::shared\_ptr<LabelExpression>> labels;}
+\DoxyCodeLine{886     std::shared\_ptr<ExpressionAST> otherwise;}
+\DoxyCodeLine{887 \};}
+\DoxyCodeLine{888 }
+\DoxyCodeLine{889 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ReadExpression}{ReadExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{890 \{}
+\DoxyCodeLine{891   \textcolor{keyword}{public}:}
+\DoxyCodeLine{892     \mbox{\hyperlink{classPascal_1_1ReadExpression}{ReadExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1VariableExpression}{VariableExpression}} *file, \textcolor{keyword}{const} std::vector<ExpressionAST> args, \textcolor{keywordtype}{bool} isLn)}
+\DoxyCodeLine{893         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_READ), args(args), output(file), isReadToLn(isLn)}
+\DoxyCodeLine{894     \{}
+\DoxyCodeLine{895     \}}
+\DoxyCodeLine{896     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{897     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{898     \{}
+\DoxyCodeLine{899         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_WRITE;}
+\DoxyCodeLine{900     \}}
+\DoxyCodeLine{901     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{902 }
+\DoxyCodeLine{903   \textcolor{keyword}{private}:}
+\DoxyCodeLine{904     std::shared\_ptr<VariableExpression> output;}
+\DoxyCodeLine{905     std::vector<ExpressionAST> args;}
+\DoxyCodeLine{906     \textcolor{keywordtype}{bool} isReadToLn;}
+\DoxyCodeLine{907 \};}
+\DoxyCodeLine{908 }
+\DoxyCodeLine{909 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1WriteExpression}{WriteExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{910 \{}
+\DoxyCodeLine{911   \textcolor{keyword}{public}:}
+\DoxyCodeLine{912     \textcolor{keyword}{struct }\mbox{\hyperlink{structPascal_1_1WriteExpression_1_1wargs}{wargs}}}
+\DoxyCodeLine{913     \{}
+\DoxyCodeLine{914         \mbox{\hyperlink{structPascal_1_1WriteExpression_1_1wargs}{wargs}}() : expr(0), width(0), precision(0)}
+\DoxyCodeLine{915         \{}
+\DoxyCodeLine{916         \}}
+\DoxyCodeLine{917         \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expr;}
+\DoxyCodeLine{918         \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *width;}
+\DoxyCodeLine{919         \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *precision;}
+\DoxyCodeLine{920     \};}
+\DoxyCodeLine{921 }
+\DoxyCodeLine{922     \mbox{\hyperlink{classPascal_1_1WriteExpression}{WriteExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> out, \textcolor{keyword}{const} std::vector<wargs> \&args,}
+\DoxyCodeLine{923                     \textcolor{keywordtype}{bool} isWriteToLin)}
+\DoxyCodeLine{924         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_WRITE), output(out), args(args), isWriteToLn(isWriteToLin)}
+\DoxyCodeLine{925     \{}
+\DoxyCodeLine{926     \}}
+\DoxyCodeLine{927     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{928     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{929     \{}
+\DoxyCodeLine{930         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_WRITE;}
+\DoxyCodeLine{931     \}}
+\DoxyCodeLine{932     \textcolor{keywordtype}{void} accept(ExpressionVisitor \&expressionVisitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{933 }
+\DoxyCodeLine{934   \textcolor{keyword}{private}:}
+\DoxyCodeLine{935     std::shared\_ptr<VariableExpression> output;}
+\DoxyCodeLine{936     std::vector<wargs> args;}
+\DoxyCodeLine{937     \textcolor{keywordtype}{bool} isWriteToLn;}
+\DoxyCodeLine{938 \};}
+\DoxyCodeLine{939 }
+\DoxyCodeLine{940 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RepeatExpression}{RepeatExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{941 \{}
+\DoxyCodeLine{942   \textcolor{keyword}{public}:}
+\DoxyCodeLine{943     \mbox{\hyperlink{classPascal_1_1RepeatExpression}{RepeatExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<ExpressionAST> cond, std::shared\_ptr<ExpressionAST> body)}
+\DoxyCodeLine{944         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_REPEAT\_EXPRE), cond(cond), body(body)}
+\DoxyCodeLine{945     \{}
+\DoxyCodeLine{946     \}}
+\DoxyCodeLine{947     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{948     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{949     \{}
+\DoxyCodeLine{950         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_REPEAT\_EXPRE;}
+\DoxyCodeLine{951     \}}
+\DoxyCodeLine{952     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{953 }
+\DoxyCodeLine{954   \textcolor{keyword}{private}:}
+\DoxyCodeLine{955     std::shared\_ptr<ExpressionAST> cond;}
+\DoxyCodeLine{956     std::shared\_ptr<ExpressionAST> body;}
+\DoxyCodeLine{957 \};}
+\DoxyCodeLine{958 }
+\DoxyCodeLine{959 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1WhileExpression}{WhileExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{960 \{}
+\DoxyCodeLine{961   \textcolor{keyword}{public}:}
+\DoxyCodeLine{962     \mbox{\hyperlink{classPascal_1_1WhileExpression}{WhileExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<ExpressionAST> cond, std::shared\_ptr<ExpressionAST> body)}
+\DoxyCodeLine{963         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_WHILE\_EXPRE), condition(cond), body(body)}
+\DoxyCodeLine{964     \{}
+\DoxyCodeLine{965     \}}
+\DoxyCodeLine{966     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{967     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{968     \{}
+\DoxyCodeLine{969         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_WHILE\_EXPRE;}
+\DoxyCodeLine{970     \}}
+\DoxyCodeLine{971     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&expressionVisitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{972 }
+\DoxyCodeLine{973   \textcolor{keyword}{private}:}
+\DoxyCodeLine{974     std::shared\_ptr<ExpressionAST> condition;}
+\DoxyCodeLine{975     std::shared\_ptr<ExpressionAST> body;}
+\DoxyCodeLine{976 \};}
+\DoxyCodeLine{977 }
+\DoxyCodeLine{978 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ForExpression}{ForExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{979 \{}
+\DoxyCodeLine{980   \textcolor{keyword}{public}:}
+\DoxyCodeLine{981     \mbox{\hyperlink{classPascal_1_1ForExpression}{ForExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> var, std::shared\_ptr<ExpressionAST> start,}
+\DoxyCodeLine{982                   std::shared\_ptr<ExpressionAST> end, \textcolor{keywordtype}{bool} down, std::shared\_ptr<ExpressionAST> body)}
+\DoxyCodeLine{983         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_FOR\_EXPRE), variable(var), start(start), stepDown(down), end(end),}
+\DoxyCodeLine{984           body(body)}
+\DoxyCodeLine{985     \{}
+\DoxyCodeLine{986     \}}
+\DoxyCodeLine{987     \mbox{\hyperlink{classPascal_1_1ForExpression}{ForExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<VariableExpression> var, std::shared\_ptr<ExpressionAST> start,}
+\DoxyCodeLine{988                   std::shared\_ptr<ExpressionAST> body)}
+\DoxyCodeLine{989         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_FOR\_EXPRE), variable(var), start(start), stepDown(\textcolor{keyword}{false}),}
+\DoxyCodeLine{990           end(\textcolor{keyword}{nullptr}), body(body)}
+\DoxyCodeLine{991     \{}
+\DoxyCodeLine{992     \}}
+\DoxyCodeLine{993     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{994     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{995     \{}
+\DoxyCodeLine{996         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_FOR\_EXPRE;}
+\DoxyCodeLine{997     \}}
+\DoxyCodeLine{998     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{999 }
+\DoxyCodeLine{1000   \textcolor{keyword}{private}:}
+\DoxyCodeLine{1001     std::shared\_ptr<llvm::Value> forInGen();}
+\DoxyCodeLine{1002     \textcolor{keywordtype}{bool} stepDown;}
+\DoxyCodeLine{1003     std::shared\_ptr<VariableExpression> variable;}
+\DoxyCodeLine{1004     std::shared\_ptr<ExpressionAST> start;}
+\DoxyCodeLine{1005     std::shared\_ptr<ExpressionAST> end;}
+\DoxyCodeLine{1006     std::shared\_ptr<ExpressionAST> body;}
+\DoxyCodeLine{1007 \};}
+\DoxyCodeLine{1008 }
+\DoxyCodeLine{1009 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1IfExpression}{IfExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{1010 \{}
+\DoxyCodeLine{1011   \textcolor{keyword}{public}:}
+\DoxyCodeLine{1012     \mbox{\hyperlink{classPascal_1_1IfExpression}{IfExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<ExpressionAST> cond, std::shared\_ptr<ExpressionAST> then,}
+\DoxyCodeLine{1013                  std::shared\_ptr<ExpressionAST> other)}
+\DoxyCodeLine{1014         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_IF\_EXPRE), cond(cond), then(then), other(other)}
+\DoxyCodeLine{1015     \{}
+\DoxyCodeLine{1016     \}}
+\DoxyCodeLine{1017     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{1018     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{1019     \{}
+\DoxyCodeLine{1020         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_IF\_EXPRE;}
+\DoxyCodeLine{1021     \}}
+\DoxyCodeLine{1022     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{1023 }
+\DoxyCodeLine{1024   \textcolor{keyword}{private}:}
+\DoxyCodeLine{1025     std::shared\_ptr<ExpressionAST> cond;}
+\DoxyCodeLine{1026     std::shared\_ptr<ExpressionAST> then;}
+\DoxyCodeLine{1027     std::shared\_ptr<ExpressionAST> other;}
+\DoxyCodeLine{1028 \};}
+\DoxyCodeLine{1029 }
+\DoxyCodeLine{1030 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1BuiltInExpression}{BuiltInExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{1031 \{}
+\DoxyCodeLine{1032   \textcolor{keyword}{public}:}
+\DoxyCodeLine{1033     \mbox{\hyperlink{classPascal_1_1BuiltInExpression}{BuiltInExpression}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::shared\_ptr<FunctionBaseBuiltin> builtin)}
+\DoxyCodeLine{1034         : \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}(loc, ExpressionType::TYPE\_BUILTIN\_EXPRE, builtin-\/>getType()), builtin(builtin)}
+\DoxyCodeLine{1035     \{}
+\DoxyCodeLine{1036     \}}
+\DoxyCodeLine{1037     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{1038     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{1039     \{}
+\DoxyCodeLine{1040         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_BUILTIN\_EXPRE;}
+\DoxyCodeLine{1041     \}}
+\DoxyCodeLine{1042     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{1043 }
+\DoxyCodeLine{1044   \textcolor{keyword}{private}:}
+\DoxyCodeLine{1045     std::shared\_ptr<FunctionBaseBuiltin> builtin;}
+\DoxyCodeLine{1046 \};}
+\DoxyCodeLine{1047 }
+\DoxyCodeLine{1048 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1CallFunctExpression}{CallFunctExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{1049 \{}
+\DoxyCodeLine{1050   \textcolor{keyword}{public}:}
+\DoxyCodeLine{1051     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{1052     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{1053     \{}
+\DoxyCodeLine{1054         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_CALL\_EXPRE;}
+\DoxyCodeLine{1055     \}}
+\DoxyCodeLine{1056     \textcolor{keyword}{const} std::shared\_ptr<PrototypeExpression> getPrototype()}
+\DoxyCodeLine{1057     \{}
+\DoxyCodeLine{1058         \textcolor{keywordflow}{return} this-\/>prototypeExpression;}
+\DoxyCodeLine{1059     \}}
+\DoxyCodeLine{1060     std::shared\_ptr<ExpressionAST> getCallee()\textcolor{keyword}{ const}}
+\DoxyCodeLine{1061 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{1062         \textcolor{keywordflow}{return} callee;}
+\DoxyCodeLine{1063     \}}
+\DoxyCodeLine{1064     std::vector<std::shared\_ptr<ExpressionAST>> getArgs()}
+\DoxyCodeLine{1065     \{}
+\DoxyCodeLine{1066         \textcolor{keywordflow}{return} this-\/>args;}
+\DoxyCodeLine{1067     \}}
+\DoxyCodeLine{1068     \textcolor{keywordtype}{void} accept(\mbox{\hyperlink{classPascal_1_1Visitor}{ExpressionVisitor}} \&visitor) \textcolor{keyword}{override};}
+\DoxyCodeLine{1069 }
+\DoxyCodeLine{1070   \textcolor{keyword}{private}:}
+\DoxyCodeLine{1071     \textcolor{keyword}{const} std::shared\_ptr<PrototypeExpression> prototypeExpression;}
+\DoxyCodeLine{1072     std::shared\_ptr<ExpressionAST> callee;}
+\DoxyCodeLine{1073     std::vector<std::shared\_ptr<ExpressionAST>> args;}
+\DoxyCodeLine{1074 \};}
+\DoxyCodeLine{1075 }
+\DoxyCodeLine{1076 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1UnitExpression}{UnitExpression}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}}}
+\DoxyCodeLine{1077 \{}
+\DoxyCodeLine{1078   \textcolor{keyword}{public}:}
+\DoxyCodeLine{1079     std::shared\_ptr<llvm::Value> codeGen() \textcolor{keyword}{override};}
+\DoxyCodeLine{1080     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ExpressionAST}{ExpressionAST}} *expressionAst)}
+\DoxyCodeLine{1081     \{}
+\DoxyCodeLine{1082         \textcolor{keywordflow}{return} expressionAst-\/>getExpressionType() == ExpressionType::TYPE\_UNIT;}
+\DoxyCodeLine{1083     \}}
+\DoxyCodeLine{1084 \};}
+\DoxyCodeLine{1085 \} \textcolor{comment}{// namespace Pascal}}
+\DoxyCodeLine{1086 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_EXPRESSION\_H}}
+
+\end{DoxyCode}

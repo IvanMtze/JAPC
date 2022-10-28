@@ -1,0 +1,1048 @@
+\hypertarget{type_8h_source}{}\doxysection{type.\+h}
+\label{type_8h_source}\index{include/japc/AST/type.h@{include/japc/AST/type.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 12/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_TYPE\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_TYPE\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <japc/AST/expression.h>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <japc/scanner/scanner.h>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <llvm/IR/DIBuilder.h>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <llvm/IR/DerivedTypes.h>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <llvm/IR/Type.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define \_\_MAX\_SET\_WORDS\_\_ 16}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#define \_\_SET\_BITS\_\_ 32}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define \_\_MAX\_\_SET\_\_SIZE\_\_ (\_\_MAX\_SET\_WORDS\_\_ * \_\_SET\_BITS\_\_)}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#define \_\_SET\_MASK\_\_ (\_\_SET\_BITS\_\_ -\/ 1)}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define \_\_SET\_POW\_TO\_BITS\_\_ 5}}
+\DoxyCodeLine{20 \textcolor{keyword}{namespace }Pascal}
+\DoxyCodeLine{21 \{}
+\DoxyCodeLine{22 \textcolor{keyword}{class }TypeDeclaration;}
+\DoxyCodeLine{23 \textcolor{keyword}{class }PrototypeExpression;}
+\DoxyCodeLine{24 \textcolor{keyword}{class }ExpressionAST;}
+\DoxyCodeLine{25 std::shared\_ptr<TypeDeclaration> getIntegerType();}
+\DoxyCodeLine{26 std::shared\_ptr<TypeDeclaration> getLongIntType();}
+\DoxyCodeLine{27 std::shared\_ptr<TypeDeclaration> getCharType();}
+\DoxyCodeLine{28 std::shared\_ptr<TypeDeclaration> getBooleanType();}
+\DoxyCodeLine{29 std::shared\_ptr<TypeDeclaration> getRealType();}
+\DoxyCodeLine{30 std::shared\_ptr<TypeDeclaration> getVoidType();}
+\DoxyCodeLine{31 std::shared\_ptr<TypeDeclaration> getTextType();}
+\DoxyCodeLine{32 std::shared\_ptr<TypeDeclaration> getStringType();}
+\DoxyCodeLine{33 std::shared\_ptr<TypeDeclaration> getTimeStampType();}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keyword}{enum} TypeKind}
+\DoxyCodeLine{36 \{}
+\DoxyCodeLine{37     TYPE\_TYPE,}
+\DoxyCodeLine{38     TYPE\_CHAR,}
+\DoxyCodeLine{39     TYPE\_INTEGER,}
+\DoxyCodeLine{40     TYPE\_LONG\_INT,}
+\DoxyCodeLine{41     TYPE\_REAL,}
+\DoxyCodeLine{42     TYPE\_VOID,}
+\DoxyCodeLine{43     TYPE\_ARRAY,}
+\DoxyCodeLine{44     TYPE\_STRING,}
+\DoxyCodeLine{45     TYPE\_LAST\_ARRAY,}
+\DoxyCodeLine{46     TYPE\_RANGE,}
+\DoxyCodeLine{47     TYPE\_ENUM,}
+\DoxyCodeLine{48     TYPE\_BOOLEAN,}
+\DoxyCodeLine{49     TYPE\_POINTER,}
+\DoxyCodeLine{50     TYPE\_FIELD,}
+\DoxyCodeLine{51     TYPE\_RECORD,}
+\DoxyCodeLine{52     TYPE\_FUNCION\_POINTER,}
+\DoxyCodeLine{53     TYPE\_FUNCTION,}
+\DoxyCodeLine{54     TYPE\_FILE,}
+\DoxyCodeLine{55     TYPE\_TEXT,}
+\DoxyCodeLine{56     TYPE\_SET,}
+\DoxyCodeLine{57     TYPE\_VRIANT,}
+\DoxyCodeLine{58     TYPE\_CLASS,}
+\DoxyCodeLine{59     TYPE\_MEMBER\_FUNCTION,}
+\DoxyCodeLine{60     TYPE\_FORWARD,}
+\DoxyCodeLine{61 \};}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63 \textcolor{keyword}{enum} Access}
+\DoxyCodeLine{64 \{}
+\DoxyCodeLine{65     Private,}
+\DoxyCodeLine{66     Protected,}
+\DoxyCodeLine{67     Public}
+\DoxyCodeLine{68 \};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{keyword}{enum}}
+\DoxyCodeLine{71 \{}
+\DoxyCodeLine{72     Handle,}
+\DoxyCodeLine{73     Buffer,}
+\DoxyCodeLine{74     RecordSize,}
+\DoxyCodeLine{75     IsText}
+\DoxyCodeLine{76 \} FileFields;}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keyword}{enum} ConstantKind}
+\DoxyCodeLine{79 \{}
+\DoxyCodeLine{80     CONSTANT\_DECLARATION,}
+\DoxyCodeLine{81     INT\_CONSTANT\_DECLARATION,}
+\DoxyCodeLine{82     ENUM\_CONSTANT\_DECLARATION,}
+\DoxyCodeLine{83     REAL\_CONSTANT\_DECLARATION,}
+\DoxyCodeLine{84     CHAR\_CONSTANT\_DECLARATION,}
+\DoxyCodeLine{85     BOOL\_CONSTANT\_DECLARATION,}
+\DoxyCodeLine{86     STRING\_CONSTANT\_DECLARATION,}
+\DoxyCodeLine{87 \};}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89 \textcolor{keyword}{class }RangeDeclaration;}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Range}{Range}}}
+\DoxyCodeLine{92 \{}
+\DoxyCodeLine{93   \textcolor{keyword}{public}:}
+\DoxyCodeLine{94     \mbox{\hyperlink{classPascal_1_1Range}{Range}}(\textcolor{keywordtype}{int} start, \textcolor{keywordtype}{int} anEnd) : start(start), end(anEnd)}
+\DoxyCodeLine{95     \{}
+\DoxyCodeLine{96     \}}
+\DoxyCodeLine{97     \textcolor{keywordtype}{int} getStart()\textcolor{keyword}{ const}}
+\DoxyCodeLine{98 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{99         \textcolor{keywordflow}{return} start;}
+\DoxyCodeLine{100     \}}
+\DoxyCodeLine{101     \textcolor{keywordtype}{void} setStart(\textcolor{keywordtype}{int} start)}
+\DoxyCodeLine{102     \{}
+\DoxyCodeLine{103         Range::start = start;}
+\DoxyCodeLine{104     \}}
+\DoxyCodeLine{105     \textcolor{keywordtype}{int} getEnd()\textcolor{keyword}{ const}}
+\DoxyCodeLine{106 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{107         \textcolor{keywordflow}{return} end;}
+\DoxyCodeLine{108     \}}
+\DoxyCodeLine{109     \textcolor{keywordtype}{void} setEnd(\textcolor{keywordtype}{int} End)}
+\DoxyCodeLine{110     \{}
+\DoxyCodeLine{111         end = End;}
+\DoxyCodeLine{112     \}}
+\DoxyCodeLine{113     \textcolor{keywordtype}{int} getSize()}
+\DoxyCodeLine{114     \{}
+\DoxyCodeLine{115         \textcolor{keywordflow}{return} end -\/ start + 1;}
+\DoxyCodeLine{116     \}}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118   \textcolor{keyword}{private}:}
+\DoxyCodeLine{119     \textcolor{keywordtype}{int} start;}
+\DoxyCodeLine{120     \textcolor{keywordtype}{int} end;}
+\DoxyCodeLine{121 \};}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} : \textcolor{keyword}{public} std::enable\_shared\_from\_this<TypeDeclaration>}
+\DoxyCodeLine{124 \{}
+\DoxyCodeLine{125   \textcolor{keyword}{public}:}
+\DoxyCodeLine{126     \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}(TypeKind kind) : kind(kind), ltype(0), name(\textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{127     \{}
+\DoxyCodeLine{128     \}}
+\DoxyCodeLine{129     \textcolor{keyword}{virtual} TypeKind getTypeKind()\textcolor{keyword}{ const}}
+\DoxyCodeLine{130 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{131         \textcolor{keywordflow}{return} kind;}
+\DoxyCodeLine{132     \}}
+\DoxyCodeLine{133     \textcolor{keyword}{virtual} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{\string~TypeDeclaration}}()}
+\DoxyCodeLine{134     \{}
+\DoxyCodeLine{135     \}}
+\DoxyCodeLine{136     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} isIncomplete()\textcolor{keyword}{ const}}
+\DoxyCodeLine{137 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{138         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{139     \}}
+\DoxyCodeLine{140     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} isIntegral()\textcolor{keyword}{ const}}
+\DoxyCodeLine{141 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{142         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{143     \}}
+\DoxyCodeLine{144     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} isStringLike()\textcolor{keyword}{ const}}
+\DoxyCodeLine{145 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{146         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{147     \}}
+\DoxyCodeLine{148     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} isUnsigned()\textcolor{keyword}{ const}}
+\DoxyCodeLine{149 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{150         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{151     \}}
+\DoxyCodeLine{152     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const}}
+\DoxyCodeLine{153 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{154         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{155     \}}
+\DoxyCodeLine{156     \textcolor{keyword}{virtual} std::shared\_ptr<Range> getRange() \textcolor{keyword}{const};}
+\DoxyCodeLine{157     \textcolor{keyword}{virtual} std::shared\_ptr<TypeDeclaration> getSubtype()\textcolor{keyword}{ const}}
+\DoxyCodeLine{158 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{159         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{160     \}}
+\DoxyCodeLine{161     \textcolor{keyword}{virtual} \textcolor{keywordtype}{unsigned} bits()\textcolor{keyword}{ const}}
+\DoxyCodeLine{162 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{163         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{164     \}}
+\DoxyCodeLine{165     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *typeDeclaration) \textcolor{keyword}{const} = 0;}
+\DoxyCodeLine{166     \textcolor{keyword}{virtual} \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const};}
+\DoxyCodeLine{167     \textcolor{keyword}{virtual} \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isAssignableType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const}}
+\DoxyCodeLine{168 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{169         \textcolor{keywordflow}{return} isCompatibleType(ty);}
+\DoxyCodeLine{170     \}}
+\DoxyCodeLine{171     \textcolor{keyword}{const} TypeKind getKind()\textcolor{keyword}{ const}}
+\DoxyCodeLine{172 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{173         \textcolor{keywordflow}{return} kind;}
+\DoxyCodeLine{174     \}}
+\DoxyCodeLine{175     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} hasLlvmType() \textcolor{keyword}{const} = 0;}
+\DoxyCodeLine{176     \textcolor{keyword}{virtual} \textcolor{keywordtype}{size\_t} getSize() \textcolor{keyword}{const};}
+\DoxyCodeLine{177     \textcolor{keywordtype}{size\_t} getAllignSize() \textcolor{keyword}{const};}
+\DoxyCodeLine{178     \textcolor{keyword}{const} std::shared\_ptr<llvm::Type> \&getLtype()\textcolor{keyword}{ const}}
+\DoxyCodeLine{179 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{180         \textcolor{keywordflow}{return} ltype;}
+\DoxyCodeLine{181     \}}
+\DoxyCodeLine{182     \textcolor{keywordtype}{void} setLtype(\textcolor{keyword}{const} std::shared\_ptr<llvm::Type> \&ltype)}
+\DoxyCodeLine{183     \{}
+\DoxyCodeLine{184         TypeDeclaration::ltype = ltype;}
+\DoxyCodeLine{185     \}}
+\DoxyCodeLine{186     \textcolor{keyword}{const} std::string \&getName()\textcolor{keyword}{ const}}
+\DoxyCodeLine{187 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{188         \textcolor{keywordflow}{return} name;}
+\DoxyCodeLine{189     \}}
+\DoxyCodeLine{190     \textcolor{keywordtype}{void} setName(\textcolor{keyword}{const} std::string \&name)}
+\DoxyCodeLine{191     \{}
+\DoxyCodeLine{192         TypeDeclaration::name = name;}
+\DoxyCodeLine{193     \}}
+\DoxyCodeLine{194     \textcolor{keywordtype}{void} setInitialValue(std::shared\_ptr<ExpressionAST> i)\{}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196     \}}
+\DoxyCodeLine{197     \textcolor{keyword}{virtual} std::shared\_ptr<TypeDeclaration> clone()\textcolor{keyword}{ const}}
+\DoxyCodeLine{198 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{199         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{200     \}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{203     \textcolor{keyword}{virtual} std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const} = 0;}
+\DoxyCodeLine{204     \textcolor{keyword}{const} TypeKind kind;}
+\DoxyCodeLine{205     \textcolor{keyword}{mutable} std::shared\_ptr<llvm::Type> ltype;}
+\DoxyCodeLine{206     std::string name;}
+\DoxyCodeLine{207     std::shared\_ptr<ExpressionAST> initial;}
+\DoxyCodeLine{208 \};}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ForwardDeclaration}{ForwardDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}}
+\DoxyCodeLine{211 \{}
+\DoxyCodeLine{212   \textcolor{keyword}{public}:}
+\DoxyCodeLine{213     \textcolor{keywordtype}{bool} isIncomplete()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{214 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{215         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{216     \}}
+\DoxyCodeLine{217     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{218 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{219         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{220     \}}
+\DoxyCodeLine{221     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{222 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{223         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{224     \}}
+\DoxyCodeLine{225     std::shared\_ptr<llvm::Type> getLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{226 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{227         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{228     \}}
+\DoxyCodeLine{229 \};}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}}
+\DoxyCodeLine{232 \{}
+\DoxyCodeLine{233   \textcolor{keyword}{public}:}
+\DoxyCodeLine{234     \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}(TypeKind tk) : \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}(tk)}
+\DoxyCodeLine{235     \{}
+\DoxyCodeLine{236     \}}
+\DoxyCodeLine{237     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{238 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{239         \textcolor{keywordflow}{return} kind == ty-\/>getTypeKind();}
+\DoxyCodeLine{240     \}}
+\DoxyCodeLine{241 \};}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RealDeclaration}{RealDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}}
+\DoxyCodeLine{244 \{}
+\DoxyCodeLine{245   \textcolor{keyword}{public}:}
+\DoxyCodeLine{246     \mbox{\hyperlink{classPascal_1_1RealDeclaration}{RealDeclaration}}() : \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}(TypeKind::TYPE\_REAL)}
+\DoxyCodeLine{247     \{}
+\DoxyCodeLine{248     \}}
+\DoxyCodeLine{249     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{250     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isAssignableType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{251     \textcolor{keywordtype}{unsigned} bits()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{252 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{253         \textcolor{keywordflow}{return} 64;}
+\DoxyCodeLine{254     \}}
+\DoxyCodeLine{255     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{256 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{257         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{258     \}}
+\DoxyCodeLine{259     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{260     \{}
+\DoxyCodeLine{261         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_REAL;}
+\DoxyCodeLine{262     \}}
+\DoxyCodeLine{263     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{264     \{}
+\DoxyCodeLine{265         \textcolor{keywordflow}{return} isClassOf(e);}
+\DoxyCodeLine{266     \}}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{268   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{269     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{270 \};}
+\DoxyCodeLine{271 }
+\DoxyCodeLine{272 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1CharDeclaration}{CharDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}}
+\DoxyCodeLine{273 \{}
+\DoxyCodeLine{274   \textcolor{keyword}{public}:}
+\DoxyCodeLine{275     \mbox{\hyperlink{classPascal_1_1CharDeclaration}{CharDeclaration}}() : \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}(TypeKind::TYPE\_CHAR)}
+\DoxyCodeLine{276     \{}
+\DoxyCodeLine{277     \}}
+\DoxyCodeLine{278     \textcolor{keywordtype}{bool} isIntegral()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{279 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{280         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{281     \}}
+\DoxyCodeLine{282     \textcolor{keywordtype}{bool} isUnsigned()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{283 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{284         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{285     \}}
+\DoxyCodeLine{286     \textcolor{keywordtype}{bool} isStringLike()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{287 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{288         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{289     \}}
+\DoxyCodeLine{290     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{291     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isAssignableType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{292     \textcolor{keywordtype}{unsigned} bits()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{293 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{294         \textcolor{keywordflow}{return} 8;}
+\DoxyCodeLine{295     \}}
+\DoxyCodeLine{296     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{297 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{298         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{299     \}}
+\DoxyCodeLine{300     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{301     \{}
+\DoxyCodeLine{302         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_CHAR;}
+\DoxyCodeLine{303     \}}
+\DoxyCodeLine{304 }
+\DoxyCodeLine{305   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{306     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{307 \};}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1VoidDeclaration}{VoidDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}}
+\DoxyCodeLine{310 \{}
+\DoxyCodeLine{311   \textcolor{keyword}{public}:}
+\DoxyCodeLine{312     \mbox{\hyperlink{classPascal_1_1VoidDeclaration}{VoidDeclaration}}() : \mbox{\hyperlink{classPascal_1_1BaseTypeDeclaration}{BaseTypeDeclaration}}(TypeKind::TYPE\_VOID)}
+\DoxyCodeLine{313     \{}
+\DoxyCodeLine{314     \}}
+\DoxyCodeLine{315     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{316 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{317         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{318     \}}
+\DoxyCodeLine{319     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{320 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{321         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{322     \}}
+\DoxyCodeLine{323     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{324     \{}
+\DoxyCodeLine{325         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_VOID;}
+\DoxyCodeLine{326     \}}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{329     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{330 \};}
+\DoxyCodeLine{331 }
+\DoxyCodeLine{332 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}}
+\DoxyCodeLine{333 \{}
+\DoxyCodeLine{334   \textcolor{keyword}{public}:}
+\DoxyCodeLine{335     \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(TypeKind typeKind, std::shared\_ptr<TypeDeclaration> typeDeclaration)}
+\DoxyCodeLine{336         : \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}(typeKind), baseType(typeDeclaration)}
+\DoxyCodeLine{337     \{}
+\DoxyCodeLine{338     \}}
+\DoxyCodeLine{339     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{340     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{341 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{342         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{343     \}}
+\DoxyCodeLine{344     std::shared\_ptr<TypeDeclaration> getSubtype()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{345 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{346         \textcolor{keywordflow}{return} baseType;}
+\DoxyCodeLine{347     \}}
+\DoxyCodeLine{348     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{349 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{350         \textcolor{keywordflow}{return} baseType-\/>hasLlvmType();}
+\DoxyCodeLine{351     \}}
+\DoxyCodeLine{352     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e);}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{355     std::shared\_ptr<TypeDeclaration> baseType;}
+\DoxyCodeLine{356 \};}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ArrayDeclaration}{ArrayDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{359 \{}
+\DoxyCodeLine{360   \textcolor{keyword}{public}:}
+\DoxyCodeLine{361     \mbox{\hyperlink{classPascal_1_1ArrayDeclaration}{ArrayDeclaration}}(std::shared\_ptr<TypeDeclaration> b, \textcolor{keyword}{const} std::vector<std::shared\_ptr<RangeDeclaration>> \&r)}
+\DoxyCodeLine{362         : \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(TypeKind::TYPE\_ARRAY, b), ranges(r)}
+\DoxyCodeLine{363     \{}
+\DoxyCodeLine{364     \}}
+\DoxyCodeLine{365     \mbox{\hyperlink{classPascal_1_1ArrayDeclaration}{ArrayDeclaration}}(TypeKind tk, std::shared\_ptr<TypeDeclaration> b,}
+\DoxyCodeLine{366                      \textcolor{keyword}{const} std::vector<std::shared\_ptr<RangeDeclaration>> \&r)}
+\DoxyCodeLine{367         : \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(tk, b), ranges(r)}
+\DoxyCodeLine{368     \{}
+\DoxyCodeLine{369     \}}
+\DoxyCodeLine{370     \textcolor{keyword}{const} std::vector<std::shared\_ptr<RangeDeclaration>> getRanges()\textcolor{keyword}{ const}}
+\DoxyCodeLine{371 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{372         \textcolor{keywordflow}{return} ranges;}
+\DoxyCodeLine{373     \}}
+\DoxyCodeLine{374     \textcolor{keywordtype}{bool} isStringLike()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{375 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{376         \textcolor{keywordflow}{return} (baseType-\/>getTypeKind() == TypeKind::TYPE\_CHAR);}
+\DoxyCodeLine{377     \}}
+\DoxyCodeLine{378     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{379     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{380     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{381     \{}
+\DoxyCodeLine{382         \textcolor{keywordflow}{return} e-\/>getKind() >= TypeKind::TYPE\_ARRAY \&\& e-\/>getKind() <= TypeKind::TYPE\_LAST\_ARRAY;}
+\DoxyCodeLine{383     \}}
+\DoxyCodeLine{384 }
+\DoxyCodeLine{385   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{386     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388   \textcolor{keyword}{private}:}
+\DoxyCodeLine{389     std::vector<std::shared\_ptr<RangeDeclaration>> ranges;}
+\DoxyCodeLine{390 \};}
+\DoxyCodeLine{391 }
+\DoxyCodeLine{392 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1EnumDeclaration}{EnumDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{393 \{}
+\DoxyCodeLine{394   \textcolor{keyword}{public}:}
+\DoxyCodeLine{395     \textcolor{keyword}{struct }\mbox{\hyperlink{structPascal_1_1EnumDeclaration_1_1EnumValue}{EnumValue}}}
+\DoxyCodeLine{396     \{}
+\DoxyCodeLine{397         \mbox{\hyperlink{structPascal_1_1EnumDeclaration_1_1EnumValue}{EnumValue}}(\textcolor{keyword}{const} std::string \&nm, \textcolor{keywordtype}{int} v) : name(nm), value(v)}
+\DoxyCodeLine{398         \{}
+\DoxyCodeLine{399         \}}
+\DoxyCodeLine{400         \mbox{\hyperlink{structPascal_1_1EnumDeclaration_1_1EnumValue}{EnumValue}}(\textcolor{keyword}{const} \mbox{\hyperlink{structPascal_1_1EnumDeclaration_1_1EnumValue}{EnumValue}} \&e) : name(e.name), value(e.value)}
+\DoxyCodeLine{401         \{}
+\DoxyCodeLine{402         \}}
+\DoxyCodeLine{403         std::string name;}
+\DoxyCodeLine{404         \textcolor{keywordtype}{int} value;}
+\DoxyCodeLine{405     \};}
+\DoxyCodeLine{406 }
+\DoxyCodeLine{407     \textcolor{keyword}{typedef} std::vector<EnumValue> EnumValues;}
+\DoxyCodeLine{408 }
+\DoxyCodeLine{409   \textcolor{keyword}{public}:}
+\DoxyCodeLine{410     \mbox{\hyperlink{classPascal_1_1EnumDeclaration}{EnumDeclaration}}(TypeKind tk, \textcolor{keyword}{const} std::vector<std::string> \&nmv, std::shared\_ptr<TypeDeclaration> ty)}
+\DoxyCodeLine{411         : \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(tk, ty)}
+\DoxyCodeLine{412     \{}
+\DoxyCodeLine{413     \}}
+\DoxyCodeLine{414     \mbox{\hyperlink{classPascal_1_1EnumDeclaration}{EnumDeclaration}}(\textcolor{keyword}{const} std::vector<std::string> \&nmv, std::shared\_ptr<TypeDeclaration> ty)}
+\DoxyCodeLine{415         : \mbox{\hyperlink{classPascal_1_1EnumDeclaration}{EnumDeclaration}}(TypeKind::TYPE\_ENUM, nmv, ty)}
+\DoxyCodeLine{416     \{}
+\DoxyCodeLine{417     \}}
+\DoxyCodeLine{418 }
+\DoxyCodeLine{419   \textcolor{keyword}{private}:}
+\DoxyCodeLine{420     \textcolor{keywordtype}{void} SetValues(\textcolor{keyword}{const} std::vector<std::string> \&nmv);}
+\DoxyCodeLine{421 }
+\DoxyCodeLine{422   \textcolor{keyword}{public}:}
+\DoxyCodeLine{423     std::shared\_ptr<Range> getRange()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{424 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{425         \textcolor{keywordflow}{return} std::make\_shared<Range>(Range(0, values.size() -\/ 1));}
+\DoxyCodeLine{426     \}}
+\DoxyCodeLine{427     \textcolor{keyword}{const} EnumValues \&getValues()\textcolor{keyword}{ const}}
+\DoxyCodeLine{428 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{429         \textcolor{keywordflow}{return} values;}
+\DoxyCodeLine{430     \}}
+\DoxyCodeLine{431     \textcolor{keywordtype}{bool} isIntegral()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{432 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{433         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{434     \}}
+\DoxyCodeLine{435     \textcolor{keywordtype}{bool} isUnsigned()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{436 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{437         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{438     \}}
+\DoxyCodeLine{439     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{440 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{441         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{442     \}}
+\DoxyCodeLine{443     \textcolor{keywordtype}{unsigned} bits() \textcolor{keyword}{const override};}
+\DoxyCodeLine{444     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} TypeDeclaration *e)}
+\DoxyCodeLine{445     \{}
+\DoxyCodeLine{446         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_ENUM;}
+\DoxyCodeLine{447     \}}
+\DoxyCodeLine{448     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} TypeDeclaration *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{451     std::shared\_ptr<llvm::Type> getLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{452 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{453         \textcolor{keywordflow}{return} baseType-\/>getLtype();}
+\DoxyCodeLine{454     \}}
+\DoxyCodeLine{455 }
+\DoxyCodeLine{456   \textcolor{keyword}{private}:}
+\DoxyCodeLine{457     EnumValues values;}
+\DoxyCodeLine{458 \};}
+\DoxyCodeLine{459 }
+\DoxyCodeLine{460 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1BoolDeclaration}{BoolDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1EnumDeclaration}{EnumDeclaration}}}
+\DoxyCodeLine{461 \{}
+\DoxyCodeLine{462   \textcolor{keyword}{public}:}
+\DoxyCodeLine{463     \mbox{\hyperlink{classPascal_1_1BoolDeclaration}{BoolDeclaration}}()}
+\DoxyCodeLine{464         : \mbox{\hyperlink{classPascal_1_1EnumDeclaration}{EnumDeclaration}}(TypeKind::TYPE\_BOOLEAN, std::vector<std::string>\{\textcolor{stringliteral}{"{}false"{}}, \textcolor{stringliteral}{"{}true"{}}\}, shared\_from\_this())}
+\DoxyCodeLine{465     \{}
+\DoxyCodeLine{466     \}}
+\DoxyCodeLine{467     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{468 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{469         \textcolor{keywordflow}{return} ty == \textcolor{keyword}{this};}
+\DoxyCodeLine{470     \}}
+\DoxyCodeLine{471 }
+\DoxyCodeLine{472   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{473     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{474 \};}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1PointerDeclaration}{PointerDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{477 \{}
+\DoxyCodeLine{478   \textcolor{keyword}{public}:}
+\DoxyCodeLine{479     \mbox{\hyperlink{classPascal_1_1PointerDeclaration}{PointerDeclaration}}(std::shared\_ptr<ForwardDeclaration> fwd)}
+\DoxyCodeLine{480         : incomplete(\textcolor{keyword}{true}), forward(\textcolor{keyword}{true}), \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(TypeKind::TYPE\_POINTER, fwd)}
+\DoxyCodeLine{481     \{}
+\DoxyCodeLine{482     \}}
+\DoxyCodeLine{483     \mbox{\hyperlink{classPascal_1_1PointerDeclaration}{PointerDeclaration}}(std::shared\_ptr<TypeDeclaration> ty)}
+\DoxyCodeLine{484         : incomplete(\textcolor{keyword}{false}), forward(\textcolor{keyword}{false}), \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(TypeKind::TYPE\_POINTER, ty)}
+\DoxyCodeLine{485     \{}
+\DoxyCodeLine{486     \}}
+\DoxyCodeLine{487     \textcolor{keywordtype}{bool} isIncomplete()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{488 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{489         \textcolor{keywordflow}{return} incomplete;}
+\DoxyCodeLine{490     \}}
+\DoxyCodeLine{491     \textcolor{keywordtype}{bool} isForward()\textcolor{keyword}{ const}}
+\DoxyCodeLine{492 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{493         \textcolor{keywordflow}{return} forward;}
+\DoxyCodeLine{494     \}}
+\DoxyCodeLine{495     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{496 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{497         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{498     \}}
+\DoxyCodeLine{499     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{500     \{}
+\DoxyCodeLine{501         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_POINTER;}
+\DoxyCodeLine{502     \}}
+\DoxyCodeLine{503     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{504 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{505         \textcolor{keywordflow}{return} baseType-\/>hasLlvmType();}
+\DoxyCodeLine{506     \}}
+\DoxyCodeLine{507     \textcolor{keywordtype}{void} SetSubType(std::shared\_ptr<TypeDeclaration> t)}
+\DoxyCodeLine{508     \{}
+\DoxyCodeLine{509         baseType = t;}
+\DoxyCodeLine{510         incomplete = \textcolor{keyword}{false};}
+\DoxyCodeLine{511     \}}
+\DoxyCodeLine{512     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)\{}
+\DoxyCodeLine{513         \textcolor{keywordflow}{return} this-\/>isClassOf(e);}
+\DoxyCodeLine{514     \}}
+\DoxyCodeLine{515   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{516     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518   \textcolor{keyword}{private}:}
+\DoxyCodeLine{519     \textcolor{keywordtype}{bool} incomplete;}
+\DoxyCodeLine{520     \textcolor{keywordtype}{bool} forward;}
+\DoxyCodeLine{521 \};}
+\DoxyCodeLine{522 }
+\DoxyCodeLine{523 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FunctionDeclaration}{FunctionDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{524 \{}
+\DoxyCodeLine{525   \textcolor{keyword}{public}:}
+\DoxyCodeLine{526     \mbox{\hyperlink{classPascal_1_1FunctionDeclaration}{FunctionDeclaration}}(\mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}} *proto);}
+\DoxyCodeLine{527     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{528 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{529         \textcolor{keywordflow}{return} baseType-\/>isCompatibleType(ty);}
+\DoxyCodeLine{530     \}}
+\DoxyCodeLine{531     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isAssignableType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{532 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{533         \textcolor{keywordflow}{return} baseType-\/>isAssignableType(ty);}
+\DoxyCodeLine{534     \}}
+\DoxyCodeLine{535     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{536 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{537         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{538     \}}
+\DoxyCodeLine{539     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{540 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{541         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{542     \}}
+\DoxyCodeLine{543     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{544     \{}
+\DoxyCodeLine{545         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_FUNCTION;}
+\DoxyCodeLine{546     \}}
+\DoxyCodeLine{547     \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}} *getPrototypeExpression()\textcolor{keyword}{ const}}
+\DoxyCodeLine{548 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{549         \textcolor{keywordflow}{return} prototype;}
+\DoxyCodeLine{550     \}}
+\DoxyCodeLine{551 }
+\DoxyCodeLine{552   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{553     std::shared\_ptr<llvm::Type> getLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{554 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{555         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{556     \}}
+\DoxyCodeLine{557 }
+\DoxyCodeLine{558   \textcolor{keyword}{private}:}
+\DoxyCodeLine{559     \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{PrototypeExpression}} *prototype;}
+\DoxyCodeLine{560 \};}
+\DoxyCodeLine{561 }
+\DoxyCodeLine{562 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FieldDeclaration}{FieldDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{563 \{}
+\DoxyCodeLine{564   \textcolor{keyword}{public}:}
+\DoxyCodeLine{565     \mbox{\hyperlink{classPascal_1_1FieldDeclaration}{FieldDeclaration}}(\textcolor{keyword}{const} std::string \&nm, std::shared\_ptr<TypeDeclaration> ty, \textcolor{keywordtype}{bool} stat, Access ac = Public)}
+\DoxyCodeLine{566         : isStat(stat), \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(TypeKind::TYPE\_FIELD, ty)}
+\DoxyCodeLine{567     \{}
+\DoxyCodeLine{568         setName(nm);}
+\DoxyCodeLine{569     \}}
+\DoxyCodeLine{570 }
+\DoxyCodeLine{571   \textcolor{keyword}{public}:}
+\DoxyCodeLine{572     std::shared\_ptr<TypeDeclaration> getFieldType()\textcolor{keyword}{ const}}
+\DoxyCodeLine{573 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{574         \textcolor{keywordflow}{return} baseType;}
+\DoxyCodeLine{575     \}}
+\DoxyCodeLine{576     \textcolor{keywordtype}{bool} isIntegral()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{577 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{578         \textcolor{keywordflow}{return} baseType-\/>isIntegral();}
+\DoxyCodeLine{579     \}}
+\DoxyCodeLine{580     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{581 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{582         \textcolor{keywordflow}{return} baseType-\/>isCompound();}
+\DoxyCodeLine{583     \}}
+\DoxyCodeLine{584     \textcolor{keywordtype}{bool} isStatic()\textcolor{keyword}{ const}}
+\DoxyCodeLine{585 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{586         \textcolor{keywordflow}{return} isStat;}
+\DoxyCodeLine{587     \}}
+\DoxyCodeLine{588     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{589 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{590         \textcolor{keywordflow}{return} baseType-\/>isSameAs(ty);}
+\DoxyCodeLine{591     \}}
+\DoxyCodeLine{592     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{593     \{}
+\DoxyCodeLine{594         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_FIELD;}
+\DoxyCodeLine{595     \}}
+\DoxyCodeLine{596     \textcolor{keyword}{operator} Access()}
+\DoxyCodeLine{597     \{}
+\DoxyCodeLine{598         \textcolor{keywordflow}{return} access;}
+\DoxyCodeLine{599     \}}
+\DoxyCodeLine{600 }
+\DoxyCodeLine{601   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{602     std::shared\_ptr<llvm::Type> getLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{603 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{604         \textcolor{keywordflow}{return} baseType-\/>getLtype();}
+\DoxyCodeLine{605     \}}
+\DoxyCodeLine{606 }
+\DoxyCodeLine{607   \textcolor{keyword}{private}:}
+\DoxyCodeLine{608     \textcolor{keywordtype}{bool} isStat;}
+\DoxyCodeLine{609     Access access;}
+\DoxyCodeLine{610 \};}
+\DoxyCodeLine{611 }
+\DoxyCodeLine{612 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FieldCollection}{FieldCollection}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}}
+\DoxyCodeLine{613 \{}
+\DoxyCodeLine{614   \textcolor{keyword}{public}:}
+\DoxyCodeLine{615     \mbox{\hyperlink{classPascal_1_1FieldCollection}{FieldCollection}}(TypeKind k, \textcolor{keyword}{const} std::vector<std::shared\_ptr<FieldDeclaration>> flds)}
+\DoxyCodeLine{616         : \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}(k), fields(flds), opaqueType(0)}
+\DoxyCodeLine{617     \{}
+\DoxyCodeLine{618     \}}
+\DoxyCodeLine{619     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} Element(\textcolor{keyword}{const} std::string \&name) \textcolor{keyword}{const};}
+\DoxyCodeLine{620     \textcolor{keyword}{virtual} \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1FieldDeclaration}{FieldDeclaration}} *getElement(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n)\textcolor{keyword}{ const}}
+\DoxyCodeLine{621 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{622     \}}
+\DoxyCodeLine{623     \textcolor{keywordtype}{void} ensureSized() \textcolor{keyword}{const};}
+\DoxyCodeLine{624     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} getFieldCount()\textcolor{keyword}{ const}}
+\DoxyCodeLine{625 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{626         \textcolor{keywordflow}{return} fields.size();}
+\DoxyCodeLine{627     \}}
+\DoxyCodeLine{628     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{629 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{630         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{631     \}}
+\DoxyCodeLine{632     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{633     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{634 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{635         \textcolor{keywordflow}{return} getLlvmType() != \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{636     \}}
+\DoxyCodeLine{637     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{638     \{}
+\DoxyCodeLine{639         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_VRIANT || e-\/>getKind() == TypeKind::TYPE\_RECORD ||}
+\DoxyCodeLine{640                e-\/>getKind() == TypeKind::TYPE\_CLASS;}
+\DoxyCodeLine{641     \}}
+\DoxyCodeLine{642 }
+\DoxyCodeLine{643   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{644     std::vector<std::shared\_ptr<FieldDeclaration>> fields;}
+\DoxyCodeLine{645     \textcolor{keyword}{mutable} std::shared\_ptr<llvm::StructType> opaqueType;}
+\DoxyCodeLine{646 \};}
+\DoxyCodeLine{647 }
+\DoxyCodeLine{648 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1VariantDeclaration}{VariantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1FieldCollection}{FieldCollection}}}
+\DoxyCodeLine{649 \{}
+\DoxyCodeLine{650   \textcolor{keyword}{public}:}
+\DoxyCodeLine{651     \mbox{\hyperlink{classPascal_1_1VariantDeclaration}{VariantDeclaration}}(\textcolor{keyword}{const} std::vector<std::shared\_ptr<FieldDeclaration>> flds)}
+\DoxyCodeLine{652         : \mbox{\hyperlink{classPascal_1_1FieldCollection}{FieldCollection}}(TypeKind::TYPE\_VRIANT, flds)\{\};}
+\DoxyCodeLine{653     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{654     \{}
+\DoxyCodeLine{655         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_VRIANT;}
+\DoxyCodeLine{656     \}}
+\DoxyCodeLine{657 }
+\DoxyCodeLine{658   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{659     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{660 \};}
+\DoxyCodeLine{661 }
+\DoxyCodeLine{662 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RecordDeclaration}{RecordDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1FieldCollection}{FieldCollection}}}
+\DoxyCodeLine{663 \{}
+\DoxyCodeLine{664   \textcolor{keyword}{public}:}
+\DoxyCodeLine{665     \mbox{\hyperlink{classPascal_1_1RecordDeclaration}{RecordDeclaration}}(\textcolor{keyword}{const} std::vector<std::shared\_ptr<FieldDeclaration>> flds, \mbox{\hyperlink{classPascal_1_1VariantDeclaration}{VariantDeclaration}} *v)}
+\DoxyCodeLine{666         : \mbox{\hyperlink{classPascal_1_1FieldCollection}{FieldCollection}}(TypeKind::TYPE\_RECORD, flds), variant(v)\{\};}
+\DoxyCodeLine{667     \textcolor{keywordtype}{size\_t} getSize() \textcolor{keyword}{const override};}
+\DoxyCodeLine{668     std::shared\_ptr<VariantDeclaration> getVariant()\textcolor{keyword}{ const}}
+\DoxyCodeLine{669 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{670         \textcolor{keywordflow}{return} variant;}
+\DoxyCodeLine{671     \}}
+\DoxyCodeLine{672     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty)\textcolor{keyword}{ const override}}
+\DoxyCodeLine{673 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{674         \textcolor{keywordflow}{return} \textcolor{keyword}{this} == ty;}
+\DoxyCodeLine{675     \}}
+\DoxyCodeLine{676     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{677     \{}
+\DoxyCodeLine{678         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_RECORD;}
+\DoxyCodeLine{679     \}}
+\DoxyCodeLine{680 }
+\DoxyCodeLine{681   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{682     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{683 }
+\DoxyCodeLine{684   \textcolor{keyword}{private}:}
+\DoxyCodeLine{685     std::shared\_ptr<VariantDeclaration> variant;}
+\DoxyCodeLine{686 \};}
+\DoxyCodeLine{687 }
+\DoxyCodeLine{688 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1MemberFunctionDeclaration}{MemberFunctionDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}}
+\DoxyCodeLine{689 \{}
+\DoxyCodeLine{690 \};}
+\DoxyCodeLine{691 }
+\DoxyCodeLine{692 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FunctionPointerDeclaration}{FunctionPointerDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{693 \{}
+\DoxyCodeLine{694   \textcolor{keyword}{public}:}
+\DoxyCodeLine{695     \mbox{\hyperlink{classPascal_1_1FunctionPointerDeclaration}{FunctionPointerDeclaration}}(std::shared\_ptr<PrototypeExpression> func);}
+\DoxyCodeLine{696     std::shared\_ptr<PrototypeExpression> getPrototype()\textcolor{keyword}{ const}}
+\DoxyCodeLine{697 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{698         \textcolor{keywordflow}{return} proto;}
+\DoxyCodeLine{699     \}}
+\DoxyCodeLine{700     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{701 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{702         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{703     \}}
+\DoxyCodeLine{704     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{705     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{706 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{707         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{708     \}}
+\DoxyCodeLine{709     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{710     \{}
+\DoxyCodeLine{711         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_FUNCION\_POINTER;}
+\DoxyCodeLine{712     \}}
+\DoxyCodeLine{713 }
+\DoxyCodeLine{714   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{715     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{716 }
+\DoxyCodeLine{717   \textcolor{keyword}{private}:}
+\DoxyCodeLine{718     std::shared\_ptr<PrototypeExpression> proto;}
+\DoxyCodeLine{719 \};}
+\DoxyCodeLine{720 }
+\DoxyCodeLine{721 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1FileDeclaration}{FileDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{722 \{}
+\DoxyCodeLine{723   \textcolor{keyword}{public}:}
+\DoxyCodeLine{724     \mbox{\hyperlink{classPascal_1_1FileDeclaration}{FileDeclaration}}(std::shared\_ptr<TypeDeclaration> ty) : \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(TypeKind::TYPE\_FILE, ty)}
+\DoxyCodeLine{725     \{}
+\DoxyCodeLine{726     \}}
+\DoxyCodeLine{727     \mbox{\hyperlink{classPascal_1_1FileDeclaration}{FileDeclaration}}(TypeKind k, std::shared\_ptr<TypeDeclaration> ty) : \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}(k, ty)}
+\DoxyCodeLine{728     \{}
+\DoxyCodeLine{729     \}}
+\DoxyCodeLine{730     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{731     \{}
+\DoxyCodeLine{732         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_FILE || e-\/>getKind() == TypeKind::TYPE\_TEXT;}
+\DoxyCodeLine{733     \}}
+\DoxyCodeLine{734 }
+\DoxyCodeLine{735   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{736     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{737 \};}
+\DoxyCodeLine{738 }
+\DoxyCodeLine{739 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1TextDeclaration}{TextDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1FileDeclaration}{FileDeclaration}}}
+\DoxyCodeLine{740 \{}
+\DoxyCodeLine{741   \textcolor{keyword}{public}:}
+\DoxyCodeLine{742     \mbox{\hyperlink{classPascal_1_1TextDeclaration}{TextDeclaration}}() : \mbox{\hyperlink{classPascal_1_1FileDeclaration}{FileDeclaration}}(TypeKind::TYPE\_TEXT, std::shared\_ptr<CharDeclaration>(\textcolor{keyword}{new} \mbox{\hyperlink{classPascal_1_1CharDeclaration}{CharDeclaration}}))}
+\DoxyCodeLine{743     \{}
+\DoxyCodeLine{744     \}}
+\DoxyCodeLine{745     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{746 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{747         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{748     \}}
+\DoxyCodeLine{749     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{750     \{}
+\DoxyCodeLine{751         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_TEXT;}
+\DoxyCodeLine{752     \}}
+\DoxyCodeLine{753 \};}
+\DoxyCodeLine{754 }
+\DoxyCodeLine{755 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1StringDeclaration}{StringDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ArrayDeclaration}{ArrayDeclaration}}}
+\DoxyCodeLine{756 \{}
+\DoxyCodeLine{757   \textcolor{keyword}{public}:}
+\DoxyCodeLine{758     \mbox{\hyperlink{classPascal_1_1StringDeclaration}{StringDeclaration}}(\textcolor{keywordtype}{unsigned} size)}
+\DoxyCodeLine{759         : \mbox{\hyperlink{classPascal_1_1ArrayDeclaration}{ArrayDeclaration}}(}
+\DoxyCodeLine{760               TypeKind::TYPE\_STRING, \textcolor{keyword}{static\_cast<}std::shared\_ptr<TypeDeclaration>\textcolor{keyword}{>}(\textcolor{keyword}{new} \mbox{\hyperlink{classPascal_1_1CharDeclaration}{CharDeclaration}}),}
+\DoxyCodeLine{761               std::vector<std::shared\_ptr<RangeDeclaration>>(}
+\DoxyCodeLine{762                   1, std::make\_shared<RangeDeclaration>(std::make\_shared<Range>(\mbox{\hyperlink{classPascal_1_1Range}{Range}}(0, size)), getIntegerType())))}
+\DoxyCodeLine{763     \{}
+\DoxyCodeLine{764     \}}
+\DoxyCodeLine{765     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{766     \{}
+\DoxyCodeLine{767         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_STRING;}
+\DoxyCodeLine{768     \}}
+\DoxyCodeLine{769     \textcolor{keywordtype}{bool} isStringLike()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{770 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{771         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{772     \}}
+\DoxyCodeLine{773     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{774 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{775         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{776     \}}
+\DoxyCodeLine{777     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{778 \};}
+\DoxyCodeLine{779 }
+\DoxyCodeLine{780 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RangeDeclaration}{RangeDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}}
+\DoxyCodeLine{781 \{}
+\DoxyCodeLine{782   \textcolor{keyword}{public}:}
+\DoxyCodeLine{783     \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{RangeDeclaration}}(\textcolor{keyword}{const} std::shared\_ptr<Range> \&range, \textcolor{keyword}{const} std::shared\_ptr<TypeDeclaration> \&baseType)}
+\DoxyCodeLine{784         : \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}}(TypeKind::TYPE\_RANGE), range(range), baseType(baseType)}
+\DoxyCodeLine{785     \{}
+\DoxyCodeLine{786     \}}
+\DoxyCodeLine{787 }
+\DoxyCodeLine{788   \textcolor{keyword}{public}:}
+\DoxyCodeLine{789     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{790     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isAssignableType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{791 }
+\DoxyCodeLine{792     \textcolor{keywordtype}{bool} isCompound()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{793 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{794         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{795     \}}
+\DoxyCodeLine{796     \textcolor{keywordtype}{bool} isIntegral()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{797 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{798         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{799     \}}
+\DoxyCodeLine{800     \textcolor{keywordtype}{bool} isUnsigned()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{801 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{802         \textcolor{keywordflow}{return} this-\/>range-\/>getStart() >= 0;}
+\DoxyCodeLine{803     \}}
+\DoxyCodeLine{804     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *typeDeclaration)}
+\DoxyCodeLine{805     \{}
+\DoxyCodeLine{806         \textcolor{keywordflow}{return} typeDeclaration-\/>getKind() == TypeKind::TYPE\_RANGE;}
+\DoxyCodeLine{807     \}}
+\DoxyCodeLine{808     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{809     \textcolor{keywordtype}{unsigned} bits() \textcolor{keyword}{const override};}
+\DoxyCodeLine{810     std::shared\_ptr<Range> getRange()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{811 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{812         \textcolor{keywordflow}{return} range;}
+\DoxyCodeLine{813     \}}
+\DoxyCodeLine{814 }
+\DoxyCodeLine{815     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{816 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{817         \textcolor{keywordflow}{return} baseType-\/>hasLlvmType();}
+\DoxyCodeLine{818     \}}
+\DoxyCodeLine{819 }
+\DoxyCodeLine{820   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{821     std::shared\_ptr<llvm::Type> getLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{822 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{823         \textcolor{keywordflow}{return} baseType-\/>getLtype();}
+\DoxyCodeLine{824     \}}
+\DoxyCodeLine{825 }
+\DoxyCodeLine{826   \textcolor{keyword}{private}:}
+\DoxyCodeLine{827     std::shared\_ptr<Range> range;}
+\DoxyCodeLine{828     std::shared\_ptr<TypeDeclaration> baseType;}
+\DoxyCodeLine{829 \};}
+\DoxyCodeLine{830 }
+\DoxyCodeLine{831 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1SetDeclaration}{SetDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{CompoundDeclaration}}}
+\DoxyCodeLine{832 \{}
+\DoxyCodeLine{833   \textcolor{keyword}{public}:}
+\DoxyCodeLine{834     \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} ElemType;}
+\DoxyCodeLine{835     \mbox{\hyperlink{classPascal_1_1SetDeclaration}{SetDeclaration}}(std::shared\_ptr<RangeDeclaration> range, std::shared\_ptr<TypeDeclaration> ty);}
+\DoxyCodeLine{836     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *e)}
+\DoxyCodeLine{837     \{}
+\DoxyCodeLine{838         \textcolor{keywordflow}{return} e-\/>getKind() == TypeKind::TYPE\_SET;}
+\DoxyCodeLine{839     \}}
+\DoxyCodeLine{840     \textcolor{keywordtype}{size\_t} SetWords()\textcolor{keyword}{ const}}
+\DoxyCodeLine{841 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{842         \textcolor{keywordflow}{return} (this-\/>range-\/>getRange()-\/>getSize() + \_\_SET\_MASK\_\_) >> \_\_SET\_POW\_TO\_BITS\_\_;}
+\DoxyCodeLine{843     \}}
+\DoxyCodeLine{844     std::shared\_ptr<Range> getRange() \textcolor{keyword}{const override};}
+\DoxyCodeLine{845     \textcolor{keywordtype}{void} UpdateRange(std::shared\_ptr<RangeDeclaration> rangeDecl)}
+\DoxyCodeLine{846     \{}
+\DoxyCodeLine{847         range = rangeDecl;}
+\DoxyCodeLine{848     \}}
+\DoxyCodeLine{849     \textcolor{keywordtype}{void} UpdateSubtype(std::shared\_ptr<TypeDeclaration> ty);}
+\DoxyCodeLine{850     \textcolor{keywordtype}{bool} isSameAs(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{851     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *isCompatibleType(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{TypeDeclaration}} *ty) \textcolor{keyword}{const override};}
+\DoxyCodeLine{852     \textcolor{keywordtype}{bool} hasLlvmType()\textcolor{keyword}{ const override}}
+\DoxyCodeLine{853 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{854         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{855     \}}
+\DoxyCodeLine{856 }
+\DoxyCodeLine{857   \textcolor{keyword}{private}:}
+\DoxyCodeLine{858     std::shared\_ptr<llvm::Type> getLlvmType() \textcolor{keyword}{const override};}
+\DoxyCodeLine{859 }
+\DoxyCodeLine{860   \textcolor{keyword}{private}:}
+\DoxyCodeLine{861     std::shared\_ptr<RangeDeclaration> range;}
+\DoxyCodeLine{862 \};}
+\DoxyCodeLine{863 }
+\DoxyCodeLine{864 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{865 \{}
+\DoxyCodeLine{866   \textcolor{keyword}{public}:}
+\DoxyCodeLine{867     \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(std::shared\_ptr<TypeDeclaration> typeDeclaration, ConstantKind kind, \mbox{\hyperlink{classPascal_1_1Location}{Location}} loc)}
+\DoxyCodeLine{868         : type(typeDeclaration), loc(loc), constantKind(kind)}
+\DoxyCodeLine{869     \{}
+\DoxyCodeLine{870     \}}
+\DoxyCodeLine{871     \textcolor{keyword}{virtual} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{\string~ConstantDeclaration}}()}
+\DoxyCodeLine{872     \{}
+\DoxyCodeLine{873     \}}
+\DoxyCodeLine{874     \textcolor{keyword}{const} std::shared\_ptr<TypeDeclaration> \&getType()\textcolor{keyword}{ const}}
+\DoxyCodeLine{875 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{876         \textcolor{keywordflow}{return} type;}
+\DoxyCodeLine{877     \}}
+\DoxyCodeLine{878     ConstantKind getConstantKind()\textcolor{keyword}{ const}}
+\DoxyCodeLine{879 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{880         \textcolor{keywordflow}{return} constantKind;}
+\DoxyCodeLine{881     \}}
+\DoxyCodeLine{882     \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&getLoc()\textcolor{keyword}{ const}}
+\DoxyCodeLine{883 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{884         \textcolor{keywordflow}{return} loc;}
+\DoxyCodeLine{885     \}}
+\DoxyCodeLine{886 }
+\DoxyCodeLine{887   \textcolor{keyword}{protected}:}
+\DoxyCodeLine{888     std::shared\_ptr<TypeDeclaration> type;}
+\DoxyCodeLine{889     ConstantKind constantKind;}
+\DoxyCodeLine{890     \mbox{\hyperlink{classPascal_1_1Location}{Location}} loc;}
+\DoxyCodeLine{891 \};}
+\DoxyCodeLine{892 }
+\DoxyCodeLine{893 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1IntConstantDeclaration}{IntConstantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{894 \{}
+\DoxyCodeLine{895   \textcolor{keyword}{public}:}
+\DoxyCodeLine{896     \mbox{\hyperlink{classPascal_1_1IntConstantDeclaration}{IntConstantDeclaration}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, int64\_t value)}
+\DoxyCodeLine{897         : value(value), \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(getIntegerType(), ConstantKind::INT\_CONSTANT\_DECLARATION, loc)}
+\DoxyCodeLine{898     \{}
+\DoxyCodeLine{899     \}}
+\DoxyCodeLine{900     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *constantDeclaration)}
+\DoxyCodeLine{901     \{}
+\DoxyCodeLine{902         \textcolor{keywordflow}{return} constantDeclaration-\/>getConstantKind() == ConstantKind::INT\_CONSTANT\_DECLARATION;}
+\DoxyCodeLine{903     \}}
+\DoxyCodeLine{904     int64\_t getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{905 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{906         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{907     \}}
+\DoxyCodeLine{908     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *namedObject)}
+\DoxyCodeLine{909     \{}
+\DoxyCodeLine{910         \textcolor{keywordflow}{return} isClassOf(namedObject);}
+\DoxyCodeLine{911     \}}
+\DoxyCodeLine{912 }
+\DoxyCodeLine{913   \textcolor{keyword}{private}:}
+\DoxyCodeLine{914     int64\_t value;}
+\DoxyCodeLine{915 \};}
+\DoxyCodeLine{916 }
+\DoxyCodeLine{917 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1EnumConstantDeclaration}{EnumConstantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{918 \{}
+\DoxyCodeLine{919   \textcolor{keyword}{public}:}
+\DoxyCodeLine{920     \mbox{\hyperlink{classPascal_1_1EnumConstantDeclaration}{EnumConstantDeclaration}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, uint64\_t value)}
+\DoxyCodeLine{921         : value(value), \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(getIntegerType(), ConstantKind::ENUM\_CONSTANT\_DECLARATION, loc)}
+\DoxyCodeLine{922     \{}
+\DoxyCodeLine{923     \}}
+\DoxyCodeLine{924     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *constantDeclaration)}
+\DoxyCodeLine{925     \{}
+\DoxyCodeLine{926         \textcolor{keywordflow}{return} constantDeclaration-\/>getConstantKind() == ConstantKind::ENUM\_CONSTANT\_DECLARATION;}
+\DoxyCodeLine{927     \}}
+\DoxyCodeLine{928     int64\_t getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{929 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{930         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{931     \}}
+\DoxyCodeLine{932     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *namedObject)}
+\DoxyCodeLine{933     \{}
+\DoxyCodeLine{934         \textcolor{keywordflow}{return} isClassOf(namedObject);}
+\DoxyCodeLine{935     \}}
+\DoxyCodeLine{936 }
+\DoxyCodeLine{937   \textcolor{keyword}{private}:}
+\DoxyCodeLine{938     uint64\_t value;}
+\DoxyCodeLine{939 \};}
+\DoxyCodeLine{940 }
+\DoxyCodeLine{941 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1RealConstantDeclaration}{RealConstantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{942 \{}
+\DoxyCodeLine{943   \textcolor{keyword}{public}:}
+\DoxyCodeLine{944     \mbox{\hyperlink{classPascal_1_1RealConstantDeclaration}{RealConstantDeclaration}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keywordtype}{double} value)}
+\DoxyCodeLine{945         : value(value), \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(getRealType(), ConstantKind::REAL\_CONSTANT\_DECLARATION, loc)}
+\DoxyCodeLine{946     \{}
+\DoxyCodeLine{947     \}}
+\DoxyCodeLine{948     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *constantDeclaration)}
+\DoxyCodeLine{949     \{}
+\DoxyCodeLine{950         \textcolor{keywordflow}{return} constantDeclaration-\/>getConstantKind() == ConstantKind::REAL\_CONSTANT\_DECLARATION;}
+\DoxyCodeLine{951     \}}
+\DoxyCodeLine{952     \textcolor{keywordtype}{double} getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{953 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{954         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{955     \}}
+\DoxyCodeLine{956     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *namedObject)}
+\DoxyCodeLine{957     \{}
+\DoxyCodeLine{958         \textcolor{keywordflow}{return} isClassOf(namedObject);}
+\DoxyCodeLine{959     \}}
+\DoxyCodeLine{960 }
+\DoxyCodeLine{961   \textcolor{keyword}{private}:}
+\DoxyCodeLine{962     \textcolor{keywordtype}{double} value;}
+\DoxyCodeLine{963 \};}
+\DoxyCodeLine{964 }
+\DoxyCodeLine{965 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1CharConstantDeclaration}{CharConstantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{966 \{}
+\DoxyCodeLine{967   \textcolor{keyword}{public}:}
+\DoxyCodeLine{968     \mbox{\hyperlink{classPascal_1_1CharConstantDeclaration}{CharConstantDeclaration}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keywordtype}{char} value)}
+\DoxyCodeLine{969         : value(value), \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(getCharType(), ConstantKind::CHAR\_CONSTANT\_DECLARATION, loc)}
+\DoxyCodeLine{970     \{}
+\DoxyCodeLine{971     \}}
+\DoxyCodeLine{972     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *constantDeclaration)}
+\DoxyCodeLine{973     \{}
+\DoxyCodeLine{974         \textcolor{keywordflow}{return} constantDeclaration-\/>getConstantKind() == ConstantKind::CHAR\_CONSTANT\_DECLARATION;}
+\DoxyCodeLine{975     \}}
+\DoxyCodeLine{976     int64\_t getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{977 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{978         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{979     \}}
+\DoxyCodeLine{980     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *namedObject)}
+\DoxyCodeLine{981     \{}
+\DoxyCodeLine{982         \textcolor{keywordflow}{return} isClassOf(namedObject);}
+\DoxyCodeLine{983     \}}
+\DoxyCodeLine{984 }
+\DoxyCodeLine{985   \textcolor{keyword}{private}:}
+\DoxyCodeLine{986     \textcolor{keywordtype}{char} value;}
+\DoxyCodeLine{987 \};}
+\DoxyCodeLine{988 }
+\DoxyCodeLine{989 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1BooleanConstantDeclaration}{BooleanConstantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{990 \{}
+\DoxyCodeLine{991   \textcolor{keyword}{public}:}
+\DoxyCodeLine{992     \mbox{\hyperlink{classPascal_1_1BooleanConstantDeclaration}{BooleanConstantDeclaration}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \textcolor{keywordtype}{bool} value)}
+\DoxyCodeLine{993         : value(value), \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(getBooleanType(), ConstantKind::BOOL\_CONSTANT\_DECLARATION, loc)}
+\DoxyCodeLine{994     \{}
+\DoxyCodeLine{995     \}}
+\DoxyCodeLine{996     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *constantDeclaration)}
+\DoxyCodeLine{997     \{}
+\DoxyCodeLine{998         \textcolor{keywordflow}{return} constantDeclaration-\/>getConstantKind() == ConstantKind::BOOL\_CONSTANT\_DECLARATION;}
+\DoxyCodeLine{999     \}}
+\DoxyCodeLine{1000     \textcolor{keywordtype}{bool} getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{1001 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{1002         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{1003     \}}
+\DoxyCodeLine{1004     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *namedObject)}
+\DoxyCodeLine{1005     \{}
+\DoxyCodeLine{1006         \textcolor{keywordflow}{return} isClassOf(namedObject);}
+\DoxyCodeLine{1007     \}}
+\DoxyCodeLine{1008 }
+\DoxyCodeLine{1009   \textcolor{keyword}{private}:}
+\DoxyCodeLine{1010     \textcolor{keywordtype}{bool} value;}
+\DoxyCodeLine{1011 \};}
+\DoxyCodeLine{1012 }
+\DoxyCodeLine{1013 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1StringConstantDeclaration}{StringConstantDeclaration}} : \textcolor{keyword}{public} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}}
+\DoxyCodeLine{1014 \{}
+\DoxyCodeLine{1015   \textcolor{keyword}{public}:}
+\DoxyCodeLine{1016     \mbox{\hyperlink{classPascal_1_1StringConstantDeclaration}{StringConstantDeclaration}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std::string value)}
+\DoxyCodeLine{1017         : value(value), \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}}(getStringType(), ConstantKind::STRING\_CONSTANT\_DECLARATION, loc)}
+\DoxyCodeLine{1018     \{}
+\DoxyCodeLine{1019     \}}
+\DoxyCodeLine{1020     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isClassOf(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *constantDeclaration)}
+\DoxyCodeLine{1021     \{}
+\DoxyCodeLine{1022         \textcolor{keywordflow}{return} constantDeclaration-\/>getConstantKind() == ConstantKind::STRING\_CONSTANT\_DECLARATION;}
+\DoxyCodeLine{1023     \}}
+\DoxyCodeLine{1024     std::string getValue()\textcolor{keyword}{ const}}
+\DoxyCodeLine{1025 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{1026         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{1027     \}}
+\DoxyCodeLine{1028     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} classof(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *namedObject)}
+\DoxyCodeLine{1029     \{}
+\DoxyCodeLine{1030         \textcolor{keywordflow}{return} isClassOf(namedObject);}
+\DoxyCodeLine{1031     \}}
+\DoxyCodeLine{1032 }
+\DoxyCodeLine{1033   \textcolor{keyword}{private}:}
+\DoxyCodeLine{1034     std::string value;}
+\DoxyCodeLine{1035 \};}
+\DoxyCodeLine{1036 }
+\DoxyCodeLine{1037 \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *operator+(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&lhs, \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&rhs);}
+\DoxyCodeLine{1038 \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *operator-\/(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&lhs, \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&rhs);}
+\DoxyCodeLine{1039 \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *operator*(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&lhs, \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&rhs);}
+\DoxyCodeLine{1040 \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} *operator/(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&lhs, \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{ConstantDeclaration}} \&rhs);}
+\DoxyCodeLine{1041 \} \textcolor{comment}{// namespace Pascal}}
+\DoxyCodeLine{1042 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_TYPE\_H}}
+
+\end{DoxyCode}

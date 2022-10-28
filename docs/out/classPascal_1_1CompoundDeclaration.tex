@@ -1,0 +1,83 @@
+\hypertarget{classPascal_1_1CompoundDeclaration}{}\doxysection{Pascal\+::Compound\+Declaration Class Reference}
+\label{classPascal_1_1CompoundDeclaration}\index{Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}}
+Inheritance diagram for Pascal\+::Compound\+Declaration\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=10.232557cm]{classPascal_1_1CompoundDeclaration}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_aed9ff875e28fa3bb4a19f96c78f8cc4c}\label{classPascal_1_1CompoundDeclaration_aed9ff875e28fa3bb4a19f96c78f8cc4c}} 
+{\bfseries Compound\+Declaration} (Type\+Kind type\+Kind, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+bool \mbox{\hyperlink{classPascal_1_1CompoundDeclaration_a09a79536a93b9a4715b66f3cc78d190d}{is\+Same\+As}} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$ty) const override
+\item 
+bool \mbox{\hyperlink{classPascal_1_1CompoundDeclaration_a0b24a83736e24750bb1c23d96a8b4bb3}{is\+Compound}} () const override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ \mbox{\hyperlink{classPascal_1_1CompoundDeclaration_a3f8c3e6f48beecc4e87c4e859611d192}{get\+Subtype}} () const override
+\item 
+bool \mbox{\hyperlink{classPascal_1_1CompoundDeclaration_aff420bb083398f4606581dfe91a9f48f}{has\+Llvm\+Type}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_a02e9dc807dd17e132f7b972b49e0436f}\label{classPascal_1_1CompoundDeclaration_a02e9dc807dd17e132f7b972b49e0436f}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$e)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_ab3bfbe20128bf0b74b416a66b3863b2d}\label{classPascal_1_1CompoundDeclaration_ab3bfbe20128bf0b74b416a66b3863b2d}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ {\bfseries base\+Type}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_a3f8c3e6f48beecc4e87c4e859611d192}\label{classPascal_1_1CompoundDeclaration_a3f8c3e6f48beecc4e87c4e859611d192}} 
+\index{Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}!getSubtype@{getSubtype}}
+\index{getSubtype@{getSubtype}!Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}}
+\doxysubsubsection{\texorpdfstring{getSubtype()}{getSubtype()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ Pascal\+::\+Compound\+Declaration\+::get\+Subtype (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_aff420bb083398f4606581dfe91a9f48f}\label{classPascal_1_1CompoundDeclaration_aff420bb083398f4606581dfe91a9f48f}} 
+\index{Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}!hasLlvmType@{hasLlvmType}}
+\index{hasLlvmType@{hasLlvmType}!Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}}
+\doxysubsubsection{\texorpdfstring{hasLlvmType()}{hasLlvmType()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Compound\+Declaration\+::has\+Llvm\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_a0b24a83736e24750bb1c23d96a8b4bb3}\label{classPascal_1_1CompoundDeclaration_a0b24a83736e24750bb1c23d96a8b4bb3}} 
+\index{Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}!isCompound@{isCompound}}
+\index{isCompound@{isCompound}!Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}}
+\doxysubsubsection{\texorpdfstring{isCompound()}{isCompound()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Compound\+Declaration\+::is\+Compound (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1CompoundDeclaration_a09a79536a93b9a4715b66f3cc78d190d}\label{classPascal_1_1CompoundDeclaration_a09a79536a93b9a4715b66f3cc78d190d}} 
+\index{Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}!isSameAs@{isSameAs}}
+\index{isSameAs@{isSameAs}!Pascal::CompoundDeclaration@{Pascal::CompoundDeclaration}}
+\doxysubsubsection{\texorpdfstring{isSameAs()}{isSameAs()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Compound\+Declaration\+::is\+Same\+As (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$}]{ty }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/type.\+h\end{DoxyCompactItemize}

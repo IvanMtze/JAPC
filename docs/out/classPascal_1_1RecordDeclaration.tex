@@ -1,0 +1,71 @@
+\hypertarget{classPascal_1_1RecordDeclaration}{}\doxysection{Pascal\+::Record\+Declaration Class Reference}
+\label{classPascal_1_1RecordDeclaration}\index{Pascal::RecordDeclaration@{Pascal::RecordDeclaration}}
+Inheritance diagram for Pascal\+::Record\+Declaration\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classPascal_1_1RecordDeclaration}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1RecordDeclaration_af9d130722d709682c0c8422bc4831190}\label{classPascal_1_1RecordDeclaration_af9d130722d709682c0c8422bc4831190}} 
+{\bfseries Record\+Declaration} (const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1FieldDeclaration}{Field\+Declaration}} $>$ $>$ flds, \mbox{\hyperlink{classPascal_1_1VariantDeclaration}{Variant\+Declaration}} $\ast$v)
+\item 
+size\+\_\+t \mbox{\hyperlink{classPascal_1_1RecordDeclaration_af6c1eb0486b2621ecd2284cbc8ec0f87}{get\+Size}} () const override
+\item 
+\mbox{\Hypertarget{classPascal_1_1RecordDeclaration_a3ed44b46c931ce38b3acd828c38eaae9}\label{classPascal_1_1RecordDeclaration_a3ed44b46c931ce38b3acd828c38eaae9}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariantDeclaration}{Variant\+Declaration}} $>$ {\bfseries get\+Variant} () const
+\item 
+bool \mbox{\hyperlink{classPascal_1_1RecordDeclaration_ac886e3c79903ed1005bda9e91a155dc0}{is\+Same\+As}} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$ty) const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1RecordDeclaration_ad3e159ed73e1d6a528757ab95f3d6a70}\label{classPascal_1_1RecordDeclaration_ad3e159ed73e1d6a528757ab95f3d6a70}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$e)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Type $>$ \mbox{\hyperlink{classPascal_1_1RecordDeclaration_a35449ff8638aefe99157844407922f20}{get\+Llvm\+Type}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1RecordDeclaration_a35449ff8638aefe99157844407922f20}\label{classPascal_1_1RecordDeclaration_a35449ff8638aefe99157844407922f20}} 
+\index{Pascal::RecordDeclaration@{Pascal::RecordDeclaration}!getLlvmType@{getLlvmType}}
+\index{getLlvmType@{getLlvmType}!Pascal::RecordDeclaration@{Pascal::RecordDeclaration}}
+\doxysubsubsection{\texorpdfstring{getLlvmType()}{getLlvmType()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Type $>$ Pascal\+::\+Record\+Declaration\+::get\+Llvm\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1RecordDeclaration_af6c1eb0486b2621ecd2284cbc8ec0f87}\label{classPascal_1_1RecordDeclaration_af6c1eb0486b2621ecd2284cbc8ec0f87}} 
+\index{Pascal::RecordDeclaration@{Pascal::RecordDeclaration}!getSize@{getSize}}
+\index{getSize@{getSize}!Pascal::RecordDeclaration@{Pascal::RecordDeclaration}}
+\doxysubsubsection{\texorpdfstring{getSize()}{getSize()}}
+{\footnotesize\ttfamily size\+\_\+t Pascal\+::\+Record\+Declaration\+::get\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1RecordDeclaration_ac886e3c79903ed1005bda9e91a155dc0}\label{classPascal_1_1RecordDeclaration_ac886e3c79903ed1005bda9e91a155dc0}} 
+\index{Pascal::RecordDeclaration@{Pascal::RecordDeclaration}!isSameAs@{isSameAs}}
+\index{isSameAs@{isSameAs}!Pascal::RecordDeclaration@{Pascal::RecordDeclaration}}
+\doxysubsubsection{\texorpdfstring{isSameAs()}{isSameAs()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Record\+Declaration\+::is\+Same\+As (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$}]{ty }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1FieldCollection}{Pascal\+::\+Field\+Collection}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/type.\+h\end{DoxyCompactItemize}

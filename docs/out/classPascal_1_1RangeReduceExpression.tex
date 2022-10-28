@@ -1,0 +1,57 @@
+\hypertarget{classPascal_1_1RangeReduceExpression}{}\doxysection{Pascal\+::Range\+Reduce\+Expression Class Reference}
+\label{classPascal_1_1RangeReduceExpression}\index{Pascal::RangeReduceExpression@{Pascal::RangeReduceExpression}}
+Inheritance diagram for Pascal\+::Range\+Reduce\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classPascal_1_1RangeReduceExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_a2e1cde22239d7f1b6e00e035a111afef}\label{classPascal_1_1RangeReduceExpression_a2e1cde22239d7f1b6e00e035a111afef}} 
+{\bfseries Range\+Reduce\+Expression} (\mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast, \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{Range\+Declaration}} $\ast$r)
+\item 
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_ac449c6b2aa6861c074c033e5919be25d}\label{classPascal_1_1RangeReduceExpression_ac449c6b2aa6861c074c033e5919be25d}} 
+{\bfseries Range\+Reduce\+Expression} (Expression\+Type expression\+Type, \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast, \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{Range\+Declaration}} $\ast$r)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1RangeReduceExpression_a91164f4da21d92625024c5fe145353b4}{code\+Gen}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_ad0fa05a81c26cacf490be2a32e6cf419}\label{classPascal_1_1RangeReduceExpression_ad0fa05a81c26cacf490be2a32e6cf419}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&v) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_a90a6bf12c3e6dc291b2eb39959bf4398}\label{classPascal_1_1RangeReduceExpression_a90a6bf12c3e6dc291b2eb39959bf4398}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_a52be9e642eb8f58ae143fe520114ac42}\label{classPascal_1_1RangeReduceExpression_a52be9e642eb8f58ae143fe520114ac42}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ {\bfseries expr}
+\item 
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_aa3bd8795db89d22df2a9c2a9ce8c9ae0}\label{classPascal_1_1RangeReduceExpression_aa3bd8795db89d22df2a9c2a9ce8c9ae0}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{Range\+Declaration}} $>$ {\bfseries range}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1RangeReduceExpression_a91164f4da21d92625024c5fe145353b4}\label{classPascal_1_1RangeReduceExpression_a91164f4da21d92625024c5fe145353b4}} 
+\index{Pascal::RangeReduceExpression@{Pascal::RangeReduceExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::RangeReduceExpression@{Pascal::RangeReduceExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Range\+Reduce\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

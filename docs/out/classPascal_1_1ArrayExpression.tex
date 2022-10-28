@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1ArrayExpression}{}\doxysection{Pascal\+::Array\+Expression Class Reference}
+\label{classPascal_1_1ArrayExpression}\index{Pascal::ArrayExpression@{Pascal::ArrayExpression}}
+Inheritance diagram for Pascal\+::Array\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classPascal_1_1ArrayExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1ArrayExpression_accc1eb97bb2a1042329e29d537370cca}\label{classPascal_1_1ArrayExpression_accc1eb97bb2a1042329e29d537370cca}} 
+{\bfseries Array\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableExpression}{Variable\+Expression}} $>$ v, const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ $>$ \&inds, const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1RangeDeclaration}{Range\+Declaration}} $>$ $>$ \&range\+Declaration, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1ArrayExpression_a833032b5114c8c7c133f8350698cf5ed}{get\+Address}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1ArrayExpression_a2363494dcf8a1586c0f3d2aebd5faf1d}\label{classPascal_1_1ArrayExpression_a2363494dcf8a1586c0f3d2aebd5faf1d}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&v) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1ArrayExpression_aefca1b5804bf24f9d6a51092c3551031}\label{classPascal_1_1ArrayExpression_aefca1b5804bf24f9d6a51092c3551031}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1ArrayExpression_a833032b5114c8c7c133f8350698cf5ed}\label{classPascal_1_1ArrayExpression_a833032b5114c8c7c133f8350698cf5ed}} 
+\index{Pascal::ArrayExpression@{Pascal::ArrayExpression}!getAddress@{getAddress}}
+\index{getAddress@{getAddress}!Pascal::ArrayExpression@{Pascal::ArrayExpression}}
+\doxysubsubsection{\texorpdfstring{getAddress()}{getAddress()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Array\+Expression\+::get\+Address (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1VariableExpression}{Pascal\+::\+Variable\+Expression}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

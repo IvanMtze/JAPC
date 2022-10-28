@@ -1,0 +1,54 @@
+\hypertarget{classPascal_1_1SizeOfExpression}{}\doxysection{Pascal\+::Size\+Of\+Expression Class Reference}
+\label{classPascal_1_1SizeOfExpression}\index{Pascal::SizeOfExpression@{Pascal::SizeOfExpression}}
+Inheritance diagram for Pascal\+::Size\+Of\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1SizeOfExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1SizeOfExpression_ac75033c3feebbb5304d138730b5643b1}\label{classPascal_1_1SizeOfExpression_ac75033c3feebbb5304d138730b5643b1}} 
+{\bfseries Size\+Of\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1SizeOfExpression_a0d29165e9ba41187d64475cc3a35a817}{code\+Gen}} () override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ \mbox{\hyperlink{classPascal_1_1SizeOfExpression_a59dc853bf54203f2654ce76f98b37369}{get\+Type\+Declaration}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1SizeOfExpression_ae7ad7203142237d31f5c7ffc798fa24c}\label{classPascal_1_1SizeOfExpression_ae7ad7203142237d31f5c7ffc798fa24c}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1SizeOfExpression_a0d29165e9ba41187d64475cc3a35a817}\label{classPascal_1_1SizeOfExpression_a0d29165e9ba41187d64475cc3a35a817}} 
+\index{Pascal::SizeOfExpression@{Pascal::SizeOfExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::SizeOfExpression@{Pascal::SizeOfExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Size\+Of\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+\mbox{\Hypertarget{classPascal_1_1SizeOfExpression_a59dc853bf54203f2654ce76f98b37369}\label{classPascal_1_1SizeOfExpression_a59dc853bf54203f2654ce76f98b37369}} 
+\index{Pascal::SizeOfExpression@{Pascal::SizeOfExpression}!getTypeDeclaration@{getTypeDeclaration}}
+\index{getTypeDeclaration@{getTypeDeclaration}!Pascal::SizeOfExpression@{Pascal::SizeOfExpression}}
+\doxysubsubsection{\texorpdfstring{getTypeDeclaration()}{getTypeDeclaration()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ Pascal\+::\+Size\+Of\+Expression\+::get\+Type\+Declaration (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

@@ -18,7 +18,11 @@ class ParserUtils
     static std::shared_ptr<Pascal::ConstantDeclaration> evaluateConstant(
         const std::shared_ptr<Pascal::ConstantDeclaration> rhs, const Pascal::TokenType tk,
         const std::shared_ptr<Pascal::ConstantDeclaration> lhs);
-    static int64_t constantDeclarationToInteger(const Pascal::ConstantDeclaration* c);
+    static int64_t constantDeclarationToInteger(const Pascal::ConstantDeclaration *c);
     static bool numericLiteralIsInteger(Pascal::Token tk);
+    static std::shared_ptr<Pascal::ExpressionAST> constantDeclarationToExpression(
+        Pascal::Location loc, Pascal::ConstantDeclaration *constantDeclaration);
+    static std::shared_ptr<Pascal::TypeDeclaration> copyWithInitialValue(
+        std::shared_ptr<Pascal::TypeDeclaration> typeDeclaration, std::shared_ptr<Pascal::ExpressionAST> initial);
 };
 #endif // JAPC_PARSER_UTILS_H

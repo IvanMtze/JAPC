@@ -1,0 +1,66 @@
+\hypertarget{classPascal_1_1VariableExpression}{}\doxysection{Pascal\+::Variable\+Expression Class Reference}
+\label{classPascal_1_1VariableExpression}\index{Pascal::VariableExpression@{Pascal::VariableExpression}}
+Inheritance diagram for Pascal\+::Variable\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.102102cm]{classPascal_1_1VariableExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_aa6804808a192b6d07cd6fab2e5dbe38e}\label{classPascal_1_1VariableExpression_aa6804808a192b6d07cd6fab2e5dbe38e}} 
+{\bfseries Variable\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, const std\+::string \&name, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_a8d625174f8dad9615d66ff0b1740b003}\label{classPascal_1_1VariableExpression_a8d625174f8dad9615d66ff0b1740b003}} 
+{\bfseries Variable\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, Expression\+Type expression\+Type, const std\+::string \&name, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_a09c2409dc46f5213ab491d7981ca124e}\label{classPascal_1_1VariableExpression_a09c2409dc46f5213ab491d7981ca124e}} 
+{\bfseries Variable\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, Expression\+Type expression\+Type, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableExpression}{Variable\+Expression}} $>$ variable\+Expre, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+const std\+::string \mbox{\hyperlink{classPascal_1_1VariableExpression_a5c3aba4cf947b312a87208d9f0167969}{get\+Name}} () const override
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1VariableExpression_a3f2f9a9f997fd0e2120b9f871d9bb5c7}{get\+Address}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_ac53969492726835693140aeea7260cd2}\label{classPascal_1_1VariableExpression_ac53969492726835693140aeea7260cd2}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_ae252d44f7a008a8667199d7e4ca9f09a}\label{classPascal_1_1VariableExpression_ae252d44f7a008a8667199d7e4ca9f09a}} 
+std\+::string {\bfseries name}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_a3f2f9a9f997fd0e2120b9f871d9bb5c7}\label{classPascal_1_1VariableExpression_a3f2f9a9f997fd0e2120b9f871d9bb5c7}} 
+\index{Pascal::VariableExpression@{Pascal::VariableExpression}!getAddress@{getAddress}}
+\index{getAddress@{getAddress}!Pascal::VariableExpression@{Pascal::VariableExpression}}
+\doxysubsubsection{\texorpdfstring{getAddress()}{getAddress()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Variable\+Expression\+::get\+Address (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1AddressableExpression}{Pascal\+::\+Addressable\+Expression}}.
+
+\mbox{\Hypertarget{classPascal_1_1VariableExpression_a5c3aba4cf947b312a87208d9f0167969}\label{classPascal_1_1VariableExpression_a5c3aba4cf947b312a87208d9f0167969}} 
+\index{Pascal::VariableExpression@{Pascal::VariableExpression}!getName@{getName}}
+\index{getName@{getName}!Pascal::VariableExpression@{Pascal::VariableExpression}}
+\doxysubsubsection{\texorpdfstring{getName()}{getName()}}
+{\footnotesize\ttfamily const std\+::string Pascal\+::\+Variable\+Expression\+::get\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1AddressableExpression}{Pascal\+::\+Addressable\+Expression}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

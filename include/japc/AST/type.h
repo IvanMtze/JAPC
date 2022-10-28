@@ -21,6 +21,7 @@ namespace Pascal
 {
 class TypeDeclaration;
 class PrototypeExpression;
+class ExpressionAST;
 std::shared_ptr<TypeDeclaration> getIntegerType();
 std::shared_ptr<TypeDeclaration> getLongIntType();
 std::shared_ptr<TypeDeclaration> getCharType();
@@ -190,12 +191,20 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
     {
         TypeDeclaration::name = name;
     }
+    void setInitialValue(std::shared_ptr<ExpressionAST> i){
+
+    }
+    virtual std::shared_ptr<TypeDeclaration> clone() const
+    {
+        return 0;
+    }
 
   protected:
     virtual std::shared_ptr<llvm::Type> getLlvmType() const = 0;
     const TypeKind kind;
     mutable std::shared_ptr<llvm::Type> ltype;
     std::string name;
+    std::shared_ptr<ExpressionAST> initial;
 };
 
 class ForwardDeclaration : public TypeDeclaration
@@ -250,6 +259,10 @@ class RealDeclaration : public BaseTypeDeclaration
     static bool isClassOf(const TypeDeclaration *e)
     {
         return e->getKind() == TypeKind::TYPE_REAL;
+    }
+    static bool classof(const TypeDeclaration *e)
+    {
+        return isClassOf(e);
     }
 
   protected:
@@ -496,7 +509,9 @@ class PointerDeclaration : public CompoundDeclaration
         baseType = t;
         incomplete = false;
     }
-
+    static bool classof(const TypeDeclaration *e){
+        return isClassOf(e);
+    }
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
 

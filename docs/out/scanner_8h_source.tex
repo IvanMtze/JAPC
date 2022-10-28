@@ -1,0 +1,326 @@
+\hypertarget{scanner_8h_source}{}\doxysection{scanner.\+h}
+\label{scanner_8h_source}\index{include/japc/scanner/scanner.h@{include/japc/scanner/scanner.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 30/06/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_SCANNER\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_SCANNER\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}japc/basic/ptr.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <regex>}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{namespace }Pascal}
+\DoxyCodeLine{14 \{}
+\DoxyCodeLine{15 \textcolor{keyword}{enum class} TokenFlags : \textcolor{keywordtype}{int}}
+\DoxyCodeLine{16 \{}
+\DoxyCodeLine{17     NONE = 0,}
+\DoxyCodeLine{18     PRECEDING\_LINE\_BREAK = 1 << 0,}
+\DoxyCodeLine{19     PRECEDING\_COMMENT = 1 << 1,}
+\DoxyCodeLine{20     UNTERMINATED = 1 << 2,}
+\DoxyCodeLine{21     EXTENDED\_UNICODE\_ESCAPE = 1 << 3,}
+\DoxyCodeLine{22     SCIENTIFIC = 1 << 4,}
+\DoxyCodeLine{23     OCTAL = 1 << 5,}
+\DoxyCodeLine{24     HEX\_SPECIFIER = 1 << 6,}
+\DoxyCodeLine{25     BINARY\_SPECIFIER = 1 << 7,}
+\DoxyCodeLine{26     OCTAL\_SPECIFIER = 1 << 8,}
+\DoxyCodeLine{27     CONTAINS\_SEPARATOR = 1 << 9,}
+\DoxyCodeLine{28     UNICODE\_ESCAPE = 1 << 10,}
+\DoxyCodeLine{29     CONTAINS\_INVALID\_ESCAPE = 1 << 11,}
+\DoxyCodeLine{30     BINARY\_OR\_OCTAL\_SPECIFIER = BINARY\_SPECIFIER | OCTAL\_SPECIFIER,}
+\DoxyCodeLine{31     NUMERIC\_LITERAL\_FLAGS = SCIENTIFIC | OCTAL | HEX\_SPECIFIER | BINARY\_OR\_OCTAL\_SPECIFIER | CONTAINS\_SEPARATOR,}
+\DoxyCodeLine{32     TEMPLATE\_LITERAL\_LIKE\_FLAGS = CONTAINS\_INVALID\_ESCAPE,}
+\DoxyCodeLine{33 \};}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keyword}{enum class} TokenType}
+\DoxyCodeLine{36 \{}
+\DoxyCodeLine{37     null,}
+\DoxyCodeLine{38     \textcolor{comment}{/*}}
+\DoxyCodeLine{39 \textcolor{comment}{     * WORD-\/SYMBOLS. See ISO 10206 Page 19}}
+\DoxyCodeLine{40 \textcolor{comment}{     */}}
+\DoxyCodeLine{41     SYMBOL\_AND,}
+\DoxyCodeLine{42     SYMBOL\_AND\_THEN,}
+\DoxyCodeLine{43     SYMBOL\_ARRAY,}
+\DoxyCodeLine{44     SYMBOL\_BEGIN,}
+\DoxyCodeLine{45     SYMBOL\_BINDABLE,}
+\DoxyCodeLine{46     SYMBOL\_CASE,}
+\DoxyCodeLine{47     SYMBOL\_CONST,}
+\DoxyCodeLine{48     SYMBOL\_DIV,}
+\DoxyCodeLine{49     SYMBOL\_DO,}
+\DoxyCodeLine{50     SYMBOL\_DOWNTO,}
+\DoxyCodeLine{51     SYMBOL\_ELSE,}
+\DoxyCodeLine{52     SYMBOL\_END,}
+\DoxyCodeLine{53     SYMBOL\_EXPORT,}
+\DoxyCodeLine{54     SYMBOL\_FILE,}
+\DoxyCodeLine{55     SYMBOL\_FOR,}
+\DoxyCodeLine{56     SYMBOL\_FUNCTION,}
+\DoxyCodeLine{57     SYMBOL\_GOTO,}
+\DoxyCodeLine{58     SYMBOL\_IF,}
+\DoxyCodeLine{59     SYMBOL\_IMPORT,}
+\DoxyCodeLine{60     SYMBOL\_IN,}
+\DoxyCodeLine{61     SYMBOL\_LABEL,}
+\DoxyCodeLine{62     SYMBOL\_MOD,}
+\DoxyCodeLine{63     SYMBOL\_MODULE,}
+\DoxyCodeLine{64     SYMBOL\_NIL,}
+\DoxyCodeLine{65     SYMBOL\_NOT,}
+\DoxyCodeLine{66     SYMBOL\_OF,}
+\DoxyCodeLine{67     SYMBOL\_ONLY,}
+\DoxyCodeLine{68     SYMBOL\_OR,}
+\DoxyCodeLine{69     SYMBOL\_OR\_ELSE,}
+\DoxyCodeLine{70     SYMBOL\_OTHERWISE,}
+\DoxyCodeLine{71     SYMBOL\_PACKED,}
+\DoxyCodeLine{72     SYMBOL\_POW,}
+\DoxyCodeLine{73     SYMBOL\_PROCEDURE,}
+\DoxyCodeLine{74     SYMBOL\_PROGRAM,}
+\DoxyCodeLine{75     SYMBOL\_PROTECTED,}
+\DoxyCodeLine{76     SYMBOL\_QUALIFIED,}
+\DoxyCodeLine{77     SYMBOL\_RECORD,}
+\DoxyCodeLine{78     SYMBOL\_REPEAT,}
+\DoxyCodeLine{79     SYMBOL\_RESTRICTED,}
+\DoxyCodeLine{80     SYMBOL\_SET,}
+\DoxyCodeLine{81     SYMBOL\_THEN,}
+\DoxyCodeLine{82     SYMBOL\_TO,}
+\DoxyCodeLine{83     SYMBOL\_TYPE,}
+\DoxyCodeLine{84     SYMBOL\_UNTIL,}
+\DoxyCodeLine{85     SYMBOL\_VALUE,}
+\DoxyCodeLine{86     SYMBOL\_VAR,}
+\DoxyCodeLine{87     SYMBOL\_WHILE,}
+\DoxyCodeLine{88     SYMBOL\_WITH,}
+\DoxyCodeLine{89     SYMBOL\_EXTERNAL,}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91     \textcolor{comment}{/*}}
+\DoxyCodeLine{92 \textcolor{comment}{     * SPECIAL-\/SYMBOLS. See ISO 10206 Page 19}}
+\DoxyCodeLine{93 \textcolor{comment}{     */}}
+\DoxyCodeLine{94     SYMBOL\_PLUS,}
+\DoxyCodeLine{95     SYMBOL\_MINUS,}
+\DoxyCodeLine{96     SYMBOL\_STAR,}
+\DoxyCodeLine{97     SYMBOL\_STAR\_STAR,}
+\DoxyCodeLine{98     SYMBOL\_SLASH,}
+\DoxyCodeLine{99     SYMBOL\_EQUAL,}
+\DoxyCodeLine{100     SYMBOL\_LESS\_THAN,}
+\DoxyCodeLine{101     SYMBOL\_GREATER\_THAN,}
+\DoxyCodeLine{102     SYMBOL\_SQUARE\_BRACKET\_OPEN,}
+\DoxyCodeLine{103     SYMBOL\_SQUARE\_BRACKET\_CLOSE,}
+\DoxyCodeLine{104     SYMBOL\_DOT,}
+\DoxyCodeLine{105     SYMBOL\_COMMA,}
+\DoxyCodeLine{106     SYMBOL\_SEMICOLON,}
+\DoxyCodeLine{107     SYMBOL\_COLON,}
+\DoxyCodeLine{108     SYMBOL\_PAREN\_OPEN,}
+\DoxyCodeLine{109     SYMBOL\_PAREN\_CLOSE,}
+\DoxyCodeLine{110     SYMBOL\_BRACE\_OPEN,}
+\DoxyCodeLine{111     SYMBOL\_BRACE\_CLOSE,}
+\DoxyCodeLine{112     SYMBOL\_POWER,}
+\DoxyCodeLine{113     SYMBOL\_STRING\_KEYWORD,}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115     \textcolor{comment}{/*}}
+\DoxyCodeLine{116 \textcolor{comment}{     * One or more characters SPECIAL-\/SYMBOLS}}
+\DoxyCodeLine{117 \textcolor{comment}{     */}}
+\DoxyCodeLine{118     SYMBOL\_LESS\_GREATER\_THAN,}
+\DoxyCodeLine{119     SYMBOL\_LESS\_EQUAL\_THAN,}
+\DoxyCodeLine{120     SYMBOL\_GREATER\_EQUAL\_THAN,}
+\DoxyCodeLine{121     SYMBOL\_COLON\_EQUAL,}
+\DoxyCodeLine{122     SYMBOL\_DOT\_DOT,}
+\DoxyCodeLine{123     SYMBOL\_GREATER\_LESS\_THAN,}
+\DoxyCodeLine{124     SYMBOL\_EQUAL\_GREATER\_THAN,}
+\DoxyCodeLine{125     SYMBOL\_WHITE\_SPACE,}
+\DoxyCodeLine{126     SYMBOL\_LETTER,}
+\DoxyCodeLine{127     SYMBOL\_UNDERSCORE,}
+\DoxyCodeLine{128     \textcolor{comment}{/*}}
+\DoxyCodeLine{129 \textcolor{comment}{     *}}
+\DoxyCodeLine{130 \textcolor{comment}{     */}}
+\DoxyCodeLine{131     IDENTIFIER,}
+\DoxyCodeLine{132     STRING\_LITERAL,}
+\DoxyCodeLine{133     NUMERIC\_LITERAL,}
+\DoxyCodeLine{134     BIG\_INTEGER,}
+\DoxyCodeLine{135     NEW\_LINE,}
+\DoxyCodeLine{136     COMMENT,}
+\DoxyCodeLine{137     END\_OF\_FILE,}
+\DoxyCodeLine{138     UNKNOWN,}
+\DoxyCodeLine{139 \};}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Location}{Location}}}
+\DoxyCodeLine{142 \{}
+\DoxyCodeLine{143   \textcolor{keyword}{public}:}
+\DoxyCodeLine{144     \mbox{\hyperlink{classPascal_1_1Location}{Location}}(\textcolor{keyword}{const} \textcolor{keywordtype}{int} lineNumber, \textcolor{keyword}{const} \textcolor{keywordtype}{int} charNumber, std::string file)}
+\DoxyCodeLine{145         : lineNo(lineNumber), charNo(charNumber), fileName(file)\{\};}
+\DoxyCodeLine{146     \mbox{\hyperlink{classPascal_1_1Location}{Location}}() : lineNo(0), charNo(0)\{\};}
+\DoxyCodeLine{147     \mbox{\hyperlink{classPascal_1_1Location}{Location}}(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc) : charNo(loc.charNo), fileName(loc.fileName), lineNo(loc.lineNo)\{\};}
+\DoxyCodeLine{148     \mbox{\hyperlink{classPascal_1_1Location}{Location}}(\mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc) : charNo(loc.charNo), fileName(loc.fileName), lineNo(loc.lineNo)\{\};}
+\DoxyCodeLine{149     \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&operator=(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc)}
+\DoxyCodeLine{150     \{}
+\DoxyCodeLine{151         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{152     \}}
+\DoxyCodeLine{153     \textcolor{keyword}{const} \textcolor{keywordtype}{int} getLineNo()\textcolor{keyword}{ const}}
+\DoxyCodeLine{154 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{155         \textcolor{keywordflow}{return} lineNo;}
+\DoxyCodeLine{156     \}}
+\DoxyCodeLine{157     \textcolor{keyword}{const} \textcolor{keywordtype}{int} getCharNo()\textcolor{keyword}{ const}}
+\DoxyCodeLine{158 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{159         \textcolor{keywordflow}{return} charNo;}
+\DoxyCodeLine{160     \}}
+\DoxyCodeLine{161     \textcolor{keyword}{const} std::string \&getFileName()\textcolor{keyword}{ const}}
+\DoxyCodeLine{162 \textcolor{keyword}{    }\{}
+\DoxyCodeLine{163         \textcolor{keywordflow}{return} fileName;}
+\DoxyCodeLine{164     \}}
+\DoxyCodeLine{165     \textcolor{keywordtype}{void} setFileName(\textcolor{keyword}{const} std::string \&fileName)}
+\DoxyCodeLine{166     \{}
+\DoxyCodeLine{167         Location::fileName = fileName;}
+\DoxyCodeLine{168     \}}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170   \textcolor{keyword}{private}:}
+\DoxyCodeLine{171     \textcolor{keyword}{const} \textcolor{keywordtype}{int} lineNo;}
+\DoxyCodeLine{172     \textcolor{keyword}{const} \textcolor{keywordtype}{int} charNo;}
+\DoxyCodeLine{173     std::string fileName;}
+\DoxyCodeLine{174 \};}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Token}{Token}}}
+\DoxyCodeLine{177 \{}
+\DoxyCodeLine{178   \textcolor{keyword}{public}:}
+\DoxyCodeLine{179     \mbox{\hyperlink{classPascal_1_1Token}{Token}}(TokenType tkType, std::string value, \mbox{\hyperlink{classPascal_1_1Location}{Location}} pos) : tokenType(tkType), tokenValue(value), tokenPos(pos)\{\};}
+\DoxyCodeLine{180     TokenType getTokenType()}
+\DoxyCodeLine{181     \{}
+\DoxyCodeLine{182         \textcolor{keywordflow}{return} this-\/>tokenType;}
+\DoxyCodeLine{183     \}}
+\DoxyCodeLine{184     std::string getValue()}
+\DoxyCodeLine{185     \{}
+\DoxyCodeLine{186         \textcolor{keywordflow}{return} this-\/>tokenValue;}
+\DoxyCodeLine{187     \}}
+\DoxyCodeLine{188     \mbox{\hyperlink{classPascal_1_1Location}{Location}} getTokenPos()}
+\DoxyCodeLine{189     \{}
+\DoxyCodeLine{190         \textcolor{keywordflow}{return} this-\/>getTokenPos();}
+\DoxyCodeLine{191     \}}
+\DoxyCodeLine{192 }
+\DoxyCodeLine{193   \textcolor{keyword}{private}:}
+\DoxyCodeLine{194     TokenType tokenType;}
+\DoxyCodeLine{195     std::string tokenValue;}
+\DoxyCodeLine{196     \mbox{\hyperlink{classPascal_1_1Location}{Location}} tokenPos;}
+\DoxyCodeLine{197 \};}
+\DoxyCodeLine{198 }
+\DoxyCodeLine{199 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1Scanner}{Scanner}}}
+\DoxyCodeLine{200 \{}
+\DoxyCodeLine{201   \textcolor{keyword}{public}:}
+\DoxyCodeLine{202     \textcolor{comment}{/*}}
+\DoxyCodeLine{203 \textcolor{comment}{     * CONSTRUCTORS}}
+\DoxyCodeLine{204 \textcolor{comment}{     */}}
+\DoxyCodeLine{205     \mbox{\hyperlink{classPascal_1_1Scanner}{Scanner}}()}
+\DoxyCodeLine{206     \{}
+\DoxyCodeLine{207     \}}
+\DoxyCodeLine{208     \mbox{\hyperlink{classPascal_1_1Scanner}{Scanner}}(std::string \&source\_, \textcolor{keywordtype}{int} currentPos\_ = 0) : source(source\_), currentPos(currentPos\_)}
+\DoxyCodeLine{209     \{}
+\DoxyCodeLine{210         end = source.size();}
+\DoxyCodeLine{211     \};}
+\DoxyCodeLine{212     \textcolor{comment}{/*}}
+\DoxyCodeLine{213 \textcolor{comment}{     * METHODS}}
+\DoxyCodeLine{214 \textcolor{comment}{     */}}
+\DoxyCodeLine{215     TokenType scan();}
+\DoxyCodeLine{216     std::string getTextSource();}
+\DoxyCodeLine{217     \textcolor{keywordtype}{void} setTextSource(std::string source);}
+\DoxyCodeLine{218     \textcolor{keywordtype}{void} setSkipTrivia(\textcolor{keywordtype}{bool} skipTrivia);}
+\DoxyCodeLine{219     \textcolor{keyword}{static} std::string tokenTypeToStr(TokenType token);}
+\DoxyCodeLine{220     \mbox{\hyperlink{classPascal_1_1Token}{Token}} getCurrentTokenObject();}
+\DoxyCodeLine{221     \textcolor{keywordtype}{void} setSkipSpaces(\textcolor{keywordtype}{bool} skipSpaces);}
+\DoxyCodeLine{222     \textcolor{keywordtype}{void} setSkipComments(\textcolor{keywordtype}{bool} skipComments);}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224   \textcolor{keyword}{private}:}
+\DoxyCodeLine{225     std::string source\{0\};}
+\DoxyCodeLine{226     \textcolor{keywordtype}{int} currentPos = 0;}
+\DoxyCodeLine{227     \textcolor{keywordtype}{int} end;}
+\DoxyCodeLine{228     \textcolor{keywordtype}{bool} skipTrivia;}
+\DoxyCodeLine{229     std::string tokenValue;}
+\DoxyCodeLine{230     \textcolor{keywordtype}{int} tokenFlags = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(TokenFlags::NONE);}
+\DoxyCodeLine{231     TokenType curToken;}
+\DoxyCodeLine{232     \textcolor{keywordtype}{int} tokenPos;}
+\DoxyCodeLine{233     \textcolor{keywordtype}{int} curLine = 1;}
+\DoxyCodeLine{234     std::string filename;}
+\DoxyCodeLine{235     \textcolor{keywordtype}{bool} skipComments;}
+\DoxyCodeLine{236     \textcolor{keywordtype}{bool} skipSpaces;}
+\DoxyCodeLine{237     \textcolor{comment}{/*}}
+\DoxyCodeLine{238 \textcolor{comment}{     * UTILS}}
+\DoxyCodeLine{239 \textcolor{comment}{     */}}
+\DoxyCodeLine{240     \textcolor{keywordtype}{bool} isWhiteSpaceSingleLine(\textcolor{keyword}{const} \textcolor{keywordtype}{int} ch);}
+\DoxyCodeLine{241     \textcolor{keywordtype}{bool} isDigit(\textcolor{keyword}{const} \textcolor{keywordtype}{int} ch);}
+\DoxyCodeLine{242     std::pair<TokenType, std::string> scanNumber();}
+\DoxyCodeLine{243     std::string scanNumberFragment();}
+\DoxyCodeLine{244     \textcolor{keywordtype}{bool} isLineBreak(\textcolor{keyword}{const} \textcolor{keywordtype}{int} ch);}
+\DoxyCodeLine{245     \textcolor{keywordtype}{int} peekExtendedUnicodeEscape();}
+\DoxyCodeLine{246     \textcolor{keywordtype}{bool} isIdentifierStart(\textcolor{keywordtype}{char} ch);}
+\DoxyCodeLine{247     \textcolor{keywordtype}{bool} isIdentifierPart(\textcolor{keywordtype}{char} ch);}
+\DoxyCodeLine{248     std::string utf16EncodeAsString(\textcolor{keywordtype}{char} ch);}
+\DoxyCodeLine{249     std::string scanExtendedUnicodeEscape();}
+\DoxyCodeLine{250     std::string scanIdentifierParts();}
+\DoxyCodeLine{251     TokenType scanIdentifier(\textcolor{keywordtype}{char} startCharacter);}
+\DoxyCodeLine{252     std::string scanEscapeSequence(\textcolor{keywordtype}{bool} isTaggedTemplate);}
+\DoxyCodeLine{253     std::string scanString();}
+\DoxyCodeLine{254     std::string scanHexadecimalEscape(\textcolor{keyword}{const} \textcolor{keywordtype}{int} numberOfDigits);}
+\DoxyCodeLine{255     \textcolor{keywordtype}{int} scanExactNumberOfHexDigits(\textcolor{keyword}{const} \textcolor{keywordtype}{int} numberOfDigits, \textcolor{keywordtype}{bool} canHaveSeparators);}
+\DoxyCodeLine{256     \textcolor{keywordtype}{bool} isCodePoint(\textcolor{keyword}{const} \textcolor{keywordtype}{char} ch);}
+\DoxyCodeLine{257     \textcolor{keywordtype}{bool} isHexDigit(\textcolor{keyword}{const} \textcolor{keywordtype}{char} ch);}
+\DoxyCodeLine{258     TokenType getIdentifierToken();}
+\DoxyCodeLine{259     TokenType checkBigIntSuffix();}
+\DoxyCodeLine{260     std::string scanMinimumNumberOfHexDigits(\textcolor{keywordtype}{int} count, \textcolor{keywordtype}{bool} canHaveSeparators);}
+\DoxyCodeLine{261     std::string scanBinaryOrOctalDigits(\textcolor{keywordtype}{int} base);}
+\DoxyCodeLine{262     std::string scanHexDigits(\textcolor{keyword}{const} \textcolor{keywordtype}{int} minCount, \textcolor{keywordtype}{bool} scanAsManyAsPossible, \textcolor{keywordtype}{bool} canHaveSeparators);}
+\DoxyCodeLine{263     std::string parsePseudoBigInt(std::string number);}
+\DoxyCodeLine{264     \textcolor{keywordtype}{int} parseInt(std::string number, \textcolor{keyword}{const} \textcolor{keywordtype}{int} radix = 10);}
+\DoxyCodeLine{265     \textcolor{keywordtype}{int} peekUnicodeEscape();}
+\DoxyCodeLine{266     std::map<std::string, TokenType> keywordsToTokenMap\{}
+\DoxyCodeLine{267         \{\textcolor{stringliteral}{"{}AND"{}}, TokenType::SYMBOL\_AND\},}
+\DoxyCodeLine{268         \{\textcolor{stringliteral}{"{}AND\_THEN"{}}, TokenType::SYMBOL\_AND\_THEN\},}
+\DoxyCodeLine{269         \{\textcolor{stringliteral}{"{}ARRAY"{}}, TokenType::SYMBOL\_ARRAY\},}
+\DoxyCodeLine{270         \{\textcolor{stringliteral}{"{}BEGIN"{}}, TokenType::SYMBOL\_BEGIN\},}
+\DoxyCodeLine{271         \{\textcolor{stringliteral}{"{}BINDABLE"{}}, TokenType::SYMBOL\_BINDABLE\},}
+\DoxyCodeLine{272         \{\textcolor{stringliteral}{"{}CASE"{}}, TokenType::SYMBOL\_CASE\},}
+\DoxyCodeLine{273         \{\textcolor{stringliteral}{"{}CONST"{}}, TokenType::SYMBOL\_CONST\},}
+\DoxyCodeLine{274         \{\textcolor{stringliteral}{"{}DIV"{}}, TokenType::SYMBOL\_DIV\},}
+\DoxyCodeLine{275         \{\textcolor{stringliteral}{"{}DO"{}}, TokenType::SYMBOL\_DO\},}
+\DoxyCodeLine{276         \{\textcolor{stringliteral}{"{}DOWNTO"{}}, TokenType::SYMBOL\_DOWNTO\},}
+\DoxyCodeLine{277         \{\textcolor{stringliteral}{"{}ELSE"{}}, TokenType::SYMBOL\_ELSE\},}
+\DoxyCodeLine{278         \{\textcolor{stringliteral}{"{}END"{}}, TokenType::SYMBOL\_END\},}
+\DoxyCodeLine{279         \{\textcolor{stringliteral}{"{}EXPORT"{}}, TokenType::SYMBOL\_EXPORT\},}
+\DoxyCodeLine{280         \{\textcolor{stringliteral}{"{}FILE"{}}, TokenType::SYMBOL\_FILE\},}
+\DoxyCodeLine{281         \{\textcolor{stringliteral}{"{}FOR"{}}, TokenType::SYMBOL\_FOR\},}
+\DoxyCodeLine{282         \{\textcolor{stringliteral}{"{}FUNCTION"{}}, TokenType::SYMBOL\_FUNCTION\},}
+\DoxyCodeLine{283         \{\textcolor{stringliteral}{"{}GOTO"{}}, TokenType::SYMBOL\_GOTO\},}
+\DoxyCodeLine{284         \{\textcolor{stringliteral}{"{}IF"{}}, TokenType::SYMBOL\_IF\},}
+\DoxyCodeLine{285         \{\textcolor{stringliteral}{"{}IMPORT"{}}, TokenType::SYMBOL\_IMPORT\},}
+\DoxyCodeLine{286         \{\textcolor{stringliteral}{"{}IN"{}}, TokenType::SYMBOL\_IN\},}
+\DoxyCodeLine{287         \{\textcolor{stringliteral}{"{}LABEL"{}}, TokenType::SYMBOL\_LABEL\},}
+\DoxyCodeLine{288         \{\textcolor{stringliteral}{"{}MOD"{}}, TokenType::SYMBOL\_MOD\},}
+\DoxyCodeLine{289         \{\textcolor{stringliteral}{"{}MODULE"{}}, TokenType::SYMBOL\_MODULE\},}
+\DoxyCodeLine{290         \{\textcolor{stringliteral}{"{}NIL"{}}, TokenType::SYMBOL\_NIL\},}
+\DoxyCodeLine{291         \{\textcolor{stringliteral}{"{}NOT"{}}, TokenType::SYMBOL\_NOT\},}
+\DoxyCodeLine{292         \{\textcolor{stringliteral}{"{}OF"{}}, TokenType::SYMBOL\_OF\},}
+\DoxyCodeLine{293         \{\textcolor{stringliteral}{"{}ONLY"{}}, TokenType::SYMBOL\_ONLY\},}
+\DoxyCodeLine{294         \{\textcolor{stringliteral}{"{}OR"{}}, TokenType::SYMBOL\_OR\},}
+\DoxyCodeLine{295         \{\textcolor{stringliteral}{"{}OR\_ELSE"{}}, TokenType::SYMBOL\_OR\_ELSE\},}
+\DoxyCodeLine{296         \{\textcolor{stringliteral}{"{}OTHERWISE"{}}, TokenType::SYMBOL\_OTHERWISE\},}
+\DoxyCodeLine{297         \{\textcolor{stringliteral}{"{}PACKED"{}}, TokenType::SYMBOL\_PACKED\},}
+\DoxyCodeLine{298         \{\textcolor{stringliteral}{"{}POW"{}}, TokenType::SYMBOL\_POW\},}
+\DoxyCodeLine{299         \{\textcolor{stringliteral}{"{}PROCEDURE"{}}, TokenType::SYMBOL\_PROCEDURE\},}
+\DoxyCodeLine{300         \{\textcolor{stringliteral}{"{}PROGRAM"{}}, TokenType::SYMBOL\_PROGRAM\},}
+\DoxyCodeLine{301         \{\textcolor{stringliteral}{"{}PROTECTED"{}}, TokenType::SYMBOL\_PROTECTED\},}
+\DoxyCodeLine{302         \{\textcolor{stringliteral}{"{}QUALIFIED"{}}, TokenType::SYMBOL\_QUALIFIED\},}
+\DoxyCodeLine{303         \{\textcolor{stringliteral}{"{}RECORD"{}}, TokenType::SYMBOL\_RECORD\},}
+\DoxyCodeLine{304         \{\textcolor{stringliteral}{"{}REPEAT"{}}, TokenType::SYMBOL\_REPEAT\},}
+\DoxyCodeLine{305         \{\textcolor{stringliteral}{"{}RESTRICTED"{}}, TokenType::SYMBOL\_RESTRICTED\},}
+\DoxyCodeLine{306         \{\textcolor{stringliteral}{"{}SET"{}}, TokenType::SYMBOL\_SET\},}
+\DoxyCodeLine{307         \{\textcolor{stringliteral}{"{}THEN"{}}, TokenType::SYMBOL\_THEN\},}
+\DoxyCodeLine{308         \{\textcolor{stringliteral}{"{}TO"{}}, TokenType::SYMBOL\_TO\},}
+\DoxyCodeLine{309         \{\textcolor{stringliteral}{"{}TYPE"{}}, TokenType::SYMBOL\_TYPE\},}
+\DoxyCodeLine{310         \{\textcolor{stringliteral}{"{}UNTIL"{}}, TokenType::SYMBOL\_UNTIL\},}
+\DoxyCodeLine{311         \{\textcolor{stringliteral}{"{}VALUE"{}}, TokenType::SYMBOL\_VALUE\},}
+\DoxyCodeLine{312         \{\textcolor{stringliteral}{"{}VAR"{}}, TokenType::SYMBOL\_VAR\},}
+\DoxyCodeLine{313         \{\textcolor{stringliteral}{"{}WHILE"{}}, TokenType::SYMBOL\_WHILE\},}
+\DoxyCodeLine{314         \{\textcolor{stringliteral}{"{}WITH"{}}, TokenType::SYMBOL\_WITH\},}
+\DoxyCodeLine{315         \{\textcolor{stringliteral}{"{}EXTERNAL"{}}, TokenType::SYMBOL\_EXTERNAL\},}
+\DoxyCodeLine{316         \{\textcolor{stringliteral}{"{}STRING"{}}, TokenType::SYMBOL\_STRING\_KEYWORD\}}
+\DoxyCodeLine{317     \};}
+\DoxyCodeLine{318 \};}
+\DoxyCodeLine{319 \} \textcolor{comment}{// namespace Pascal}}
+\DoxyCodeLine{320 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_SCANNER\_H}}
+
+\end{DoxyCode}

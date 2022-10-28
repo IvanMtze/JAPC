@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1WhileExpression}{}\doxysection{Pascal\+::While\+Expression Class Reference}
+\label{classPascal_1_1WhileExpression}\index{Pascal::WhileExpression@{Pascal::WhileExpression}}
+Inheritance diagram for Pascal\+::While\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1WhileExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1WhileExpression_a19c0945f6f748a233c6fe59d1efae443}\label{classPascal_1_1WhileExpression_a19c0945f6f748a233c6fe59d1efae443}} 
+{\bfseries While\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ cond, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ body)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1WhileExpression_acee6773279e9e77d023639b51a92a04e}{code\+Gen}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1WhileExpression_a98a8710cb4a4d2e2d0c400486ef2e0cd}\label{classPascal_1_1WhileExpression_a98a8710cb4a4d2e2d0c400486ef2e0cd}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&expression\+Visitor) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1WhileExpression_a0b21e79c378b369d80f2ac07ee848d4d}\label{classPascal_1_1WhileExpression_a0b21e79c378b369d80f2ac07ee848d4d}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1WhileExpression_acee6773279e9e77d023639b51a92a04e}\label{classPascal_1_1WhileExpression_acee6773279e9e77d023639b51a92a04e}} 
+\index{Pascal::WhileExpression@{Pascal::WhileExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::WhileExpression@{Pascal::WhileExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ While\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

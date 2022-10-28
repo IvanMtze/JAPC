@@ -7,6 +7,10 @@
 #include "japc/scanner/scanner.h"
 int main()
 {
+    /**
+     * @author wuser
+     * The main program for japc
+     */
     using namespace Pascal;
     Scanner scanner;
     scanner.setSkipTrivia(true);

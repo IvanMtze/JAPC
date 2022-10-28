@@ -256,15 +256,19 @@ void Parser::parseProgramHeading()
 }
 void Parser::parseMainProgramBlock()
 {
+    std::vector<std::shared_ptr<ExpressionAST>> expressions;
     while (!isAtEnd() && current()->getTokenType() != TokenType::SYMBOL_BEGIN)
     {
+        std::shared_ptr<ExpressionAST> currentExpr;
         switch (current()->getTokenType())
         {
         case TokenType::SYMBOL_LABEL:
             parseLabel();
         case TokenType::SYMBOL_TYPE:
+            parseTypeDefinitionPart();
             break;
         case TokenType::SYMBOL_VAR:
+            currentExpr = parseVarDeclarations();
             break;
         case TokenType::SYMBOL_CONST:
             parseConstantDefinition();
@@ -279,6 +283,10 @@ void Parser::parseMainProgramBlock()
             //  TODO: ERROR ??
             sync();
             break;
+        }
+        if (currentExpr)
+        {
+            expressions.push_back(currentExpr);
         }
     }
     if (isAtEnd())
@@ -295,6 +303,96 @@ void Parser::parseImportPart()
 }
 void Parser::parseTypeDefinitionPart()
 {
+    std::vector<std::shared_ptr<PointerDeclaration>> incompletes;
+    if (current()->getTokenType() != TokenType::SYMBOL_TYPE)
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected TYPE keyword");
+        this->sync();
+        return;
+    }
+    advance();
+    do
+    {
+        if (current()->getTokenType() != TokenType::IDENTIFIER)
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected IDENTIFIER");
+            this->sync();
+            return;
+        }
+        std::string name = current()->getValue();
+        advance();
+        if (current()->getTokenType() != TokenType::SYMBOL_EQUAL)
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '=' after type name");
+            this->sync();
+        }
+        advance();
+        bool restricted = false;
+        if (current()->getTokenType() == TokenType::SYMBOL_RESTRICTED)
+        {
+            restricted = true;
+            advance();
+        }
+        std::shared_ptr<TypeDeclaration> typeDeclaration = parseType();
+        if (typeDeclaration)
+        {
+            std::shared_ptr<ExpressionAST> initial;
+            if (current()->getTokenType() == TokenType::SYMBOL_VALUE)
+            {
+                advance();
+                initial = parseInitValue(typeDeclaration);
+                if (!initial)
+                {
+                    this->sync();
+                    return;
+                }
+                typeDeclaration = ParserUtils::copyWithInitialValue(typeDeclaration, initial);
+                if (!this->objects->insert(name, std::make_shared<TypeDefinition>(name, typeDeclaration, restricted)))
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "%s is already declared");
+                    return;
+                }
+                if (typeDeclaration->getTypeKind() == TypeKind::TYPE_POINTER &&
+                    llvm::dyn_cast_or_null<PointerDeclaration>(typeDeclaration.get())->isIncomplete())
+                {
+                    const PointerDeclaration *pointerDeclaration =
+                        llvm::dyn_cast_or_null<PointerDeclaration>(typeDeclaration.get());
+                    incompletes.push_back(std::make_shared<PointerDeclaration>(*pointerDeclaration));
+                }
+                if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ';' ");
+                    this->sync();
+                    return;
+                }
+            }
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Missing type declaration");
+            this->sync();
+            return;
+        }
+    } while (current()->getTokenType() == TokenType::IDENTIFIER);
+    for (auto incomplete : incompletes)
+    {
+        std::string name = incomplete->getSubtype()->getName();
+        if (std::shared_ptr<TypeDeclaration> type = getTypeDeclaration(name))
+        {
+            if (type->isIncomplete())
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Forwarded type %s is incomplete.",
+                                                       name.c_str());
+                return;
+            }
+            incomplete->SetSubType(type);
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                   "Forwarded declared pointer type %s is not declared.", name.c_str());
+        }
+    }
 }
 VariableDeclarationExpression *Parser::parseVariableDeclarationPart()
 {
@@ -1414,7 +1512,9 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
                         {
                             this->diagnosticsEngine->japc_error_at(
                                 *current().get(), "Expected variable initialization after VALUE keyword");
+                            this->sync();
                         }
+                        return std::make_shared<VariableDeclarationExpression>(current().get()->getTokenPos(), varDefs);
                     }
                     if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
                     {
@@ -1445,5 +1545,22 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
 }
 std::shared_ptr<InitValue> Parser::parseInitValue(std::shared_ptr<TypeDeclaration> typeOfInitialization)
 {
-    return std::shared_ptr<InitValue>();
+    if (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_OPEN)
+    {
+    }
+    else
+    {
+        std::shared_ptr<ConstantDeclaration> constantExpression =
+            parseConstantExpression({TokenType::SYMBOL_SEMICOLON});
+        if (constantExpression)
+        {
+            std::shared_ptr<ExpressionAST> expre =
+                ParserUtils::constantDeclarationToExpression(current()->getTokenPos(), constantExpression.get());
+            InitValue value(current()->getTokenPos(), {expre});
+            return std::make_shared<InitValue>(value);
+        }
+    }
+    this->diagnosticsEngine->japc_error_at(
+        *current().get(), "Expected constant integral or real expression or set expression in variable initialization");
+    return nullptr;
 }

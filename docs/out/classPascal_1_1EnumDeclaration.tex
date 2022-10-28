@@ -1,0 +1,133 @@
+\hypertarget{classPascal_1_1EnumDeclaration}{}\doxysection{Pascal\+::Enum\+Declaration Class Reference}
+\label{classPascal_1_1EnumDeclaration}\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+Inheritance diagram for Pascal\+::Enum\+Declaration\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classPascal_1_1EnumDeclaration}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structPascal_1_1EnumDeclaration_1_1EnumValue}{Enum\+Value}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a57de8a4b1d65852d574a19e76a975649}\label{classPascal_1_1EnumDeclaration_a57de8a4b1d65852d574a19e76a975649}} 
+typedef std\+::vector$<$ \mbox{\hyperlink{structPascal_1_1EnumDeclaration_1_1EnumValue}{Enum\+Value}} $>$ {\bfseries Enum\+Values}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a8e09bba6f9052c09b000471e0a9114b4}\label{classPascal_1_1EnumDeclaration_a8e09bba6f9052c09b000471e0a9114b4}} 
+{\bfseries Enum\+Declaration} (Type\+Kind tk, const std\+::vector$<$ std\+::string $>$ \&nmv, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ ty)
+\item 
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_ae5a91fb581ae4bf5c58addedf30c20a9}\label{classPascal_1_1EnumDeclaration_ae5a91fb581ae4bf5c58addedf30c20a9}} 
+{\bfseries Enum\+Declaration} (const std\+::vector$<$ std\+::string $>$ \&nmv, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ ty)
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1Range}{Range}} $>$ \mbox{\hyperlink{classPascal_1_1EnumDeclaration_af22eb8436695e9e64dcb00be2364191c}{get\+Range}} () const override
+\item 
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a76dedf3babe0dad6efa0575a3af66e3c}\label{classPascal_1_1EnumDeclaration_a76dedf3babe0dad6efa0575a3af66e3c}} 
+const Enum\+Values \& {\bfseries get\+Values} () const
+\item 
+bool \mbox{\hyperlink{classPascal_1_1EnumDeclaration_a2d0ee618967ae4e97969798dc2a197ed}{is\+Integral}} () const override
+\item 
+bool \mbox{\hyperlink{classPascal_1_1EnumDeclaration_a7ec478427d60fd1e47514023d87f3a50}{is\+Unsigned}} () const override
+\item 
+bool \mbox{\hyperlink{classPascal_1_1EnumDeclaration_ac8d68c42c0c6a7f27be57451c6471b70}{is\+Compound}} () const override
+\item 
+unsigned \mbox{\hyperlink{classPascal_1_1EnumDeclaration_a2445042642c1d41186ce7e2d0b49f54a}{bits}} () const override
+\item 
+bool \mbox{\hyperlink{classPascal_1_1EnumDeclaration_a5b78cba7ae25f5f0e307f17cea7a1b0d}{is\+Same\+As}} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$ty) const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a7a8c7166ed28987856fef6a51234c394}\label{classPascal_1_1EnumDeclaration_a7a8c7166ed28987856fef6a51234c394}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$e)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Type $>$ \mbox{\hyperlink{classPascal_1_1EnumDeclaration_a3c1b23b2435d1956f0f3549adf380afb}{get\+Llvm\+Type}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a2445042642c1d41186ce7e2d0b49f54a}\label{classPascal_1_1EnumDeclaration_a2445042642c1d41186ce7e2d0b49f54a}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!bits@{bits}}
+\index{bits@{bits}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{bits()}{bits()}}
+{\footnotesize\ttfamily unsigned Pascal\+::\+Enum\+Declaration\+::bits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a3c1b23b2435d1956f0f3549adf380afb}\label{classPascal_1_1EnumDeclaration_a3c1b23b2435d1956f0f3549adf380afb}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!getLlvmType@{getLlvmType}}
+\index{getLlvmType@{getLlvmType}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{getLlvmType()}{getLlvmType()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Type $>$ Pascal\+::\+Enum\+Declaration\+::get\+Llvm\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_af22eb8436695e9e64dcb00be2364191c}\label{classPascal_1_1EnumDeclaration_af22eb8436695e9e64dcb00be2364191c}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!getRange@{getRange}}
+\index{getRange@{getRange}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{getRange()}{getRange()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1Range}{Range}} $>$ Pascal\+::\+Enum\+Declaration\+::get\+Range (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_ac8d68c42c0c6a7f27be57451c6471b70}\label{classPascal_1_1EnumDeclaration_ac8d68c42c0c6a7f27be57451c6471b70}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!isCompound@{isCompound}}
+\index{isCompound@{isCompound}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{isCompound()}{isCompound()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Enum\+Declaration\+::is\+Compound (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{Pascal\+::\+Compound\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a2d0ee618967ae4e97969798dc2a197ed}\label{classPascal_1_1EnumDeclaration_a2d0ee618967ae4e97969798dc2a197ed}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!isIntegral@{isIntegral}}
+\index{isIntegral@{isIntegral}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{isIntegral()}{isIntegral()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Enum\+Declaration\+::is\+Integral (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a5b78cba7ae25f5f0e307f17cea7a1b0d}\label{classPascal_1_1EnumDeclaration_a5b78cba7ae25f5f0e307f17cea7a1b0d}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!isSameAs@{isSameAs}}
+\index{isSameAs@{isSameAs}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{isSameAs()}{isSameAs()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Enum\+Declaration\+::is\+Same\+As (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $\ast$}]{ty }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1CompoundDeclaration}{Pascal\+::\+Compound\+Declaration}}.
+
+\mbox{\Hypertarget{classPascal_1_1EnumDeclaration_a7ec478427d60fd1e47514023d87f3a50}\label{classPascal_1_1EnumDeclaration_a7ec478427d60fd1e47514023d87f3a50}} 
+\index{Pascal::EnumDeclaration@{Pascal::EnumDeclaration}!isUnsigned@{isUnsigned}}
+\index{isUnsigned@{isUnsigned}!Pascal::EnumDeclaration@{Pascal::EnumDeclaration}}
+\doxysubsubsection{\texorpdfstring{isUnsigned()}{isUnsigned()}}
+{\footnotesize\ttfamily bool Pascal\+::\+Enum\+Declaration\+::is\+Unsigned (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Pascal\+::\+Type\+Declaration}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/type.\+h\end{DoxyCompactItemize}

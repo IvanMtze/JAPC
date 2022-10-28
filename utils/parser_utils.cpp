@@ -34,7 +34,8 @@ std::shared_ptr<Pascal::ConstantDeclaration> ParserUtils::evaluateConstant(
     const std::shared_ptr<Pascal::ConstantDeclaration> rhs, const Pascal::TokenType tk,
     const std::shared_ptr<Pascal::ConstantDeclaration> lhs)
 {
-    switch(tk){
+    switch (tk)
+    {
     case Pascal::TokenType::SYMBOL_PLUS:
         return lhs.get() + rhs.get();
         break;
@@ -53,7 +54,7 @@ std::shared_ptr<Pascal::ConstantDeclaration> ParserUtils::evaluateConstant(
     return nullptr;
 }
 
-int64_t ParserUtils::constantDeclarationToInteger(const Pascal::ConstantDeclaration* c)
+int64_t ParserUtils::constantDeclarationToInteger(const Pascal::ConstantDeclaration *c)
 {
     if (auto ci = llvm::dyn_cast<Pascal::IntConstantDeclaration>(c))
     {
@@ -75,8 +76,31 @@ int64_t ParserUtils::constantDeclarationToInteger(const Pascal::ConstantDeclarat
 }
 bool ParserUtils::numericLiteralIsInteger(Pascal::Token tk)
 {
-    if(tk.getTokenType() != Pascal::TokenType::NUMERIC_LITERAL){
+    if (tk.getTokenType() != Pascal::TokenType::NUMERIC_LITERAL)
+    {
         return false;
     }
     return (tk.getValue().find(".") != std::string::npos);
+}
+std::shared_ptr<Pascal::ExpressionAST> ParserUtils::constantDeclarationToExpression(
+    const Pascal::Location loc, Pascal::ConstantDeclaration *constantDeclaration)
+{
+    std::shared_ptr<Pascal::TypeDeclaration> type = constantDeclaration->getType();
+    if (constantDeclaration->getType()->isIntegral())
+    {
+        int64_t val = ParserUtils::constantDeclarationToInteger(constantDeclaration);
+        return std::make_shared<Pascal::IntegerExpression>(loc, val, type);
+    }
+    if (auto rc = llvm::dyn_cast_or_null<Pascal::RealConstantDeclaration>(constantDeclaration))
+    {
+        return std::make_shared<Pascal::RealExpression>(loc, rc->getValue(), type);
+    }
+    return nullptr;
+}
+std::shared_ptr<Pascal::TypeDeclaration> ParserUtils::copyWithInitialValue(
+    std::shared_ptr<Pascal::TypeDeclaration> typeDeclaration, std::shared_ptr<Pascal::ExpressionAST> initial)
+{
+    std::shared_ptr<Pascal::TypeDeclaration> typeDeclarationObj = typeDeclaration->clone();
+    typeDeclarationObj->setInitialValue(initial);
+    return typeDeclarationObj;
 }

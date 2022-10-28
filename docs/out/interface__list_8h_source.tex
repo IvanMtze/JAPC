@@ -1,0 +1,26 @@
+\hypertarget{interface__list_8h_source}{}\doxysection{interface\+\_\+list.\+h}
+\label{interface__list_8h_source}\index{include/japc/AST/interface\_list.h@{include/japc/AST/interface\_list.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 19/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_INTERFACE\_LIST\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_INTERFACE\_LIST\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}japc/AST/stack.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}japc/AST/named\_object.h"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }Pascal\{}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{classPascal_1_1InterfaceList}{InterfaceList}}\{}
+\DoxyCodeLine{13   \textcolor{keyword}{public}:}
+\DoxyCodeLine{14     \textcolor{keywordtype}{bool} add(std::string name, \textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1NamedObject}{NamedObject}}* obj);}
+\DoxyCodeLine{15     \textcolor{keyword}{const} std::map<std::string, const NamedObject*> getListNamedObjects();}
+\DoxyCodeLine{16   \textcolor{keyword}{private}:}
+\DoxyCodeLine{17     std::map<std::string, const NamedObject*> list;}
+\DoxyCodeLine{18 \};}
+\DoxyCodeLine{19 \}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_INTERFACE\_LIST\_H}}
+
+\end{DoxyCode}

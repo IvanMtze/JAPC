@@ -1,0 +1,63 @@
+\hypertarget{classPascal_1_1PrototypeExpression}{}\doxysection{Pascal\+::Prototype\+Expression Class Reference}
+\label{classPascal_1_1PrototypeExpression}\index{Pascal::PrototypeExpression@{Pascal::PrototypeExpression}}
+Inheritance diagram for Pascal\+::Prototype\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1PrototypeExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_aca209d30dea8d262b74de29e2a18677b}\label{classPascal_1_1PrototypeExpression_aca209d30dea8d262b74de29e2a18677b}} 
+{\bfseries Prototype\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, const std\+::string \&name, const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableDefinition}{Variable\+Definition}} $>$ $>$ args, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ result\+Type)
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a743fa98703c0c0521e354a83d3dd59da}\label{classPascal_1_1PrototypeExpression_a743fa98703c0c0521e354a83d3dd59da}} 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Function $>$ {\bfseries create} (const std\+::string \&name\+Prefix)
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a64e831a81e84bad7a282f9e02bfcec4f}\label{classPascal_1_1PrototypeExpression_a64e831a81e84bad7a282f9e02bfcec4f}} 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Function $>$ {\bfseries get\+Llvm\+Function} () const
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_aa0c73f2b6e3673de20f13da4152a9293}\label{classPascal_1_1PrototypeExpression_aa0c73f2b6e3673de20f13da4152a9293}} 
+void {\bfseries create\+Arguments\+Alloca} ()
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a06a1b175a926b49c3be2e20529b5ee90}\label{classPascal_1_1PrototypeExpression_a06a1b175a926b49c3be2e20529b5ee90}} 
+std\+::string {\bfseries get\+Name} () const
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a1418e5d0fe6b7e12ea3d8a424b564cc5}\label{classPascal_1_1PrototypeExpression_a1418e5d0fe6b7e12ea3d8a424b564cc5}} 
+const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableDefinition}{Variable\+Definition}} $>$ $>$ {\bfseries get\+Args} ()
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_acd479d711ac4c4b5e726e49db90f01d2}\label{classPascal_1_1PrototypeExpression_acd479d711ac4c4b5e726e49db90f01d2}} 
+bool {\bfseries is\+Forwarded} () const
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a235e6ad959d730aa708c19ae89330224}\label{classPascal_1_1PrototypeExpression_a235e6ad959d730aa708c19ae89330224}} 
+void {\bfseries set\+Is\+Forward} (bool forward)
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a7b1a7f7c40fcf13adc3640d4e913582d}\label{classPascal_1_1PrototypeExpression_a7b1a7f7c40fcf13adc3640d4e913582d}} 
+void {\bfseries set\+Function} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1Function}{Function}} $>$ function)
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a73d36f6bc49953093f8053dd0b61366f}\label{classPascal_1_1PrototypeExpression_a73d36f6bc49953093f8053dd0b61366f}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1Function}{Function}} $>$ {\bfseries get\+Function} () const
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_aacfdd6f8c9714734572eed1b482ef775}\label{classPascal_1_1PrototypeExpression_aacfdd6f8c9714734572eed1b482ef775}} 
+void {\bfseries add\+Extra\+Args\+First} (std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableDefinition}{Variable\+Definition}} $>$ $>$ vars)
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_ab1cd086d7dd3d8bf46fd50d2309258b4}\label{classPascal_1_1PrototypeExpression_ab1cd086d7dd3d8bf46fd50d2309258b4}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{Prototype\+Expression}} \&rhs) const
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_a3db6be9ce88c0d86e134711d0c24a6d1}\label{classPascal_1_1PrototypeExpression_a3db6be9ce88c0d86e134711d0c24a6d1}} 
+bool {\bfseries is\+Match\+Without\+Closure} (const \mbox{\hyperlink{classPascal_1_1PrototypeExpression}{Prototype\+Expression}} $\ast$rhs) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1PrototypeExpression_ab428a950a1f17bf4b20689304954ff74}\label{classPascal_1_1PrototypeExpression_ab428a950a1f17bf4b20689304954ff74}} 
+static bool {\bfseries is\+Class\+Of} (\mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

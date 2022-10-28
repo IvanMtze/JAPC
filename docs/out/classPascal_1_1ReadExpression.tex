@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1ReadExpression}{}\doxysection{Pascal\+::Read\+Expression Class Reference}
+\label{classPascal_1_1ReadExpression}\index{Pascal::ReadExpression@{Pascal::ReadExpression}}
+Inheritance diagram for Pascal\+::Read\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1ReadExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1ReadExpression_aee939e84a967821e21ac867fd88420c1}\label{classPascal_1_1ReadExpression_aee939e84a967821e21ac867fd88420c1}} 
+{\bfseries Read\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, \mbox{\hyperlink{classPascal_1_1VariableExpression}{Variable\+Expression}} $\ast$file, const std\+::vector$<$ \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $>$ args, bool is\+Ln)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1ReadExpression_ab99c35e7055780e6da697548d60ee9ea}{code\+Gen}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1ReadExpression_a8339c46729ca989fca0e47df708333df}\label{classPascal_1_1ReadExpression_a8339c46729ca989fca0e47df708333df}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&visitor) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1ReadExpression_a607a986ded99ca57a8b5e29570839339}\label{classPascal_1_1ReadExpression_a607a986ded99ca57a8b5e29570839339}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1ReadExpression_ab99c35e7055780e6da697548d60ee9ea}\label{classPascal_1_1ReadExpression_ab99c35e7055780e6da697548d60ee9ea}} 
+\index{Pascal::ReadExpression@{Pascal::ReadExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::ReadExpression@{Pascal::ReadExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Read\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

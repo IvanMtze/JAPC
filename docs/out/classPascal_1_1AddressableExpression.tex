@@ -1,0 +1,48 @@
+\hypertarget{classPascal_1_1AddressableExpression}{}\doxysection{Pascal\+::Addressable\+Expression Class Reference}
+\label{classPascal_1_1AddressableExpression}\index{Pascal::AddressableExpression@{Pascal::AddressableExpression}}
+Inheritance diagram for Pascal\+::Addressable\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.801802cm]{classPascal_1_1AddressableExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1AddressableExpression_a090109c118b2267730fea9638a87f8e1}\label{classPascal_1_1AddressableExpression_a090109c118b2267730fea9638a87f8e1}} 
+{\bfseries Addressable\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, Expression\+Type expression\+Type, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+\mbox{\Hypertarget{classPascal_1_1AddressableExpression_ab99512dc12291224fe7c55d6db910985}\label{classPascal_1_1AddressableExpression_ab99512dc12291224fe7c55d6db910985}} 
+virtual std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ {\bfseries get\+Address} ()
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1AddressableExpression_a92913bb6ff1a34506bf7231ec47991bd}{code\+Gen}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1AddressableExpression_aa4938ba041dc3b6e78f593513daa977c}\label{classPascal_1_1AddressableExpression_aa4938ba041dc3b6e78f593513daa977c}} 
+virtual const std\+::string {\bfseries get\+Name} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1AddressableExpression_a78951899ec5988acf4415353edab2e55}\label{classPascal_1_1AddressableExpression_a78951899ec5988acf4415353edab2e55}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1AddressableExpression_a92913bb6ff1a34506bf7231ec47991bd}\label{classPascal_1_1AddressableExpression_a92913bb6ff1a34506bf7231ec47991bd}} 
+\index{Pascal::AddressableExpression@{Pascal::AddressableExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::AddressableExpression@{Pascal::AddressableExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Addressable\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,45 @@
+\hypertarget{classPascal_1_1PointerExpression}{}\doxysection{Pascal\+::Pointer\+Expression Class Reference}
+\label{classPascal_1_1PointerExpression}\index{Pascal::PointerExpression@{Pascal::PointerExpression}}
+Inheritance diagram for Pascal\+::Pointer\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classPascal_1_1PointerExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1PointerExpression_ae64dc1bbb702deb8ce8bdc9e6f001906}\label{classPascal_1_1PointerExpression_ae64dc1bbb702deb8ce8bdc9e6f001906}} 
+{\bfseries Pointer\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&location, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableExpression}{Variable\+Expression}} $>$ variable\+Expre, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Declaration)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1PointerExpression_a46600b322e33d40c8a2b41203eccddb7}{get\+Address}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1PointerExpression_a5e224cc966f9652dfb94778f9192dd4b}\label{classPascal_1_1PointerExpression_a5e224cc966f9652dfb94778f9192dd4b}} 
+void {\bfseries accept} (\mbox{\hyperlink{classPascal_1_1Visitor}{Expression\+Visitor}} \&visitor) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1PointerExpression_a3695731f602c096dc0c75726efdacc97}\label{classPascal_1_1PointerExpression_a3695731f602c096dc0c75726efdacc97}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1PointerExpression_a46600b322e33d40c8a2b41203eccddb7}\label{classPascal_1_1PointerExpression_a46600b322e33d40c8a2b41203eccddb7}} 
+\index{Pascal::PointerExpression@{Pascal::PointerExpression}!getAddress@{getAddress}}
+\index{getAddress@{getAddress}!Pascal::PointerExpression@{Pascal::PointerExpression}}
+\doxysubsubsection{\texorpdfstring{getAddress()}{getAddress()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Pointer\+Expression\+::get\+Address (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1VariableExpression}{Pascal\+::\+Variable\+Expression}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,48 @@
+\hypertarget{classPascal_1_1VariableDeclarationExpression}{}\doxysection{Pascal\+::Variable\+Declaration\+Expression Class Reference}
+\label{classPascal_1_1VariableDeclarationExpression}\index{Pascal::VariableDeclarationExpression@{Pascal::VariableDeclarationExpression}}
+Inheritance diagram for Pascal\+::Variable\+Declaration\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPascal_1_1VariableDeclarationExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableDeclarationExpression_a24efb2e10100bcf555aefcd351431682}\label{classPascal_1_1VariableDeclarationExpression_a24efb2e10100bcf555aefcd351431682}} 
+{\bfseries Variable\+Declaration\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableDefinition}{Variable\+Definition}} $>$ $>$ vars)
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1VariableDeclarationExpression_a73ad20e127f396c1a3c2624d4b475f2a}{code\+Gen}} () override
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableDeclarationExpression_a7cd66bb7709a23af9c9d00112ab668f8}\label{classPascal_1_1VariableDeclarationExpression_a7cd66bb7709a23af9c9d00112ab668f8}} 
+void {\bfseries set\+Function} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1Function}{Function}} $>$ function)
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableDeclarationExpression_ac8d65f246256a7b638f53297702606ea}\label{classPascal_1_1VariableDeclarationExpression_ac8d65f246256a7b638f53297702606ea}} 
+const std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1VariableDefinition}{Variable\+Definition}} $>$ $>$ {\bfseries get\+Vars} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1VariableDeclarationExpression_a1df439874f045fe5a31c0438474513d5}\label{classPascal_1_1VariableDeclarationExpression_a1df439874f045fe5a31c0438474513d5}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1VariableDeclarationExpression_a73ad20e127f396c1a3c2624d4b475f2a}\label{classPascal_1_1VariableDeclarationExpression_a73ad20e127f396c1a3c2624d4b475f2a}} 
+\index{Pascal::VariableDeclarationExpression@{Pascal::VariableDeclarationExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::VariableDeclarationExpression@{Pascal::VariableDeclarationExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Variable\+Declaration\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

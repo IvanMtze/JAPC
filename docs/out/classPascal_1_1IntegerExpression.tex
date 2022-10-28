@@ -1,0 +1,54 @@
+\hypertarget{classPascal_1_1IntegerExpression}{}\doxysection{Pascal\+::Integer\+Expression Class Reference}
+\label{classPascal_1_1IntegerExpression}\index{Pascal::IntegerExpression@{Pascal::IntegerExpression}}
+Inheritance diagram for Pascal\+::Integer\+Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classPascal_1_1IntegerExpression}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1IntegerExpression_a51ac6ce0afab67676ffb810f4b4c601f}\label{classPascal_1_1IntegerExpression_a51ac6ce0afab67676ffb810f4b4c601f}} 
+{\bfseries Integer\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, int64\+\_\+t value, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Dec)
+\item 
+\mbox{\Hypertarget{classPascal_1_1IntegerExpression_a156242e72fa052c17bb4c6d6636ef6f6}\label{classPascal_1_1IntegerExpression_a156242e72fa052c17bb4c6d6636ef6f6}} 
+{\bfseries Integer\+Expression} (const \mbox{\hyperlink{classPascal_1_1Location}{Location}} \&loc, Expression\+Type expression\+Type, int64\+\_\+t value, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPascal_1_1TypeDeclaration}{Type\+Declaration}} $>$ type\+Dec)
+\item 
+\mbox{\Hypertarget{classPascal_1_1IntegerExpression_a747ec809544eca22e25afbf3e8ecc270}\label{classPascal_1_1IntegerExpression_a747ec809544eca22e25afbf3e8ecc270}} 
+int64\+\_\+t {\bfseries get\+Value} ()
+\item 
+std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ \mbox{\hyperlink{classPascal_1_1IntegerExpression_a17c785d9b8083c332081c1091f8e1d63}{code\+Gen}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1IntegerExpression_a60c7ca284a5843cffc5cb3259beefeff}\label{classPascal_1_1IntegerExpression_a60c7ca284a5843cffc5cb3259beefeff}} 
+static bool {\bfseries is\+Class\+Of} (const \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Expression\+AST}} $\ast$expression\+Ast)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPascal_1_1IntegerExpression_a053212bf056c0687dd68ee794de79170}\label{classPascal_1_1IntegerExpression_a053212bf056c0687dd68ee794de79170}} 
+int64\+\_\+t {\bfseries value}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPascal_1_1IntegerExpression_a17c785d9b8083c332081c1091f8e1d63}\label{classPascal_1_1IntegerExpression_a17c785d9b8083c332081c1091f8e1d63}} 
+\index{Pascal::IntegerExpression@{Pascal::IntegerExpression}!codeGen@{codeGen}}
+\index{codeGen@{codeGen}!Pascal::IntegerExpression@{Pascal::IntegerExpression}}
+\doxysubsubsection{\texorpdfstring{codeGen()}{codeGen()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ llvm\+::\+Value $>$ Integer\+Expression\+::code\+Gen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classPascal_1_1ExpressionAST}{Pascal\+::\+Expression\+AST}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/japc/\+AST/expression.\+h\item 
+lib/\+AST/expression.\+cpp\end{DoxyCompactItemize}

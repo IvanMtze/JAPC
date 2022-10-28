@@ -1,0 +1,34 @@
+\hypertarget{parser__utils_8h_source}{}\doxysection{parser\+\_\+utils.\+h}
+\label{parser__utils_8h_source}\index{utils/parser\_utils.h@{utils/parser\_utils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{// Created by wuser on 21/10/22.}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JAPC\_PARSER\_UTILS\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define JAPC\_PARSER\_UTILS\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}japc/AST/type.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}japc/scanner/scanner.h"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{classParserUtils}{ParserUtils}}}
+\DoxyCodeLine{13 \{}
+\DoxyCodeLine{14   \textcolor{keyword}{public}:}
+\DoxyCodeLine{15     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isAnyOf(\mbox{\hyperlink{classPascal_1_1Token}{Pascal::Token}} to, std::vector<Pascal::Token> tkList);}
+\DoxyCodeLine{16     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isAnyOf(\mbox{\hyperlink{classPascal_1_1Token}{Pascal::Token}} to, std::vector<Pascal::TokenType> tkList);}
+\DoxyCodeLine{17     \textcolor{keyword}{static} \textcolor{keywordtype}{int} getPrecedence(Pascal::TokenType tk);}
+\DoxyCodeLine{18     \textcolor{keyword}{static} std::shared\_ptr<Pascal::ConstantDeclaration> evaluateConstant(}
+\DoxyCodeLine{19         \textcolor{keyword}{const} std::shared\_ptr<Pascal::ConstantDeclaration> rhs, \textcolor{keyword}{const} Pascal::TokenType tk,}
+\DoxyCodeLine{20         \textcolor{keyword}{const} std::shared\_ptr<Pascal::ConstantDeclaration> lhs);}
+\DoxyCodeLine{21     \textcolor{keyword}{static} int64\_t constantDeclarationToInteger(\textcolor{keyword}{const} \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{Pascal::ConstantDeclaration}} *c);}
+\DoxyCodeLine{22     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} numericLiteralIsInteger(\mbox{\hyperlink{classPascal_1_1Token}{Pascal::Token}} tk);}
+\DoxyCodeLine{23     \textcolor{keyword}{static} std::shared\_ptr<Pascal::ExpressionAST> constantDeclarationToExpression(}
+\DoxyCodeLine{24         \mbox{\hyperlink{classPascal_1_1Location}{Pascal::Location}} loc, \mbox{\hyperlink{classPascal_1_1ConstantDeclaration}{Pascal::ConstantDeclaration}} *constantDeclaration);}
+\DoxyCodeLine{25     \textcolor{keyword}{static} std::shared\_ptr<Pascal::TypeDeclaration> copyWithInitialValue(}
+\DoxyCodeLine{26         std::shared\_ptr<Pascal::TypeDeclaration> typeDeclaration, std::shared\_ptr<Pascal::ExpressionAST> initial);}
+\DoxyCodeLine{27 \};}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// JAPC\_PARSER\_UTILS\_H}}
+
+\end{DoxyCode}
