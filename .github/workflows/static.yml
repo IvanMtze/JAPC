@@ -41,7 +41,7 @@ jobs:
           cmake -DOPTION_BUILD_DOCS=ON ..
           make internal-docs  
       - name: Move and clean
-        run: pwd && ls && mv ../docs ./docs
+        run: mv ./JAPC/build/docs ./docs
       - name: Upload documentation
         uses: actions/upload-pages-artifact@v1
         with:
