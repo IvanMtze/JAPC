@@ -32,11 +32,21 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v2
-      - name: Upload artifact
+      - name: Install doxygen and latex components
+        run: sudo apt-get update; sudo apt-get install -y doxygen graphviz texlive-full
+      - name: Build internal documentation from cmake
+        run: |
+          git clone https://github.com/IvanMtze/JAPC.git
+          mkdir JAPC/build && cd JAPC/build
+          cmake -DOPTION_BUILD_DOCS=ON ..
+          make internal-docs
+      - name: Move and clean
+        run: mv ./JAPC/build/docs ./docs
+      - name: Upload documentation
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: './docs'
+          path: './docs/html/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
