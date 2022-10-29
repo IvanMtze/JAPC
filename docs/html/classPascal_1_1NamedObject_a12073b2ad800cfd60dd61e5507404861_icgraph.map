@@ -1,0 +1,19 @@
+<map id="Pascal::NamedObject::getNamedObjectType" name="Pascal::NamedObject::getNamedObjectType">
+<area shape="rect" id="node1" title=" " alt="" coords="547,229,704,269"/>
+<area shape="rect" id="node2" href="$classPascal_1_1VariableDefinition.html#a06ba5ebeaee14ade8d5f4b0b5be89ad3" title=" " alt="" coords="301,5,473,45"/>
+<area shape="rect" id="node4" href="$classPascal_1_1FunctionDefinition.html#a12ce310817f005b617b417ec0f7ebe46" title=" " alt="" coords="300,69,475,109"/>
+<area shape="rect" id="node6" href="$classPascal_1_1TypeDefinition.html#a1b6594031b566b3b3d9ee4cc4d9fdb4d" title=" " alt="" coords="310,133,465,173"/>
+<area shape="rect" id="node8" href="$classPascal_1_1ConstantDefinition.html#af8d1f0f737687df81fa7383274089d92" title=" " alt="" coords="298,197,477,237"/>
+<area shape="rect" id="node10" href="$classPascal_1_1EnumDefinition.html#a448f1106cb54b5aa4a94555bfa606b98" title=" " alt="" coords="308,261,467,301"/>
+<area shape="rect" id="node12" href="$classPascal_1_1WithDefinition.html#a15d5f2036deaa2e4bbafa7de51f3add1" title=" " alt="" coords="311,325,463,365"/>
+<area shape="rect" id="node14" href="$classPascal_1_1MemberFunctionDefinition.html#a8e132960f5dd4d243e41cf9969aac88f" title=" " alt="" coords="276,389,499,429"/>
+<area shape="rect" id="node16" href="$classPascal_1_1LabelDefinition.html#a271da9781fc05da4f3b94070d85f63a1" title=" " alt="" coords="309,453,465,493"/>
+<area shape="rect" id="node3" href="$classPascal_1_1VariableDefinition.html#a212ff15fe384a895c1c295f26cd5a40e" title=" " alt="" coords="31,5,203,45"/>
+<area shape="rect" id="node5" href="$classPascal_1_1FunctionDefinition.html#a5317ed5fd1f2fb713bf465fa3112e88f" title=" " alt="" coords="29,69,204,109"/>
+<area shape="rect" id="node7" href="$classPascal_1_1TypeDefinition.html#a5d43195c818f61eea32ef5a0699b3c7e" title=" " alt="" coords="39,133,194,173"/>
+<area shape="rect" id="node9" href="$classPascal_1_1ConstantDefinition.html#ab1c8e89d48ee0ecbaaa6951f48eb9fe8" title=" " alt="" coords="27,197,206,237"/>
+<area shape="rect" id="node11" href="$classPascal_1_1EnumDefinition.html#ac4f122dfabc4629d5a084b4337dafae6" title=" " alt="" coords="37,261,196,301"/>
+<area shape="rect" id="node13" href="$classPascal_1_1WithDefinition.html#a3a4150018596513c122e7d450b477e70" title=" " alt="" coords="41,325,193,365"/>
+<area shape="rect" id="node15" href="$classPascal_1_1MemberFunctionDefinition.html#a636f880c565241bc079abd1031dfc7ad" title=" " alt="" coords="5,389,228,429"/>
+<area shape="rect" id="node17" href="$classPascal_1_1LabelDefinition.html#aea2f56e1ebc99fd74696b43d5d12f80f" title=" " alt="" coords="39,453,195,493"/>
+</map>

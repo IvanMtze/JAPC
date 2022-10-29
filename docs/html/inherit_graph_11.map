@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classPascal_1_1NamedObject.html" title=" " alt="" coords="5,179,156,204"/>
+<area shape="rect" id="node2" href="$classPascal_1_1ConstantDefinition.html" title=" " alt="" coords="226,5,405,31"/>
+<area shape="rect" id="node3" href="$classPascal_1_1EnumDefinition.html" title=" " alt="" coords="236,55,395,80"/>
+<area shape="rect" id="node4" href="$classPascal_1_1FunctionDefinition.html" title=" " alt="" coords="228,104,403,129"/>
+<area shape="rect" id="node5" href="$classPascal_1_1LabelDefinition.html" title=" " alt="" coords="237,153,393,179"/>
+<area shape="rect" id="node6" href="$classPascal_1_1MemberFunctionDefinition.html" title=" " alt="" coords="204,203,427,228"/>
+<area shape="rect" id="node7" href="$classPascal_1_1TypeDefinition.html" title=" " alt="" coords="238,252,393,277"/>
+<area shape="rect" id="node8" href="$classPascal_1_1VariableDefinition.html" title=" " alt="" coords="229,301,401,327"/>
+<area shape="rect" id="node9" href="$classPascal_1_1WithDefinition.html" title=" " alt="" coords="239,351,391,376"/>
+</map>

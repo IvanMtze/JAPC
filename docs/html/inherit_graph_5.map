@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classPascal_1_1ConstantDeclaration.html" title=" " alt="" coords="5,129,195,155"/>
+<area shape="rect" id="node2" href="$classPascal_1_1BooleanConstantDeclaration.html" title=" " alt="" coords="243,5,479,31"/>
+<area shape="rect" id="node3" href="$classPascal_1_1CharConstantDeclaration.html" title=" " alt="" coords="252,55,469,80"/>
+<area shape="rect" id="node4" href="$classPascal_1_1EnumConstantDeclaration.html" title=" " alt="" coords="249,104,472,129"/>
+<area shape="rect" id="node5" href="$classPascal_1_1IntConstantDeclaration.html" title=" " alt="" coords="259,153,463,179"/>
+<area shape="rect" id="node6" href="$classPascal_1_1RealConstantDeclaration.html" title=" " alt="" coords="253,203,469,228"/>
+<area shape="rect" id="node7" href="$classPascal_1_1StringConstantDeclaration.html" title=" " alt="" coords="249,252,472,277"/>
+</map>
