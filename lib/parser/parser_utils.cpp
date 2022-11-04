@@ -1,9 +1,9 @@
 //
 // Created by wuser on 21/10/22.
 //
-#include "parser_utils.h"
+#include "japc/parser/parser_utils.h"
 
-bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::Token> tkList)
+bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::Token>& tkList)
 {
     for (Pascal::Token tk : tkList)
     {
@@ -15,7 +15,7 @@ bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::Token> tkList)
     return false;
 }
 
-bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::TokenType> tkList)
+bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::TokenType>& tkList)
 {
     for (Pascal::TokenType tk : tkList)
     {
@@ -103,4 +103,8 @@ std::shared_ptr<Pascal::TypeDeclaration> ParserUtils::copyWithInitialValue(
     std::shared_ptr<Pascal::TypeDeclaration> typeDeclarationObj = typeDeclaration->clone();
     typeDeclarationObj->setInitialValue(initial);
     return typeDeclarationObj;
+}
+int64_t ParserUtils::convertStringToInteger(std::basic_string<char> ref)
+{
+    return stoi(ref);
 }

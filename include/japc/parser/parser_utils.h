@@ -24,5 +24,6 @@ class ParserUtils
         Pascal::Location loc, Pascal::ConstantDeclaration *constantDeclaration);
     static std::shared_ptr<Pascal::TypeDeclaration> copyWithInitialValue(
         std::shared_ptr<Pascal::TypeDeclaration> typeDeclaration, std::shared_ptr<Pascal::ExpressionAST> initial);
+    static int64_t convertStringToInteger(std::basic_string<char> ref);
 };
 #endif // JAPC_PARSER_UTILS_H
