@@ -1,4 +1,27 @@
 <map id="Pascal::TypeDeclaration::getTypeKind" name="Pascal::TypeDeclaration::getTypeKind">
-<area shape="rect" id="node1" title=" " alt="" coords="248,5,413,45"/>
-<area shape="rect" id="node2" href="$classPascal_1_1BaseTypeDeclaration.html#a6cf5856a9c306a809dc29e592324cdc3" title=" " alt="" coords="5,5,200,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="780,357,945,397"/>
+<area shape="rect" id="node2" href="$classPascal_1_1ForwardDeclaration.html#ab4982e1ea06ac37db5616ec3bec7820a" title=" " alt="" coords="524,133,707,173"/>
+<area shape="rect" id="node3" href="$classPascal_1_1CharDeclaration.html#a31aae73656c08287cd0719f328bced4c" title=" " alt="" coords="533,197,697,237"/>
+<area shape="rect" id="node4" href="$classPascal_1_1VoidDeclaration.html#af662e1da2b7c46bec17c6d1601718a48" title=" " alt="" coords="534,261,697,301"/>
+<area shape="rect" id="node5" href="$classPascal_1_1CompoundDeclaration.html#ad00650a6ee19a19e7f941eab8e05de27" title=" " alt="" coords="516,325,715,365"/>
+<area shape="rect" id="node17" href="$classPascal_1_1FieldCollection.html#a8be56c92191e42a1c74fb69200bad812" title=" " alt="" coords="537,389,693,429"/>
+<area shape="rect" id="node20" href="$classPascal_1_1MemberFunctionDeclaration.html#a04cc23f36f8592be7c57981c2bcb72cb" title=" " alt="" coords="499,453,732,493"/>
+<area shape="rect" id="node21" href="$classPascal_1_1RangeDeclaration.html#a6b8af85f166b88fac2b7d447c9cebfd4" title=" " alt="" coords="528,517,703,557"/>
+<area shape="rect" id="node22" href="$classPascal_1_1BaseTypeDeclaration.html#a6cf5856a9c306a809dc29e592324cdc3" title=" " alt="" coords="518,677,713,717"/>
+<area shape="rect" id="node6" href="$classPascal_1_1ArrayDeclaration.html#ae63706b7e1e99445f3676b2202680795" title=" " alt="" coords="254,5,421,45"/>
+<area shape="rect" id="node8" href="$classPascal_1_1EnumDeclaration.html#ab63d71a5b9602a6f938735e033fd877b" title=" " alt="" coords="252,69,423,109"/>
+<area shape="rect" id="node10" href="$classPascal_1_1PointerDeclaration.html#a4aa4d6a91dc09be7b477700f63ee2199" title=" " alt="" coords="249,133,426,173"/>
+<area shape="rect" id="node11" href="$classPascal_1_1FunctionDeclaration.html#acc7bb9e7e65b43429e59038bb2792572" title=" " alt="" coords="244,197,431,237"/>
+<area shape="rect" id="node12" href="$classPascal_1_1FieldDeclaration.html#a2a5c386b6039f6604df9f21ceee44950" title=" " alt="" coords="255,261,419,301"/>
+<area shape="rect" id="node13" href="$classPascal_1_1FunctionPointerDeclaration.html#a91a1eaf5d826a6ae2c8f550aae915be1" title=" " alt="" coords="224,325,451,365"/>
+<area shape="rect" id="node14" href="$classPascal_1_1FileDeclaration.html#af9b285ebd4b0b582ee0d3e490fe94f81" title=" " alt="" coords="259,389,416,429"/>
+<area shape="rect" id="node16" href="$classPascal_1_1SetDeclaration.html#a6c6c5ccca691595ce1b3bc25badfd555" title=" " alt="" coords="259,453,415,493"/>
+<area shape="rect" id="node7" href="$classPascal_1_1StringDeclaration.html#ad05645ea258da7ea6c131b33afa30a64" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" id="node9" href="$classPascal_1_1BoolDeclaration.html#aade2a64db9b67f0484a2e3b2191830e1" title=" " alt="" coords="9,69,172,109"/>
+<area shape="rect" id="node15" href="$classPascal_1_1TextDeclaration.html#aadaa741238a430074b1d73c8e10fb464" title=" " alt="" coords="9,389,172,429"/>
+<area shape="rect" id="node18" href="$classPascal_1_1VariantDeclaration.html#a168adc1390040edc742b23f0874217b4" title=" " alt="" coords="249,517,426,557"/>
+<area shape="rect" id="node19" href="$classPascal_1_1RecordDeclaration.html#a02bf4c0c0199f1315219d6efff14785f" title=" " alt="" coords="248,581,427,621"/>
+<area shape="rect" id="node23" href="$classPascal_1_1RealDeclaration.html#a5914160827eb6cb22cabb9cedbfc62fe" title=" " alt="" coords="256,645,419,685"/>
+<area shape="rect" id="node24" href="$classPascal_1_1CharDeclaration.html#abbc0f5b32b7da3a689fda91ca5563f81" title=" " alt="" coords="255,709,419,749"/>
+<area shape="rect" id="node25" href="$classPascal_1_1VoidDeclaration.html#ae2f693d2c7bc00bcd941d7606d62a9ac" title=" " alt="" coords="256,773,419,813"/>
 </map>

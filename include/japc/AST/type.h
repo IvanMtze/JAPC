@@ -19,18 +19,10 @@
 #define __SET_POW_TO_BITS__ 5
 namespace Pascal
 {
-class TypeDeclaration;
 class PrototypeExpression;
 class ExpressionAST;
-std::shared_ptr<TypeDeclaration> getIntegerType();
-std::shared_ptr<TypeDeclaration> getLongIntType();
-std::shared_ptr<TypeDeclaration> getCharType();
-std::shared_ptr<TypeDeclaration> getBooleanType();
-std::shared_ptr<TypeDeclaration> getRealType();
-std::shared_ptr<TypeDeclaration> getVoidType();
-std::shared_ptr<TypeDeclaration> getTextType();
-std::shared_ptr<TypeDeclaration> getStringType();
-std::shared_ptr<TypeDeclaration> getTimeStampType();
+class TypeDeclaration;
+class RangeDeclaration;
 
 enum TypeKind
 {
@@ -75,6 +67,16 @@ enum
     IsText
 } FileFields;
 
+std::shared_ptr<TypeDeclaration> getIntegerType();
+std::shared_ptr<TypeDeclaration> getLongIntType();
+std::shared_ptr<TypeDeclaration> getCharType();
+std::shared_ptr<TypeDeclaration> getBooleanType();
+std::shared_ptr<TypeDeclaration> getRealType();
+std::shared_ptr<TypeDeclaration> getVoidType();
+std::shared_ptr<TypeDeclaration> getTextType();
+std::shared_ptr<TypeDeclaration> getStringType();
+std::shared_ptr<TypeDeclaration> getTimeStampType();
+
 enum ConstantKind
 {
     CONSTANT_DECLARATION,
@@ -85,8 +87,6 @@ enum ConstantKind
     BOOL_CONSTANT_DECLARATION,
     STRING_CONSTANT_DECLARATION,
 };
-
-class RangeDeclaration;
 
 class Range
 {
@@ -129,9 +129,6 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
     virtual TypeKind getTypeKind() const
     {
         return kind;
-    }
-    virtual ~TypeDeclaration()
-    {
     }
     virtual bool isIncomplete() const
     {
@@ -191,8 +188,8 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
     {
         TypeDeclaration::name = name;
     }
-    void setInitialValue(std::shared_ptr<ExpressionAST> i){
-
+    void setInitialValue(std::shared_ptr<ExpressionAST> i)
+    {
     }
     virtual std::shared_ptr<TypeDeclaration> clone() const
     {
@@ -210,6 +207,18 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
 class ForwardDeclaration : public TypeDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
     bool isIncomplete() const override
     {
         return true;
@@ -222,6 +231,8 @@ class ForwardDeclaration : public TypeDeclaration
     {
         return false;
     }
+
+  protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override
     {
         return 0;
@@ -238,6 +249,16 @@ class BaseTypeDeclaration : public TypeDeclaration
     {
         return kind == ty->getTypeKind();
     }
+    bool hasLlvmType() const override
+    {
+        return false;
+    }
+
+  protected:
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+        return std::shared_ptr<llvm::Type>();
+    }
 };
 
 class RealDeclaration : public BaseTypeDeclaration
@@ -246,8 +267,14 @@ class RealDeclaration : public BaseTypeDeclaration
     RealDeclaration() : BaseTypeDeclaration(TypeKind::TYPE_REAL)
     {
     }
-    const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override;
-    const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const override;
+    const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override
+    {
+        return TypeDeclaration::isCompatibleType(ty);
+    }
+    const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const override
+    {
+        return TypeDeclaration::isAssignableType(ty);
+    }
     unsigned bits() const override
     {
         return 64;
@@ -264,9 +291,16 @@ class RealDeclaration : public BaseTypeDeclaration
     {
         return isClassOf(e);
     }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return BaseTypeDeclaration::isSameAs(ty);
+    }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+        return BaseTypeDeclaration::getLlvmType();
+    }
 };
 
 class CharDeclaration : public BaseTypeDeclaration
@@ -301,6 +335,17 @@ class CharDeclaration : public BaseTypeDeclaration
     {
         return e->getKind() == TypeKind::TYPE_CHAR;
     }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return BaseTypeDeclaration::isSameAs(ty);
+    }
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
@@ -309,12 +354,30 @@ class CharDeclaration : public BaseTypeDeclaration
 class VoidDeclaration : public BaseTypeDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+
+  public:
     VoidDeclaration() : BaseTypeDeclaration(TypeKind::TYPE_VOID)
     {
     }
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override
     {
         return 0;
+    }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return BaseTypeDeclaration::isSameAs(ty);
     }
     bool hasLlvmType() const override
     {
@@ -332,6 +395,17 @@ class VoidDeclaration : public BaseTypeDeclaration
 class CompoundDeclaration : public TypeDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
     CompoundDeclaration(TypeKind typeKind, std::shared_ptr<TypeDeclaration> typeDeclaration)
         : TypeDeclaration(typeKind), baseType(typeDeclaration)
     {
@@ -352,12 +426,28 @@ class CompoundDeclaration : public TypeDeclaration
     static bool isClassOf(const TypeDeclaration *e);
 
   protected:
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+        return std::shared_ptr<llvm::Type>();
+    }
+
     std::shared_ptr<TypeDeclaration> baseType;
 };
 
 class ArrayDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     ArrayDeclaration(std::shared_ptr<TypeDeclaration> b, const std::vector<std::shared_ptr<RangeDeclaration>> &r)
         : CompoundDeclaration(TypeKind::TYPE_ARRAY, b), ranges(r)
     {
@@ -381,6 +471,10 @@ class ArrayDeclaration : public CompoundDeclaration
     {
         return e->getKind() >= TypeKind::TYPE_ARRAY && e->getKind() <= TypeKind::TYPE_LAST_ARRAY;
     }
+    bool hasLlvmType() const override
+    {
+        return CompoundDeclaration::hasLlvmType();
+    }
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
@@ -392,6 +486,14 @@ class ArrayDeclaration : public CompoundDeclaration
 class EnumDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isStringLike() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     struct EnumValue
     {
         EnumValue(const std::string &nm, int v) : name(nm), value(v)
@@ -446,6 +548,10 @@ class EnumDeclaration : public CompoundDeclaration
         return e->getKind() == TypeKind::TYPE_ENUM;
     }
     bool isSameAs(const TypeDeclaration *ty) const override;
+    bool hasLlvmType() const override
+    {
+        return CompoundDeclaration::hasLlvmType();
+    }
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override
@@ -460,6 +566,19 @@ class EnumDeclaration : public CompoundDeclaration
 class BoolDeclaration : public EnumDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isStringLike() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual bool isIntegral() const;
+    virtual bool isUnsigned() const;
+    virtual bool isCompound() const;
+    virtual unsigned int bits() const;
     BoolDeclaration()
         : EnumDeclaration(TypeKind::TYPE_BOOLEAN, std::vector<std::string>{"false", "true"}, shared_from_this())
     {
@@ -467,6 +586,10 @@ class BoolDeclaration : public EnumDeclaration
     bool isSameAs(const TypeDeclaration *ty) const override
     {
         return ty == this;
+    }
+    bool hasLlvmType() const override
+    {
+        return EnumDeclaration::hasLlvmType();
     }
 
   protected:
@@ -476,6 +599,17 @@ class BoolDeclaration : public EnumDeclaration
 class PointerDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     PointerDeclaration(std::shared_ptr<ForwardDeclaration> fwd)
         : incomplete(true), forward(true), CompoundDeclaration(TypeKind::TYPE_POINTER, fwd)
     {
@@ -509,9 +643,15 @@ class PointerDeclaration : public CompoundDeclaration
         baseType = t;
         incomplete = false;
     }
-    static bool classof(const TypeDeclaration *e){
+    static bool classof(const TypeDeclaration *e)
+    {
         return isClassOf(e);
     }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return CompoundDeclaration::isSameAs(ty);
+    }
+
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
 
@@ -523,7 +663,17 @@ class PointerDeclaration : public CompoundDeclaration
 class FunctionDeclaration : public CompoundDeclaration
 {
   public:
-    FunctionDeclaration(PrototypeExpression *proto);
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    FunctionDeclaration(std::shared_ptr<PrototypeExpression> proto);
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override
     {
         return baseType->isCompatibleType(ty);
@@ -544,9 +694,17 @@ class FunctionDeclaration : public CompoundDeclaration
     {
         return e->getKind() == TypeKind::TYPE_FUNCTION;
     }
-    PrototypeExpression *getPrototypeExpression() const
+    std::shared_ptr<PrototypeExpression> getPrototypeExpression() const
     {
         return prototype;
+    }
+    static bool isclassof(const TypeDeclaration *e)
+    {
+        return isClassOf(e);
+    }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return CompoundDeclaration::isSameAs(ty);
     }
 
   protected:
@@ -556,12 +714,23 @@ class FunctionDeclaration : public CompoundDeclaration
     }
 
   private:
-    PrototypeExpression *prototype;
+    std::shared_ptr<PrototypeExpression> prototype;
 };
 
 class FieldDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     FieldDeclaration(const std::string &nm, std::shared_ptr<TypeDeclaration> ty, bool stat, Access ac = Public)
         : isStat(stat), CompoundDeclaration(TypeKind::TYPE_FIELD, ty)
     {
@@ -597,6 +766,10 @@ class FieldDeclaration : public CompoundDeclaration
     {
         return access;
     }
+    bool hasLlvmType() const override
+    {
+        return CompoundDeclaration::hasLlvmType();
+    }
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override
@@ -611,6 +784,20 @@ class FieldDeclaration : public CompoundDeclaration
 
 class FieldCollection : public TypeDeclaration
 {
+  public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+
   public:
     FieldCollection(TypeKind k, const std::vector<std::shared_ptr<FieldDeclaration>> flds)
         : TypeDeclaration(k), fields(flds), opaqueType(0)
@@ -641,6 +828,10 @@ class FieldCollection : public TypeDeclaration
     }
 
   protected:
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+        return std::shared_ptr<llvm::Type>();
+    }
     std::vector<std::shared_ptr<FieldDeclaration>> fields;
     mutable std::shared_ptr<llvm::StructType> opaqueType;
 };
@@ -648,11 +839,35 @@ class FieldCollection : public TypeDeclaration
 class VariantDeclaration : public FieldCollection
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual int Element(const std::string &name) const;
+    virtual const FieldDeclaration *getElement(unsigned int n) const;
+    virtual int getFieldCount() const;
+    virtual bool isCompound() const;
     VariantDeclaration(const std::vector<std::shared_ptr<FieldDeclaration>> flds)
         : FieldCollection(TypeKind::TYPE_VRIANT, flds){};
     static bool isClassOf(const TypeDeclaration *e)
     {
         return e->getKind() == TypeKind::TYPE_VRIANT;
+    }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return FieldCollection::isSameAs(ty);
+    }
+    bool hasLlvmType() const override
+    {
+        return FieldCollection::hasLlvmType();
     }
 
   protected:
@@ -661,6 +876,23 @@ class VariantDeclaration : public FieldCollection
 
 class RecordDeclaration : public FieldCollection
 {
+  public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual int Element(const std::string &name) const;
+    virtual const FieldDeclaration *getElement(unsigned int n) const;
+    virtual int getFieldCount() const;
+    virtual bool isCompound() const;
+
   public:
     RecordDeclaration(const std::vector<std::shared_ptr<FieldDeclaration>> flds, VariantDeclaration *v)
         : FieldCollection(TypeKind::TYPE_RECORD, flds), variant(v){};
@@ -677,6 +909,10 @@ class RecordDeclaration : public FieldCollection
     {
         return e->getKind() == TypeKind::TYPE_RECORD;
     }
+    bool hasLlvmType() const override
+    {
+        return FieldCollection::hasLlvmType();
+    }
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
@@ -687,11 +923,53 @@ class RecordDeclaration : public FieldCollection
 
 class MemberFunctionDeclaration : public TypeDeclaration
 {
+  public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+
+  public:
+    bool isSameAs(const TypeDeclaration *typeDeclaration) const override
+    {
+        return false;
+    }
+    bool hasLlvmType() const override
+    {
+        return false;
+    }
+
+  protected:
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+        return std::shared_ptr<llvm::Type>();
+    }
 };
 
 class FunctionPointerDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     FunctionPointerDeclaration(std::shared_ptr<PrototypeExpression> func);
     std::shared_ptr<PrototypeExpression> getPrototype() const
     {
@@ -721,6 +999,19 @@ class FunctionPointerDeclaration : public CompoundDeclaration
 class FileDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     FileDeclaration(std::shared_ptr<TypeDeclaration> ty) : CompoundDeclaration(TypeKind::TYPE_FILE, ty)
     {
     }
@@ -731,6 +1022,14 @@ class FileDeclaration : public CompoundDeclaration
     {
         return e->getKind() == TypeKind::TYPE_FILE || e->getKind() == TypeKind::TYPE_TEXT;
     }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return CompoundDeclaration::isSameAs(ty);
+    }
+    bool hasLlvmType() const override
+    {
+        return CompoundDeclaration::hasLlvmType();
+    }
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
@@ -738,6 +1037,21 @@ class FileDeclaration : public CompoundDeclaration
 
 class TextDeclaration : public FileDeclaration
 {
+  public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+
   public:
     TextDeclaration() : FileDeclaration(TypeKind::TYPE_TEXT, std::shared_ptr<CharDeclaration>(new CharDeclaration))
     {
@@ -750,10 +1064,37 @@ class TextDeclaration : public FileDeclaration
     {
         return e->getKind() == TypeKind::TYPE_TEXT;
     }
+    bool isSameAs(const TypeDeclaration *ty) const override
+    {
+        return FileDeclaration::isSameAs(ty);
+    }
+
+  protected:
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+        return FileDeclaration::getLlvmType();
+    }
 };
 
 class StringDeclaration : public ArrayDeclaration
 {
+  public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isUnsigned() const;
+    virtual std::shared_ptr<Range> getRange() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual bool isSameAs(const TypeDeclaration *ty) const;
+
+  protected:
+    virtual std::shared_ptr<llvm::Type> getLlvmType() const;
+
   public:
     StringDeclaration(unsigned size)
         : ArrayDeclaration(
@@ -774,12 +1115,19 @@ class StringDeclaration : public ArrayDeclaration
     {
         return true;
     }
+
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override;
 };
 
 class RangeDeclaration : public TypeDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isStringLike() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
     RangeDeclaration(const std::shared_ptr<Range> &range, const std::shared_ptr<TypeDeclaration> &baseType)
         : TypeDeclaration(TypeKind::TYPE_RANGE), range(range), baseType(baseType)
     {
@@ -831,6 +1179,17 @@ class RangeDeclaration : public TypeDeclaration
 class SetDeclaration : public CompoundDeclaration
 {
   public:
+    virtual TypeKind getTypeKind() const;
+    virtual bool isIncomplete() const;
+    virtual bool isIntegral() const;
+    virtual bool isStringLike() const;
+    virtual bool isUnsigned() const;
+    virtual unsigned int bits() const;
+    virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const;
+    virtual size_t getSize() const;
+    virtual std::shared_ptr<TypeDeclaration> clone() const;
+    virtual bool isCompound() const;
+    virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     typedef unsigned int ElemType;
     SetDeclaration(std::shared_ptr<RangeDeclaration> range, std::shared_ptr<TypeDeclaration> ty);
     static bool isClassOf(const TypeDeclaration *e)
@@ -847,7 +1206,10 @@ class SetDeclaration : public CompoundDeclaration
         range = rangeDecl;
     }
     void UpdateSubtype(std::shared_ptr<TypeDeclaration> ty);
-    bool isSameAs(const TypeDeclaration *ty) const override;
+    bool isSameAs(const TypeDeclaration *ty) const
+    {
+        return true;
+    }
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override;
     bool hasLlvmType() const override
     {
@@ -855,7 +1217,9 @@ class SetDeclaration : public CompoundDeclaration
     }
 
   private:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    std::shared_ptr<llvm::Type> getLlvmType() const
+    {
+    }
 
   private:
     std::shared_ptr<RangeDeclaration> range;
@@ -866,9 +1230,6 @@ class ConstantDeclaration
   public:
     ConstantDeclaration(std::shared_ptr<TypeDeclaration> typeDeclaration, ConstantKind kind, Location loc)
         : type(typeDeclaration), loc(loc), constantKind(kind)
-    {
-    }
-    virtual ~ConstantDeclaration()
     {
     }
     const std::shared_ptr<TypeDeclaration> &getType() const
@@ -1034,9 +1395,22 @@ class StringConstantDeclaration : public ConstantDeclaration
     std::string value;
 };
 
-ConstantDeclaration *operator+(const ConstantDeclaration &lhs, const ConstantDeclaration &rhs);
-ConstantDeclaration *operator-(const ConstantDeclaration &lhs, const ConstantDeclaration &rhs);
-ConstantDeclaration *operator*(const ConstantDeclaration &lhs, const ConstantDeclaration &rhs);
-ConstantDeclaration *operator/(const ConstantDeclaration &lhs, const ConstantDeclaration &rhs);
+inline std::shared_ptr<ConstantDeclaration> operator+(std::shared_ptr<ConstantDeclaration> const &lhs,
+                                               std::shared_ptr<ConstantDeclaration> const &rhs)
+{
+}
+inline std::shared_ptr<ConstantDeclaration> operator-(const std::shared_ptr<ConstantDeclaration> &lhs,
+                                               const std::shared_ptr<ConstantDeclaration> &rhs)
+{
+}
+inline std::shared_ptr<ConstantDeclaration> operator*(const std::shared_ptr<ConstantDeclaration> &lhs,
+                                               const std::shared_ptr<ConstantDeclaration> &rhs)
+{
+}
+inline std::shared_ptr<ConstantDeclaration> operator/(const std::shared_ptr<ConstantDeclaration> &lhs,
+                                               const std::shared_ptr<ConstantDeclaration> &rhs)
+{
+}
+
 } // namespace Pascal
 #endif // JAPC_TYPE_H

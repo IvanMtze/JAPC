@@ -183,6 +183,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1Parser.html">Parser</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ParserUtils.html">ParserUtils</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1PointerDeclaration.html">PointerDeclaration</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1PointerExpression.html">PointerExpression</a></td></tr>
@@ -445,69 +447,71 @@ Enumerations</h2></td></tr>
 , <br />
 &#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da221536d8d60143d82b6180249f1fc8f6">SYMBOL_WITH</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dacdc17c32e7721fe9de84ae64cf4bef2f">SYMBOL_EXTERNAL</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da0715fb8d2bf7058e209d7262774af869">SYMBOL_FORWARD</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dac1e7df5143c44cfc23478c559b75fc94">SYMBOL_PLUS</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da4431f5e27c14bf9ae5a17ef54b8b9972">SYMBOL_MINUS</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da91f2afcc766e30844d594d4f2775802c">SYMBOL_STAR</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da4431f5e27c14bf9ae5a17ef54b8b9972">SYMBOL_MINUS</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da91f2afcc766e30844d594d4f2775802c">SYMBOL_STAR</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dab1da7160399b0d7796957a9aa505c1cc">SYMBOL_STAR_STAR</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daffe9c0f168778a0a787e3f59fdf36cc6">SYMBOL_SLASH</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da9719ebdf1df10e7eec85fad67aa818c0">SYMBOL_EQUAL</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da66478d6915eb047ff03094a3e87a82c5">SYMBOL_LESS_THAN</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da9719ebdf1df10e7eec85fad67aa818c0">SYMBOL_EQUAL</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da66478d6915eb047ff03094a3e87a82c5">SYMBOL_LESS_THAN</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da32501f0b2625bc07d060394ed5dc6b49">SYMBOL_GREATER_THAN</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daff8cd0b1a2fbf862a5d5491667017380">SYMBOL_SQUARE_BRACKET_OPEN</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da00dbbb0762477c4a17161e736c15b68f">SYMBOL_SQUARE_BRACKET_CLOSE</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da5d1a447dc6f64b737929ef8b06fb5ae1">SYMBOL_DOT</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da00dbbb0762477c4a17161e736c15b68f">SYMBOL_SQUARE_BRACKET_CLOSE</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da5d1a447dc6f64b737929ef8b06fb5ae1">SYMBOL_DOT</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daa548061698f9f5a44f83590730d27694">SYMBOL_COMMA</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da2b8106e0ddcf8bae2df26a95b53ad63e">SYMBOL_SEMICOLON</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dae5f3487f9066d5d2d767d927733d04a3">SYMBOL_COLON</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da74a9a7dfc1b3e74de4ba28e069a297cd">SYMBOL_PAREN_OPEN</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dae5f3487f9066d5d2d767d927733d04a3">SYMBOL_COLON</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da74a9a7dfc1b3e74de4ba28e069a297cd">SYMBOL_PAREN_OPEN</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da97c87bf4da7c7abee2ef9a067f58508f">SYMBOL_PAREN_CLOSE</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da8497b80d0f46096714c0ac9f4c11af65">SYMBOL_BRACE_OPEN</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dab313526dbf14a5a1489f319d41ba0df6">SYMBOL_BRACE_CLOSE</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daf885c29f717da549b9655ef836df4afc">SYMBOL_POWER</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dab313526dbf14a5a1489f319d41ba0df6">SYMBOL_BRACE_CLOSE</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daf885c29f717da549b9655ef836df4afc">SYMBOL_POWER</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da201027d07895510a13765561a149d944">SYMBOL_STRING_KEYWORD</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da9efc2169a29559ccd4636756d5434205">SYMBOL_LESS_GREATER_THAN</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da11416dd364dbef519fcdb21672eb6947">SYMBOL_LESS_EQUAL_THAN</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da54c4389cf8bb9c637b6c54f827e9c07c">SYMBOL_GREATER_EQUAL_THAN</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da11416dd364dbef519fcdb21672eb6947">SYMBOL_LESS_EQUAL_THAN</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da54c4389cf8bb9c637b6c54f827e9c07c">SYMBOL_GREATER_EQUAL_THAN</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daf369aa1bd34da63c74bd8a90957e94e0">SYMBOL_COLON_EQUAL</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dab63086e26b8f06fe4765109ae8a6e061">SYMBOL_DOT_DOT</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da92263388316b8f9857cbf22dfcaaaa4b">SYMBOL_GREATER_LESS_THAN</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dad6d73b4ca9d6c08a90fef7d5628941ff">SYMBOL_EQUAL_GREATER_THAN</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da92263388316b8f9857cbf22dfcaaaa4b">SYMBOL_GREATER_LESS_THAN</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6dad6d73b4ca9d6c08a90fef7d5628941ff">SYMBOL_EQUAL_GREATER_THAN</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da3fc6ccd1e8340d18e7efa1333dbdb785">SYMBOL_WHITE_SPACE</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da218937d8a615537ecb6ea689087c1f29">SYMBOL_LETTER</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da09181b32d6cae5d84bf792563e8164dc">SYMBOL_UNDERSCORE</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da6fcc416051346daca31c571646af127a">IDENTIFIER</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da09181b32d6cae5d84bf792563e8164dc">SYMBOL_UNDERSCORE</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da6fcc416051346daca31c571646af127a">IDENTIFIER</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da544c390254a29bd232dfb1ff2bcf7c12">STRING_LITERAL</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da7c2af8c21977d7d66a69006680f09804">NUMERIC_LITERAL</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da5c373f203cd6782a94ab7bc68c9258ee">BIG_INTEGER</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da2f2c2fcd7430065623e7506f03fe38bc">NEW_LINE</a>
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da5c373f203cd6782a94ab7bc68c9258ee">BIG_INTEGER</a>
+, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da2f2c2fcd7430065623e7506f03fe38bc">NEW_LINE</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6daf2cd320b55767434dd48d81b165ea956">COMMENT</a>
 , <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da581953f6b20ad7f993b64b1dc632032e">END_OF_FILE</a>
-, <a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</a>
+, <br />
+&#160;&#160;<a class="el" href="namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</a>
 <br />
  }</td></tr>
 <tr class="separator:ab2a7dea4a79cdebc706e08ea071c7a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac19ccdcd8675358c90847ab723c3067b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#ac19ccdcd8675358c90847ab723c3067b">operator&lt;</a> (const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a> &amp;lhs, const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a> &amp;rhs)</td></tr>
-<tr class="separator:ac19ccdcd8675358c90847ab723c3067b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c5d862d8c69bdba3cfa3c98eee4a48d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a0c5d862d8c69bdba3cfa3c98eee4a48d">getIntegerType</a> ()</td></tr>
+<tr class="separator:a0c5d862d8c69bdba3cfa3c98eee4a48d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95907e02aad82b7dd43e2fa36acc2e82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a95907e02aad82b7dd43e2fa36acc2e82">operator&lt;</a> (const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a> lhs, const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a> rhs)</td></tr>
+<tr class="separator:a95907e02aad82b7dd43e2fa36acc2e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef304a08837ea67eaaea76fdadd8f8c4"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#aef304a08837ea67eaaea76fdadd8f8c4">operator&amp;</a> (const <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a> lhs, const <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a> rhs)</td></tr>
 <tr class="separator:aef304a08837ea67eaaea76fdadd8f8c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98d3aeb6fdce4c85a2365164a38cb744"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a98d3aeb6fdce4c85a2365164a38cb744">operator|</a> (const <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a> lhs, const <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a> rhs)</td></tr>
 <tr class="separator:a98d3aeb6fdce4c85a2365164a38cb744"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2912446397b5a2fd1cab90a44e4c4897"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a2912446397b5a2fd1cab90a44e4c4897">operator|=</a> (<a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a> lhs, const <a class="el" href="namespacePascal.html#af252b7c99307f7aade8794768d75a141">VariableDefinitionFlags</a> rhs)</td></tr>
 <tr class="separator:a2912446397b5a2fd1cab90a44e4c4897"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c5d862d8c69bdba3cfa3c98eee4a48d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a0c5d862d8c69bdba3cfa3c98eee4a48d">getIntegerType</a> ()</td></tr>
-<tr class="separator:a0c5d862d8c69bdba3cfa3c98eee4a48d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1cad3fc5025a0590a5de2d051e0f39b"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#af1cad3fc5025a0590a5de2d051e0f39b">getLongIntType</a> ()</td></tr>
 <tr class="separator:af1cad3fc5025a0590a5de2d051e0f39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff9c699b64960a352ba3d96dfe0e3ce3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#aff9c699b64960a352ba3d96dfe0e3ce3">getCharType</a> ()</td></tr>
@@ -524,14 +528,14 @@ Functions</h2></td></tr>
 <tr class="separator:ac630c15025a3fcd313bb48ddc6d5bf97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f6e77e14664f10c3c2d9ac47ecb07c5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a3f6e77e14664f10c3c2d9ac47ecb07c5">getTimeStampType</a> ()</td></tr>
 <tr class="separator:a3f6e77e14664f10c3c2d9ac47ecb07c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26ab587b2782fed8957edc613908c381"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a26ab587b2782fed8957edc613908c381">operator+</a> (const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;lhs, const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;rhs)</td></tr>
-<tr class="separator:a26ab587b2782fed8957edc613908c381"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a028dae275c6fa8935320ca7ae336ba0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a028dae275c6fa8935320ca7ae336ba0c">operator-</a> (const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;lhs, const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;rhs)</td></tr>
-<tr class="separator:a028dae275c6fa8935320ca7ae336ba0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7de0bbb4ee5fc1feeb7444601aaf12d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#ad7de0bbb4ee5fc1feeb7444601aaf12d">operator*</a> (const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;lhs, const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;rhs)</td></tr>
-<tr class="separator:ad7de0bbb4ee5fc1feeb7444601aaf12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1657970cf943726bbc91c9ce9abf5da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#ad1657970cf943726bbc91c9ce9abf5da">operator/</a> (const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;lhs, const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;rhs)</td></tr>
-<tr class="separator:ad1657970cf943726bbc91c9ce9abf5da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af34175282e375d2d87a26ef34b516cc1"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#af34175282e375d2d87a26ef34b516cc1">operator+</a> (std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; const &amp;lhs, std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; const &amp;rhs)</td></tr>
+<tr class="separator:af34175282e375d2d87a26ef34b516cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bc027c8b6511498e8a53698d720e9b0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a2bc027c8b6511498e8a53698d720e9b0">operator-</a> (const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;lhs, const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;rhs)</td></tr>
+<tr class="separator:a2bc027c8b6511498e8a53698d720e9b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69505db419f73c525f1af8fdffc2ad72"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a69505db419f73c525f1af8fdffc2ad72">operator*</a> (const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;lhs, const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;rhs)</td></tr>
+<tr class="separator:a69505db419f73c525f1af8fdffc2ad72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a879b6bc749fac82592109c933888baf2"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePascal.html#a879b6bc749fac82592109c933888baf2">operator/</a> (const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;lhs, const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;rhs)</td></tr>
+<tr class="separator:a879b6bc749fac82592109c933888baf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -777,6 +781,7 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6da9ed10172a72512487e19be922c54b948" name="ab2a7dea4a79cdebc706e08ea071c7a6da9ed10172a72512487e19be922c54b948"></a>SYMBOL_WHILE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6da221536d8d60143d82b6180249f1fc8f6" name="ab2a7dea4a79cdebc706e08ea071c7a6da221536d8d60143d82b6180249f1fc8f6"></a>SYMBOL_WITH&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6dacdc17c32e7721fe9de84ae64cf4bef2f" name="ab2a7dea4a79cdebc706e08ea071c7a6dacdc17c32e7721fe9de84ae64cf4bef2f"></a>SYMBOL_EXTERNAL&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6da0715fb8d2bf7058e209d7262774af869" name="ab2a7dea4a79cdebc706e08ea071c7a6da0715fb8d2bf7058e209d7262774af869"></a>SYMBOL_FORWARD&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6dac1e7df5143c44cfc23478c559b75fc94" name="ab2a7dea4a79cdebc706e08ea071c7a6dac1e7df5143c44cfc23478c559b75fc94"></a>SYMBOL_PLUS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6da4431f5e27c14bf9ae5a17ef54b8b9972" name="ab2a7dea4a79cdebc706e08ea071c7a6da4431f5e27c14bf9ae5a17ef54b8b9972"></a>SYMBOL_MINUS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab2a7dea4a79cdebc706e08ea071c7a6da91f2afcc766e30844d594d4f2775802c" name="ab2a7dea4a79cdebc706e08ea071c7a6da91f2afcc766e30844d594d4f2775802c"></a>SYMBOL_STAR&#160;</td><td class="fielddoc"></td></tr>
@@ -1081,29 +1086,29 @@ Here is the caller graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ad7de0bbb4ee5fc1feeb7444601aaf12d" name="ad7de0bbb4ee5fc1feeb7444601aaf12d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7de0bbb4ee5fc1feeb7444601aaf12d">&#9670;&#160;</a></span>operator*()</h2>
+<a id="a69505db419f73c525f1af8fdffc2ad72" name="a69505db419f73c525f1af8fdffc2ad72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69505db419f73c525f1af8fdffc2ad72">&#9670;&#160;</a></span>operator*()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> * Pascal::operator* </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; Pascal::operator* </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -1116,22 +1121,22 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a26ab587b2782fed8957edc613908c381" name="a26ab587b2782fed8957edc613908c381"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26ab587b2782fed8957edc613908c381">&#9670;&#160;</a></span>operator+()</h2>
+<a id="af34175282e375d2d87a26ef34b516cc1" name="af34175282e375d2d87a26ef34b516cc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af34175282e375d2d87a26ef34b516cc1">&#9670;&#160;</a></span>operator+()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> * Pascal::operator+ </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; Pascal::operator+ </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; const &amp;&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; const &amp;&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -1144,22 +1149,22 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a028dae275c6fa8935320ca7ae336ba0c" name="a028dae275c6fa8935320ca7ae336ba0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a028dae275c6fa8935320ca7ae336ba0c">&#9670;&#160;</a></span>operator-()</h2>
+<a id="a2bc027c8b6511498e8a53698d720e9b0" name="a2bc027c8b6511498e8a53698d720e9b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bc027c8b6511498e8a53698d720e9b0">&#9670;&#160;</a></span>operator-()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> * Pascal::operator- </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; Pascal::operator- </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -1172,22 +1177,22 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ad1657970cf943726bbc91c9ce9abf5da" name="ad1657970cf943726bbc91c9ce9abf5da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1657970cf943726bbc91c9ce9abf5da">&#9670;&#160;</a></span>operator/()</h2>
+<a id="a879b6bc749fac82592109c933888baf2" name="a879b6bc749fac82592109c933888baf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a879b6bc749fac82592109c933888baf2">&#9670;&#160;</a></span>operator/()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> * Pascal::operator/ </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; Pascal::operator/ </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &amp;&#160;</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classPascal_1_1ConstantDeclaration.html">ConstantDeclaration</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -1200,22 +1205,25 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ac19ccdcd8675358c90847ab723c3067b" name="ac19ccdcd8675358c90847ab723c3067b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac19ccdcd8675358c90847ab723c3067b">&#9670;&#160;</a></span>operator&lt;()</h2>
+<a id="a95907e02aad82b7dd43e2fa36acc2e82" name="a95907e02aad82b7dd43e2fa36acc2e82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95907e02aad82b7dd43e2fa36acc2e82">&#9670;&#160;</a></span>operator&lt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool Pascal::operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a>&#160;</td>
           <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classPascal_1_1VariableDefinition.html">VariableDefinition</a>&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -1224,12 +1232,17 @@ Here is the caller graph for this function:</div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacePascal_ac19ccdcd8675358c90847ab723c3067b_cgraph.png" border="0" usemap="#anamespacePascal_ac19ccdcd8675358c90847ab723c3067b_cgraph" alt=""/></div>
-<map name="anamespacePascal_ac19ccdcd8675358c90847ab723c3067b_cgraph" id="anamespacePascal_ac19ccdcd8675358c90847ab723c3067b_cgraph">
+<div class="center"><img src="namespacePascal_a95907e02aad82b7dd43e2fa36acc2e82_cgraph.png" border="0" usemap="#anamespacePascal_a95907e02aad82b7dd43e2fa36acc2e82_cgraph" alt=""/></div>
+<map name="anamespacePascal_a95907e02aad82b7dd43e2fa36acc2e82_cgraph" id="anamespacePascal_a95907e02aad82b7dd43e2fa36acc2e82_cgraph">
 <area shape="rect" title=" " alt="" coords="5,13,131,38"/>
 <area shape="rect" href="classPascal_1_1NamedObject.html#ae15ef9b7a5bd02ff4302e845923c3043" title=" " alt="" coords="179,5,329,45"/>
 </map>
@@ -1266,7 +1279,7 @@ Here is the call graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1302,7 +1315,7 @@ Here is the call graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

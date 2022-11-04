@@ -14,7 +14,7 @@
 namespace Pascal
 {
 class ExpressionAST;
-
+class TypeDeclaration;
 class FunctionBaseBuiltin
 {
   public:

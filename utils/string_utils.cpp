@@ -15,7 +15,7 @@ bool string_utils::compareAhead(const int skip, const std::string mainString, co
 char string_utils::getCharAt(const int skip, const std::string string)
 {
     if (skip < 0 || skip > string.size())
-        return NULL;
+        return '\0';
     return string[skip];
 }
 

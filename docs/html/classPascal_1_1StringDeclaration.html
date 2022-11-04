@@ -76,6 +76,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classPascal_1_1StringDeclaration-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Pascal::StringDeclaration Class Reference</div></div>
 </div><!--header-->
@@ -87,9 +88,9 @@ Inheritance diagram for Pascal::StringDeclaration:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPascal_1_1StringDeclaration__inherit__graph.png" border="0" usemap="#aPascal_1_1StringDeclaration_inherit__map" alt="Inheritance graph"/></div>
 <map name="aPascal_1_1StringDeclaration_inherit__map" id="aPascal_1_1StringDeclaration_inherit__map">
-<area shape="rect" title=" " alt="" coords="19,827,194,940"/>
-<area shape="rect" href="classPascal_1_1ArrayDeclaration.html" title=" " alt="" coords="21,621,192,779"/>
-<area shape="rect" href="classPascal_1_1CompoundDeclaration.html" title=" " alt="" coords="5,431,208,573"/>
+<area shape="rect" title=" " alt="" coords="19,1003,194,1233"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html" title=" " alt="" coords="21,724,192,955"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html" title=" " alt="" coords="5,431,208,676"/>
 <area shape="rect" href="classPascal_1_1TypeDeclaration.html" title=" " alt="" coords="22,108,191,383"/>
 <area shape="rect" title=" " alt="" coords="5,5,208,60"/>
 </map>
@@ -99,9 +100,9 @@ Collaboration diagram for Pascal::StringDeclaration:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPascal_1_1StringDeclaration__coll__graph.png" border="0" usemap="#aPascal_1_1StringDeclaration_coll__map" alt="Collaboration graph"/></div>
 <map name="aPascal_1_1StringDeclaration_coll__map" id="aPascal_1_1StringDeclaration_coll__map">
-<area shape="rect" title=" " alt="" coords="19,827,194,940"/>
-<area shape="rect" href="classPascal_1_1ArrayDeclaration.html" title=" " alt="" coords="21,621,192,779"/>
-<area shape="rect" href="classPascal_1_1CompoundDeclaration.html" title=" " alt="" coords="5,431,208,573"/>
+<area shape="rect" title=" " alt="" coords="19,1003,194,1233"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html" title=" " alt="" coords="21,724,192,955"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html" title=" " alt="" coords="5,431,208,676"/>
 <area shape="rect" href="classPascal_1_1TypeDeclaration.html" title=" " alt="" coords="22,108,191,383"/>
 <area shape="rect" title=" " alt="" coords="5,5,208,60"/>
 </map>
@@ -109,15 +110,61 @@ Collaboration diagram for Pascal::StringDeclaration:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ad05645ea258da7ea6c131b33afa30a64"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#ad05645ea258da7ea6c131b33afa30a64">getTypeKind</a> () const</td></tr>
+<tr class="separator:ad05645ea258da7ea6c131b33afa30a64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadaea6ba70d1f391c084f658331a0c85"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#aadaea6ba70d1f391c084f658331a0c85">isIncomplete</a> () const</td></tr>
+<tr class="separator:aadaea6ba70d1f391c084f658331a0c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49916775c518af836140d0ebf7c0c9dc"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a49916775c518af836140d0ebf7c0c9dc">isIntegral</a> () const</td></tr>
+<tr class="separator:a49916775c518af836140d0ebf7c0c9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae829169ad3a25579d3c13260e5c7d8c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#aae829169ad3a25579d3c13260e5c7d8c">isUnsigned</a> () const</td></tr>
+<tr class="separator:aae829169ad3a25579d3c13260e5c7d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c4b03950ef50ce49fa6eb10981e1d01"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1Range.html">Range</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a9c4b03950ef50ce49fa6eb10981e1d01">getRange</a> () const</td></tr>
+<tr class="separator:a9c4b03950ef50ce49fa6eb10981e1d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71fb0fc558baa10922accfd9ee4ffafb"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a71fb0fc558baa10922accfd9ee4ffafb">bits</a> () const</td></tr>
+<tr class="separator:a71fb0fc558baa10922accfd9ee4ffafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a703a105d2e660c10fd172c27e2ff287d"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a703a105d2e660c10fd172c27e2ff287d">isAssignableType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
+<tr class="separator:a703a105d2e660c10fd172c27e2ff287d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a626c4fdd6760957c6d918d6847208c20"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a626c4fdd6760957c6d918d6847208c20">getSize</a> () const</td></tr>
+<tr class="separator:a626c4fdd6760957c6d918d6847208c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af350e30e9fbbaa9b80f3fb4a81734cb6"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#af350e30e9fbbaa9b80f3fb4a81734cb6">clone</a> () const</td></tr>
+<tr class="separator:af350e30e9fbbaa9b80f3fb4a81734cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28f6c9a0c66087dc5de2ff2046f046c4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a28f6c9a0c66087dc5de2ff2046f046c4">isCompound</a> () const</td></tr>
+<tr class="separator:a28f6c9a0c66087dc5de2ff2046f046c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87ded221cca2faf83972c9a4b65b16a0"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a87ded221cca2faf83972c9a4b65b16a0">getSubtype</a> () const</td></tr>
+<tr class="separator:a87ded221cca2faf83972c9a4b65b16a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c628ab545705620b57894a500739eb6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a4c628ab545705620b57894a500739eb6">isSameAs</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
+<tr class="separator:a4c628ab545705620b57894a500739eb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0747774fa38333a4e4ae0ed339a70839"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a0747774fa38333a4e4ae0ed339a70839">StringDeclaration</a> (unsigned size)</td></tr>
 <tr class="separator:a0747774fa38333a4e4ae0ed339a70839"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e50ba1ce1321cf6241e68b19a9a4756"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a9e50ba1ce1321cf6241e68b19a9a4756">isStringLike</a> () const override</td></tr>
 <tr class="separator:a9e50ba1ce1321cf6241e68b19a9a4756"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71bb217a932baee9ac3608c99bfde2c5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a71bb217a932baee9ac3608c99bfde2c5">hasLlvmType</a> () const override</td></tr>
 <tr class="separator:a71bb217a932baee9ac3608c99bfde2c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a216cc4a95f4fd91ee6bd45b7213443"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a5a216cc4a95f4fd91ee6bd45b7213443">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
-<tr class="separator:a5a216cc4a95f4fd91ee6bd45b7213443"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82487b9ca47890c3434b8ca5af91f405"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a82487b9ca47890c3434b8ca5af91f405">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
+<tr class="separator:a82487b9ca47890c3434b8ca5af91f405"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classPascal_1_1ArrayDeclaration"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classPascal_1_1ArrayDeclaration')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classPascal_1_1ArrayDeclaration.html">Pascal::ArrayDeclaration</a></td></tr>
+<tr class="memitem:ae63706b7e1e99445f3676b2202680795 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#ae63706b7e1e99445f3676b2202680795">getTypeKind</a> () const</td></tr>
+<tr class="separator:ae63706b7e1e99445f3676b2202680795 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e656d74d6ed78228584dfada54dcb77 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a6e656d74d6ed78228584dfada54dcb77">isIncomplete</a> () const</td></tr>
+<tr class="separator:a6e656d74d6ed78228584dfada54dcb77 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c571701772341de7c29b59e88d610cc inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a0c571701772341de7c29b59e88d610cc">isIntegral</a> () const</td></tr>
+<tr class="separator:a0c571701772341de7c29b59e88d610cc inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12ea7cb1475c7239e6d0feb3ef27caeb inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a12ea7cb1475c7239e6d0feb3ef27caeb">isUnsigned</a> () const</td></tr>
+<tr class="separator:a12ea7cb1475c7239e6d0feb3ef27caeb inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630ad0b353cc8b596b49bf4a6348fe13 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1Range.html">Range</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a630ad0b353cc8b596b49bf4a6348fe13">getRange</a> () const</td></tr>
+<tr class="separator:a630ad0b353cc8b596b49bf4a6348fe13 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab906c68d7b7b9de3762f9307218b2a9d inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#ab906c68d7b7b9de3762f9307218b2a9d">bits</a> () const</td></tr>
+<tr class="separator:ab906c68d7b7b9de3762f9307218b2a9d inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a058c11ed3891455452874806b8b3e11a inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a058c11ed3891455452874806b8b3e11a">isAssignableType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
+<tr class="separator:a058c11ed3891455452874806b8b3e11a inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a296467b2cf134d20ec3acb68f85f95c8 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a296467b2cf134d20ec3acb68f85f95c8">getSize</a> () const</td></tr>
+<tr class="separator:a296467b2cf134d20ec3acb68f85f95c8 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a237bccdc8b1848fe1a52d01cd945eed6 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a237bccdc8b1848fe1a52d01cd945eed6">clone</a> () const</td></tr>
+<tr class="separator:a237bccdc8b1848fe1a52d01cd945eed6 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d3c67e5da6b2818778c931f82fd7bc9 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a4d3c67e5da6b2818778c931f82fd7bc9">isCompound</a> () const</td></tr>
+<tr class="separator:a4d3c67e5da6b2818778c931f82fd7bc9 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a422f1f715eeb78f43b1610856589ad02 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a422f1f715eeb78f43b1610856589ad02">getSubtype</a> () const</td></tr>
+<tr class="separator:a422f1f715eeb78f43b1610856589ad02 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e66540d2f0686ed63e21f148b954883 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a1e66540d2f0686ed63e21f148b954883">ArrayDeclaration</a> (std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt; b, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classPascal_1_1RangeDeclaration.html">RangeDeclaration</a> &gt; &gt; &amp;r)</td></tr>
 <tr class="separator:a1e66540d2f0686ed63e21f148b954883 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa442452693dfdd9ec9fee4ee60579fa inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#aaa442452693dfdd9ec9fee4ee60579fa">ArrayDeclaration</a> (<a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a> tk, std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt; b, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classPascal_1_1RangeDeclaration.html">RangeDeclaration</a> &gt; &gt; &amp;r)</td></tr>
@@ -126,15 +173,39 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acef7f62218ec57295a0fde12efc31262 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc334a516076f0afc7bf808aa244161 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#aefc334a516076f0afc7bf808aa244161">isStringLike</a> () const override</td></tr>
 <tr class="separator:aefc334a516076f0afc7bf808aa244161 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c3bd513dc9afc90de273f4b355541aa inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a9c3bd513dc9afc90de273f4b355541aa">isSameAs</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
-<tr class="separator:a9c3bd513dc9afc90de273f4b355541aa inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99fe7f413e378b75ae06ad17302f283b inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a99fe7f413e378b75ae06ad17302f283b">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
-<tr class="separator:a99fe7f413e378b75ae06ad17302f283b inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad35524d827f7e7a168574622e8aeed5 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#aad35524d827f7e7a168574622e8aeed5">isSameAs</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
+<tr class="separator:aad35524d827f7e7a168574622e8aeed5 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58d0749dfcad8b4ddb1de88037c9443f inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a58d0749dfcad8b4ddb1de88037c9443f">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
+<tr class="separator:a58d0749dfcad8b4ddb1de88037c9443f inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56e1213884b5d7448ef7599ed2166903 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a56e1213884b5d7448ef7599ed2166903">hasLlvmType</a> () const override</td></tr>
+<tr class="separator:a56e1213884b5d7448ef7599ed2166903 inherit pub_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classPascal_1_1CompoundDeclaration"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classPascal_1_1CompoundDeclaration')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classPascal_1_1CompoundDeclaration.html">Pascal::CompoundDeclaration</a></td></tr>
+<tr class="memitem:ad00650a6ee19a19e7f941eab8e05de27 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#ad00650a6ee19a19e7f941eab8e05de27">getTypeKind</a> () const</td></tr>
+<tr class="separator:ad00650a6ee19a19e7f941eab8e05de27 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a608ebeec437f188b5a6aed3fcda6b inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#aa5a608ebeec437f188b5a6aed3fcda6b">isIncomplete</a> () const</td></tr>
+<tr class="separator:aa5a608ebeec437f188b5a6aed3fcda6b inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2848074a96469e8014fcfa90e7ff0dd8 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a2848074a96469e8014fcfa90e7ff0dd8">isIntegral</a> () const</td></tr>
+<tr class="separator:a2848074a96469e8014fcfa90e7ff0dd8 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a072705889731dffdcacab3b58f99c485 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a072705889731dffdcacab3b58f99c485">isStringLike</a> () const</td></tr>
+<tr class="separator:a072705889731dffdcacab3b58f99c485 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5032ef6a66ce88fe97166f54c3d3130f inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a5032ef6a66ce88fe97166f54c3d3130f">isUnsigned</a> () const</td></tr>
+<tr class="separator:a5032ef6a66ce88fe97166f54c3d3130f inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1134f7286ebd9ffe08556d4efb7ca40a inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1Range.html">Range</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a1134f7286ebd9ffe08556d4efb7ca40a">getRange</a> () const</td></tr>
+<tr class="separator:a1134f7286ebd9ffe08556d4efb7ca40a inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41833a644368b74208252a0aa0063ea1 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a41833a644368b74208252a0aa0063ea1">bits</a> () const</td></tr>
+<tr class="separator:a41833a644368b74208252a0aa0063ea1 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4efcd4030fbf1be50edb7308fdef0914 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a4efcd4030fbf1be50edb7308fdef0914">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
+<tr class="separator:a4efcd4030fbf1be50edb7308fdef0914 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91c0741032b5de17df4be5001de60f58 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a91c0741032b5de17df4be5001de60f58">isAssignableType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
+<tr class="separator:a91c0741032b5de17df4be5001de60f58 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad107eacec5ef57a33780dbe2625c7fa0 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#ad107eacec5ef57a33780dbe2625c7fa0">getSize</a> () const</td></tr>
+<tr class="separator:ad107eacec5ef57a33780dbe2625c7fa0 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae77a75c3b18b263e9b8ca25d1d57852b inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#ae77a75c3b18b263e9b8ca25d1d57852b">clone</a> () const</td></tr>
+<tr class="separator:ae77a75c3b18b263e9b8ca25d1d57852b inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed9ff875e28fa3bb4a19f96c78f8cc4c inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#aed9ff875e28fa3bb4a19f96c78f8cc4c">CompoundDeclaration</a> (<a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a> typeKind, std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt; typeDeclaration)</td></tr>
 <tr class="separator:aed9ff875e28fa3bb4a19f96c78f8cc4c inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09a79536a93b9a4715b66f3cc78d190d inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a09a79536a93b9a4715b66f3cc78d190d">isSameAs</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
-<tr class="separator:a09a79536a93b9a4715b66f3cc78d190d inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d7f89ae2f62124a52ea520bbc7206a inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#af6d7f89ae2f62124a52ea520bbc7206a">isSameAs</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const override</td></tr>
+<tr class="separator:af6d7f89ae2f62124a52ea520bbc7206a inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b24a83736e24750bb1c23d96a8b4bb3 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a0b24a83736e24750bb1c23d96a8b4bb3">isCompound</a> () const override</td></tr>
 <tr class="separator:a0b24a83736e24750bb1c23d96a8b4bb3 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f8c3e6f48beecc4e87c4e859611d192 inherit pub_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a3f8c3e6f48beecc4e87c4e859611d192">getSubtype</a> () const override</td></tr>
@@ -146,8 +217,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acc47931bf9f0dff43085522e694d809f inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cd21f50de62af3eb0cee89fbd2b75dd inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a0cd21f50de62af3eb0cee89fbd2b75dd">getTypeKind</a> () const</td></tr>
 <tr class="separator:a0cd21f50de62af3eb0cee89fbd2b75dd inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c0e3af5cf8d4b4fdb1679b3c899af8f inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a2c0e3af5cf8d4b4fdb1679b3c899af8f">~TypeDeclaration</a> ()</td></tr>
-<tr class="separator:a2c0e3af5cf8d4b4fdb1679b3c899af8f inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46924f55c1423d2cc5b0bb4d848ebe1d inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a46924f55c1423d2cc5b0bb4d848ebe1d">isIncomplete</a> () const</td></tr>
 <tr class="separator:a46924f55c1423d2cc5b0bb4d848ebe1d inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8820a2d506c2ae6446d0356490cecc0f inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a8820a2d506c2ae6446d0356490cecc0f">isIntegral</a> () const</td></tr>
@@ -158,26 +227,26 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6e05e25a95f4c6d1312256d405c25128 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bb4630b76db138eadb5318837316aa4 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a2bb4630b76db138eadb5318837316aa4">isCompound</a> () const</td></tr>
 <tr class="separator:a2bb4630b76db138eadb5318837316aa4 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a781ed58023e61dbbd20eeb964dcd00b0 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1Range.html">Range</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a781ed58023e61dbbd20eeb964dcd00b0">getRange</a> () const</td></tr>
-<tr class="separator:a781ed58023e61dbbd20eeb964dcd00b0 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28e33dcad02f87a0d4d2eb6ba4d8cea6 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1Range.html">Range</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a28e33dcad02f87a0d4d2eb6ba4d8cea6">getRange</a> () const</td></tr>
+<tr class="separator:a28e33dcad02f87a0d4d2eb6ba4d8cea6 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a352f7cd326d7e529db9c7e216c8837 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a1a352f7cd326d7e529db9c7e216c8837">getSubtype</a> () const</td></tr>
 <tr class="separator:a1a352f7cd326d7e529db9c7e216c8837 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03ae1598dfd4b73a63835b2188c801e7 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a03ae1598dfd4b73a63835b2188c801e7">bits</a> () const</td></tr>
 <tr class="separator:a03ae1598dfd4b73a63835b2188c801e7 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdb8fdddf636590a90266e69c6e224dd inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#afdb8fdddf636590a90266e69c6e224dd">isSameAs</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *typeDeclaration) const =0</td></tr>
 <tr class="separator:afdb8fdddf636590a90266e69c6e224dd inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38c060ed4e0b8e8410ac4ab26193a324 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a38c060ed4e0b8e8410ac4ab26193a324">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
-<tr class="separator:a38c060ed4e0b8e8410ac4ab26193a324 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03cb23d1fcd9d1741b12e97ed65a37d6 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a03cb23d1fcd9d1741b12e97ed65a37d6">isCompatibleType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
+<tr class="separator:a03cb23d1fcd9d1741b12e97ed65a37d6 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a059f5ead1a99743ad21db8a16b2bd2db inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a059f5ead1a99743ad21db8a16b2bd2db">isAssignableType</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *ty) const</td></tr>
 <tr class="separator:a059f5ead1a99743ad21db8a16b2bd2db inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a879d145b6933c12025d2b58a57582e inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a7a879d145b6933c12025d2b58a57582e">getKind</a> () const</td></tr>
 <tr class="separator:a7a879d145b6933c12025d2b58a57582e inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51b8414fac1183a10f12f5ceb547e6c0 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a51b8414fac1183a10f12f5ceb547e6c0">hasLlvmType</a> () const =0</td></tr>
 <tr class="separator:a51b8414fac1183a10f12f5ceb547e6c0 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa23543db9432cc9434b6cfe0c0b55781 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#aa23543db9432cc9434b6cfe0c0b55781">getSize</a> () const</td></tr>
-<tr class="separator:aa23543db9432cc9434b6cfe0c0b55781 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a925604ce707dcd8a7d40f1f056091b6e inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a925604ce707dcd8a7d40f1f056091b6e">getAllignSize</a> () const</td></tr>
-<tr class="separator:a925604ce707dcd8a7d40f1f056091b6e inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4f72e4d68384734e8856b0253233736 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#af4f72e4d68384734e8856b0253233736">getSize</a> () const</td></tr>
+<tr class="separator:af4f72e4d68384734e8856b0253233736 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f229e0951ef7e255d93045257e568f inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#af3f229e0951ef7e255d93045257e568f">getAllignSize</a> () const</td></tr>
+<tr class="separator:af3f229e0951ef7e255d93045257e568f inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c7edfb153589309df6fba82e70c3d1c inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">const std::shared_ptr&lt; llvm::Type &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#a9c7edfb153589309df6fba82e70c3d1c">getLtype</a> () const</td></tr>
 <tr class="separator:a9c7edfb153589309df6fba82e70c3d1c inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadcbef0cdd32852da69fa1b21dd656a2 inherit pub_methods_classPascal_1_1TypeDeclaration"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#aadcbef0cdd32852da69fa1b21dd656a2">setLtype</a> (const std::shared_ptr&lt; llvm::Type &gt; &amp;<a class="el" href="classPascal_1_1TypeDeclaration.html#a1e59748ec85ae95940b12d0305d95abf">ltype</a>)</td></tr>
@@ -199,16 +268,22 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a65a70b9616ecabefc65c86ba0c121d inherit pub_static_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a3a65a70b9616ecabefc65c86ba0c121d">isClassOf</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *e)</td></tr>
 <tr class="separator:a3a65a70b9616ecabefc65c86ba0c121d inherit pub_static_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classPascal_1_1CompoundDeclaration"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classPascal_1_1CompoundDeclaration')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classPascal_1_1CompoundDeclaration.html">Pascal::CompoundDeclaration</a></td></tr>
-<tr class="memitem:a02e9dc807dd17e132f7b972b49e0436f inherit pub_static_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a02e9dc807dd17e132f7b972b49e0436f">isClassOf</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *e)</td></tr>
-<tr class="separator:a02e9dc807dd17e132f7b972b49e0436f inherit pub_static_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75fad9bc42b5fc771bc625d83e87ed18 inherit pub_static_methods_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a75fad9bc42b5fc771bc625d83e87ed18">isClassOf</a> (const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *e)</td></tr>
+<tr class="separator:a75fad9bc42b5fc771bc625d83e87ed18 inherit pub_static_methods_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a9a691e8ea5228de857986e06308699f0"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; llvm::Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1StringDeclaration.html#a9a691e8ea5228de857986e06308699f0">getLlvmType</a> () const</td></tr>
+<tr class="separator:a9a691e8ea5228de857986e06308699f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a666f0e51124a09fcdf8d18516013389b"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; llvm::Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a666f0e51124a09fcdf8d18516013389b">getLlvmType</a> () const override</td></tr>
+<tr class="separator:a666f0e51124a09fcdf8d18516013389b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a715bfa0f2dc0f281d0e58db27a7f2562"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; llvm::Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#a715bfa0f2dc0f281d0e58db27a7f2562">getLlvmType</a> () const override</td></tr>
+<tr class="separator:a715bfa0f2dc0f281d0e58db27a7f2562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4d401a4ddabe27406ef1faa6b217f61"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; llvm::Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#af4d401a4ddabe27406ef1faa6b217f61">getLlvmType</a> () const =0</td></tr>
+<tr class="separator:af4d401a4ddabe27406ef1faa6b217f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pro_methods_classPascal_1_1ArrayDeclaration"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classPascal_1_1ArrayDeclaration')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classPascal_1_1ArrayDeclaration.html">Pascal::ArrayDeclaration</a></td></tr>
-<tr class="memitem:a1d03affa71df05bc6f255fe39b5da1d3 inherit pro_methods_classPascal_1_1ArrayDeclaration"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; llvm::Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1ArrayDeclaration.html#a1d03affa71df05bc6f255fe39b5da1d3">getLlvmType</a> () const override</td></tr>
-<tr class="separator:a1d03affa71df05bc6f255fe39b5da1d3 inherit pro_methods_classPascal_1_1ArrayDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4d401a4ddabe27406ef1faa6b217f61"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; llvm::Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1TypeDeclaration.html#af4d401a4ddabe27406ef1faa6b217f61">getLlvmType</a> () const =0</td></tr>
-<tr class="separator:af4d401a4ddabe27406ef1faa6b217f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classPascal_1_1CompoundDeclaration"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classPascal_1_1CompoundDeclaration')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classPascal_1_1CompoundDeclaration.html">Pascal::CompoundDeclaration</a></td></tr>
 <tr class="memitem:ab3bfbe20128bf0b74b416a66b3863b2d inherit pro_attribs_classPascal_1_1CompoundDeclaration"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPascal_1_1CompoundDeclaration.html#ab3bfbe20128bf0b74b416a66b3863b2d">baseType</a></td></tr>
 <tr class="separator:ab3bfbe20128bf0b74b416a66b3863b2d inherit pro_attribs_classPascal_1_1CompoundDeclaration"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -250,6 +325,270 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a71fb0fc558baa10922accfd9ee4ffafb" name="a71fb0fc558baa10922accfd9ee4ffafb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71fb0fc558baa10922accfd9ee4ffafb">&#9670;&#160;</a></span>bits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int StringDeclaration::bits </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#ab906c68d7b7b9de3762f9307218b2a9d">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a71fb0fc558baa10922accfd9ee4ffafb_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a71fb0fc558baa10922accfd9ee4ffafb_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a71fb0fc558baa10922accfd9ee4ffafb_cgraph" id="aclassPascal_1_1StringDeclaration_a71fb0fc558baa10922accfd9ee4ffafb_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#ab906c68d7b7b9de3762f9307218b2a9d" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a41833a644368b74208252a0aa0063ea1" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a03ae1598dfd4b73a63835b2188c801e7" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af350e30e9fbbaa9b80f3fb4a81734cb6" name="af350e30e9fbbaa9b80f3fb4a81734cb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af350e30e9fbbaa9b80f3fb4a81734cb6">&#9670;&#160;</a></span>clone()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt; StringDeclaration::clone </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a237bccdc8b1848fe1a52d01cd945eed6">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_af350e30e9fbbaa9b80f3fb4a81734cb6_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_af350e30e9fbbaa9b80f3fb4a81734cb6_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_af350e30e9fbbaa9b80f3fb4a81734cb6_cgraph" id="aclassPascal_1_1StringDeclaration_af350e30e9fbbaa9b80f3fb4a81734cb6_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a237bccdc8b1848fe1a52d01cd945eed6" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#ae77a75c3b18b263e9b8ca25d1d57852b" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#aefc4d65cf378764f1807b9c577c8ef6c" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9a691e8ea5228de857986e06308699f0" name="a9a691e8ea5228de857986e06308699f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a691e8ea5228de857986e06308699f0">&#9670;&#160;</a></span>getLlvmType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; llvm::Type &gt; StringDeclaration::getLlvmType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a666f0e51124a09fcdf8d18516013389b">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a9a691e8ea5228de857986e06308699f0_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a9a691e8ea5228de857986e06308699f0_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a9a691e8ea5228de857986e06308699f0_cgraph" id="aclassPascal_1_1StringDeclaration_a9a691e8ea5228de857986e06308699f0_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a666f0e51124a09fcdf8d18516013389b" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a715bfa0f2dc0f281d0e58db27a7f2562" title=" " alt="" coords="439,5,637,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9c4b03950ef50ce49fa6eb10981e1d01" name="a9c4b03950ef50ce49fa6eb10981e1d01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c4b03950ef50ce49fa6eb10981e1d01">&#9670;&#160;</a></span>getRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1Range.html">Range</a> &gt; StringDeclaration::getRange </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a630ad0b353cc8b596b49bf4a6348fe13">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a9c4b03950ef50ce49fa6eb10981e1d01_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a9c4b03950ef50ce49fa6eb10981e1d01_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a9c4b03950ef50ce49fa6eb10981e1d01_cgraph" id="aclassPascal_1_1StringDeclaration_a9c4b03950ef50ce49fa6eb10981e1d01_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a630ad0b353cc8b596b49bf4a6348fe13" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a1134f7286ebd9ffe08556d4efb7ca40a" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a28e33dcad02f87a0d4d2eb6ba4d8cea6" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a626c4fdd6760957c6d918d6847208c20" name="a626c4fdd6760957c6d918d6847208c20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a626c4fdd6760957c6d918d6847208c20">&#9670;&#160;</a></span>getSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t StringDeclaration::getSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a296467b2cf134d20ec3acb68f85f95c8">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a626c4fdd6760957c6d918d6847208c20_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a626c4fdd6760957c6d918d6847208c20_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a626c4fdd6760957c6d918d6847208c20_cgraph" id="aclassPascal_1_1StringDeclaration_a626c4fdd6760957c6d918d6847208c20_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a296467b2cf134d20ec3acb68f85f95c8" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#ad107eacec5ef57a33780dbe2625c7fa0" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#af4f72e4d68384734e8856b0253233736" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a87ded221cca2faf83972c9a4b65b16a0" name="a87ded221cca2faf83972c9a4b65b16a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87ded221cca2faf83972c9a4b65b16a0">&#9670;&#160;</a></span>getSubtype()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> &gt; StringDeclaration::getSubtype </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a422f1f715eeb78f43b1610856589ad02">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a87ded221cca2faf83972c9a4b65b16a0_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a87ded221cca2faf83972c9a4b65b16a0_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a87ded221cca2faf83972c9a4b65b16a0_cgraph" id="aclassPascal_1_1StringDeclaration_a87ded221cca2faf83972c9a4b65b16a0_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a422f1f715eeb78f43b1610856589ad02" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a3f8c3e6f48beecc4e87c4e859611d192" title=" " alt="" coords="439,5,637,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ad05645ea258da7ea6c131b33afa30a64" name="ad05645ea258da7ea6c131b33afa30a64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad05645ea258da7ea6c131b33afa30a64">&#9670;&#160;</a></span>getTypeKind()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca">TypeKind</a> StringDeclaration::getTypeKind </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#ae63706b7e1e99445f3676b2202680795">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_ad05645ea258da7ea6c131b33afa30a64_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_ad05645ea258da7ea6c131b33afa30a64_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_ad05645ea258da7ea6c131b33afa30a64_cgraph" id="aclassPascal_1_1StringDeclaration_ad05645ea258da7ea6c131b33afa30a64_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#ae63706b7e1e99445f3676b2202680795" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#ad00650a6ee19a19e7f941eab8e05de27" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a0cd21f50de62af3eb0cee89fbd2b75dd" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a71bb217a932baee9ac3608c99bfde2c5" name="a71bb217a932baee9ac3608c99bfde2c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a71bb217a932baee9ac3608c99bfde2c5">&#9670;&#160;</a></span>hasLlvmType()</h2>
 
@@ -273,7 +612,47 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classPascal_1_1CompoundDeclaration.html#aff420bb083398f4606581dfe91a9f48f">Pascal::CompoundDeclaration</a>.</p>
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a56e1213884b5d7448ef7599ed2166903">Pascal::ArrayDeclaration</a>.</p>
+
+</div>
+</div>
+<a id="a703a105d2e660c10fd172c27e2ff287d" name="a703a105d2e660c10fd172c27e2ff287d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a703a105d2e660c10fd172c27e2ff287d">&#9670;&#160;</a></span>isAssignableType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> * StringDeclaration::isAssignableType </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td>
+          <td class="paramname"><em>ty</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a058c11ed3891455452874806b8b3e11a">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a703a105d2e660c10fd172c27e2ff287d_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a703a105d2e660c10fd172c27e2ff287d_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a703a105d2e660c10fd172c27e2ff287d_cgraph" id="aclassPascal_1_1StringDeclaration_a703a105d2e660c10fd172c27e2ff287d_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a058c11ed3891455452874806b8b3e11a" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a91c0741032b5de17df4be5001de60f58" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a059f5ead1a99743ad21db8a16b2bd2db" title=" " alt="" coords="685,5,851,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a03cb23d1fcd9d1741b12e97ed65a37d6" title=" " alt="" coords="899,5,1064,45"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -312,8 +691,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a5a216cc4a95f4fd91ee6bd45b7213443" name="a5a216cc4a95f4fd91ee6bd45b7213443"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a216cc4a95f4fd91ee6bd45b7213443">&#9670;&#160;</a></span>isCompatibleType()</h2>
+<a id="a82487b9ca47890c3434b8ca5af91f405" name="a82487b9ca47890c3434b8ca5af91f405"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82487b9ca47890c3434b8ca5af91f405">&#9670;&#160;</a></span>isCompatibleType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +701,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> * Pascal::StringDeclaration::isCompatibleType </td>
+          <td class="memname">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> * StringDeclaration::isCompatibleType </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td>
           <td class="paramname"><em>ty</em></td><td>)</td>
@@ -336,7 +715,169 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a99fe7f413e378b75ae06ad17302f283b">Pascal::ArrayDeclaration</a>.</p>
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a58d0749dfcad8b4ddb1de88037c9443f">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a82487b9ca47890c3434b8ca5af91f405_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a82487b9ca47890c3434b8ca5af91f405_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a82487b9ca47890c3434b8ca5af91f405_cgraph" id="aclassPascal_1_1StringDeclaration_a82487b9ca47890c3434b8ca5af91f405_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a58d0749dfcad8b4ddb1de88037c9443f" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a4efcd4030fbf1be50edb7308fdef0914" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a03cb23d1fcd9d1741b12e97ed65a37d6" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a28f6c9a0c66087dc5de2ff2046f046c4" name="a28f6c9a0c66087dc5de2ff2046f046c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28f6c9a0c66087dc5de2ff2046f046c4">&#9670;&#160;</a></span>isCompound()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool StringDeclaration::isCompound </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a4d3c67e5da6b2818778c931f82fd7bc9">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a28f6c9a0c66087dc5de2ff2046f046c4_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a28f6c9a0c66087dc5de2ff2046f046c4_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a28f6c9a0c66087dc5de2ff2046f046c4_cgraph" id="aclassPascal_1_1StringDeclaration_a28f6c9a0c66087dc5de2ff2046f046c4_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a4d3c67e5da6b2818778c931f82fd7bc9" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a0b24a83736e24750bb1c23d96a8b4bb3" title=" " alt="" coords="439,5,637,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aadaea6ba70d1f391c084f658331a0c85" name="aadaea6ba70d1f391c084f658331a0c85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadaea6ba70d1f391c084f658331a0c85">&#9670;&#160;</a></span>isIncomplete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool StringDeclaration::isIncomplete </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a6e656d74d6ed78228584dfada54dcb77">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_aadaea6ba70d1f391c084f658331a0c85_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_aadaea6ba70d1f391c084f658331a0c85_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_aadaea6ba70d1f391c084f658331a0c85_cgraph" id="aclassPascal_1_1StringDeclaration_aadaea6ba70d1f391c084f658331a0c85_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a6e656d74d6ed78228584dfada54dcb77" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#aa5a608ebeec437f188b5a6aed3fcda6b" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a46924f55c1423d2cc5b0bb4d848ebe1d" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a49916775c518af836140d0ebf7c0c9dc" name="a49916775c518af836140d0ebf7c0c9dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49916775c518af836140d0ebf7c0c9dc">&#9670;&#160;</a></span>isIntegral()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool StringDeclaration::isIntegral </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a0c571701772341de7c29b59e88d610cc">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a49916775c518af836140d0ebf7c0c9dc_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a49916775c518af836140d0ebf7c0c9dc_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a49916775c518af836140d0ebf7c0c9dc_cgraph" id="aclassPascal_1_1StringDeclaration_a49916775c518af836140d0ebf7c0c9dc_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a0c571701772341de7c29b59e88d610cc" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a2848074a96469e8014fcfa90e7ff0dd8" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a8820a2d506c2ae6446d0356490cecc0f" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a4c628ab545705620b57894a500739eb6" name="a4c628ab545705620b57894a500739eb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c628ab545705620b57894a500739eb6">&#9670;&#160;</a></span>isSameAs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool StringDeclaration::isSameAs </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPascal_1_1TypeDeclaration.html">TypeDeclaration</a> *&#160;</td>
+          <td class="paramname"><em>ty</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#aad35524d827f7e7a168574622e8aeed5">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_a4c628ab545705620b57894a500739eb6_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_a4c628ab545705620b57894a500739eb6_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_a4c628ab545705620b57894a500739eb6_cgraph" id="aclassPascal_1_1StringDeclaration_a4c628ab545705620b57894a500739eb6_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#aad35524d827f7e7a168574622e8aeed5" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#af6d7f89ae2f62124a52ea520bbc7206a" title=" " alt="" coords="439,5,637,45"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -367,8 +908,47 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a id="aae829169ad3a25579d3c13260e5c7d8c" name="aae829169ad3a25579d3c13260e5c7d8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae829169ad3a25579d3c13260e5c7d8c">&#9670;&#160;</a></span>isUnsigned()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool StringDeclaration::isUnsigned </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classPascal_1_1ArrayDeclaration.html#a12ea7cb1475c7239e6d0feb3ef27caeb">Pascal::ArrayDeclaration</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPascal_1_1StringDeclaration_aae829169ad3a25579d3c13260e5c7d8c_cgraph.png" border="0" usemap="#aclassPascal_1_1StringDeclaration_aae829169ad3a25579d3c13260e5c7d8c_cgraph" alt=""/></div>
+<map name="aclassPascal_1_1StringDeclaration_aae829169ad3a25579d3c13260e5c7d8c_cgraph" id="aclassPascal_1_1StringDeclaration_aae829169ad3a25579d3c13260e5c7d8c_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" href="classPascal_1_1ArrayDeclaration.html#a12ea7cb1475c7239e6d0feb3ef27caeb" title=" " alt="" coords="224,5,391,45"/>
+<area shape="rect" href="classPascal_1_1CompoundDeclaration.html#a5032ef6a66ce88fe97166f54c3d3130f" title=" " alt="" coords="439,5,637,45"/>
+<area shape="rect" href="classPascal_1_1TypeDeclaration.html#a6e05e25a95f4c6d1312256d405c25128" title=" " alt="" coords="685,5,851,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/japc/AST/<a class="el" href="type_8h_source.html">type.h</a></li>
+<li>lib/AST/<a class="el" href="type_8cpp.html">type.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

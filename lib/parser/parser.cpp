@@ -83,8 +83,9 @@ std::unique_ptr<Token> Parser::previous()
 void Parser::sync()
 {
     while (!ParserUtils::isAnyOf(*current().get(),
-                                 {TokenType::SYMBOL_SEMICOLON, TokenType::SYMBOL_CONST, TokenType::SYMBOL_VAR,
-                                  TokenType::SYMBOL_FUNCTION, TokenType ::SYMBOL_PROCEDURE, TokenType::SYMBOL_FILE}))
+                                 std::vector<TokenType>{TokenType::SYMBOL_FILE, TokenType::SYMBOL_SEMICOLON,
+                                                        TokenType::SYMBOL_CONST, TokenType::SYMBOL_VAR,
+                                                        TokenType ::SYMBOL_PROCEDURE, TokenType::SYMBOL_FUNCTION}))
     {
         advance();
         if (current()->getTokenType() == TokenType::END_OF_FILE)
@@ -97,7 +98,7 @@ void Parser::sync()
 bool Parser::match(std::vector<TokenType> tokensToMatch)
 {
 }
-void Parser::parseExpression()
+std::shared_ptr<ExpressionAST> Parser::parseExpression()
 {
     //  ISO 10206 -  6.8.1
     //  EXPRESSION = SIMPLE-EXPRESSION [ RELATIONAL-OPERATOR SIMPLE-EXPRESSION ]
@@ -110,7 +111,7 @@ void Parser::parseExpression()
         parseSimpleExpression();
     }
 }
-void Parser::parsePrimary()
+std::shared_ptr<ExpressionAST> Parser::parsePrimary()
 {
 }
 void Parser::parseFactor()
@@ -394,7 +395,7 @@ void Parser::parseTypeDefinitionPart()
         }
     }
 }
-VariableDeclarationExpression *Parser::parseVariableDeclarationPart()
+std::shared_ptr<VariableDeclarationExpression> Parser::parseVariableDeclarationPart()
 {
     advance(); // eat VAR keyword
     while (current()->getTokenType() == TokenType::IDENTIFIER)
@@ -1058,8 +1059,99 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
         }
     }
 }
-void Parser::parseFunction()
+std::shared_ptr<Function> Parser::parseFunction()
 {
+    std::string name;
+    std::shared_ptr<PrototypeExpression> prototype = parseFunctionHeader();
+    if (!prototype || current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Error??");
+        return nullptr;
+    }
+    advance();
+    Location loc = current()->getTokenPos();
+    name = prototype->getName();
+    std::shared_ptr<NamedObject> namedObject;
+    std::shared_ptr<NamedObject> definition = this->objects->find(name);
+    FunctionDefinition *functionDef = llvm::dyn_cast_or_null<FunctionDefinition>(definition.get());
+    if (!functionDef && !functionDef->getPrototype() && functionDef->getPrototype() != prototype)
+    {
+        // This seems to be a way to handle with abstract classes using smart ptrs
+        std::shared_ptr<FunctionDeclaration> functionDeclaration = std::make_shared<FunctionDeclaration>(prototype);
+        std::shared_ptr<TypeDeclaration> typeDeclaration = functionDeclaration;
+        namedObject = std::make_shared<FunctionDefinition>(name, typeDeclaration, prototype);
+        if (!this->objects->insert(name, namedObject))
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "%s already exists.", name.c_str());
+        }
+        advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_FORWARD)
+        {
+            prototype->setIsForward(true);
+            advance();
+            if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ';' after forward keyword");
+                this->sync();
+            }
+            return std::make_shared<Function>(Function(current()->getTokenPos(), prototype, {}, nullptr));
+        }
+    }
+    this->objects->addLevel();
+    if (name != "")
+    {
+        if (namedObject)
+        {
+            this->objects->insert(name, namedObject);
+        }
+    }
+    for (auto v : prototype->getArgs())
+    {
+        std::shared_ptr<VariableDefinition> varDefs =
+            std::make_shared<VariableDefinition>(v->getName(), v->getTypeDeclaration());
+        if (!this->objects->insert(v->getName(), varDefs))
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Duplicated %s in prototype.",
+                                                   v->getName().c_str());
+        }
+    }
+    std::vector<std::shared_ptr<VariableDeclarationExpression>> variableDeclarations;
+    std::shared_ptr<BlockExpression> body;
+    std::vector<std::shared_ptr<Function>> innerFunctions;
+    for (;;)
+    {
+        switch (current()->getTokenType())
+        {
+        case TokenType::SYMBOL_VAR:
+            if (std::shared_ptr<VariableDeclarationExpression> vars = parseVarDeclarations())
+            {
+                variableDeclarations.push_back(vars);
+            }
+            else
+            {
+                return nullptr;
+            }
+            break;
+        case TokenType::SYMBOL_LABEL:
+            parseLabel();
+            break;
+        case TokenType::SYMBOL_TYPE:
+            parseTypeDefinitionPart();
+            break;
+        case TokenType::SYMBOL_CONST:
+            parseConstantDefinition();
+            break;
+        case TokenType::SYMBOL_FUNCTION:
+        case TokenType::SYMBOL_PROCEDURE:
+            if (std::shared_ptr<Function> function = parseFunction())
+            {
+                innerFunctions.push_back(function);
+            }
+            break;
+        case TokenType::SYMBOL_BEGIN:
+            break;
+        }
+    }
 }
 std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
 {
@@ -1563,4 +1655,89 @@ std::shared_ptr<InitValue> Parser::parseInitValue(std::shared_ptr<TypeDeclaratio
     this->diagnosticsEngine->japc_error_at(
         *current().get(), "Expected constant integral or real expression or set expression in variable initialization");
     return nullptr;
+}
+std::shared_ptr<BlockExpression> Parser::parseBlock()
+{
+    if (current()->getTokenType() == TokenType::SYMBOL_BEGIN)
+    {
+        advance(); // eat begin keyword
+        std::vector<std::shared_ptr<ExpressionAST>> content;
+        Location loc = current()->getTokenPos();
+        while (current()->getTokenType() != TokenType::SYMBOL_END)
+        {
+            if (current()->getTokenType() == TokenType::NUMERIC_LITERAL &&
+                ParserUtils::numericLiteralIsInteger(*current().get()) &&
+                lookAhead(1)->getTokenType() == TokenType::SYMBOL_COLON)
+            {
+                Token cur = *current().get();
+                advance(); // eat numeric literal
+                advance(); // colon
+                int64_t label_val = ParserUtils::convertStringToInteger(cur.getValue());
+                std::string labelName = current()->getValue();
+                if (!this->objects->findAtTop(labelName))
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Label %s cannot be used in this scope",
+                                                           labelName.c_str());
+                    return nullptr;
+                }
+                content.push_back(std::make_shared<LabelExpression>(
+                    LabelExpression(cur.getTokenPos(), {{label_val, label_val}}, nullptr)));
+            }
+            else if (std::shared_ptr<ExpressionAST> expression = parseStatement())
+            {
+                content.push_back(expression);
+                if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON ||
+                    current()->getTokenType() != TokenType::SYMBOL_END)
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                           "Expected ';' or END keyword at this point");
+                    return nullptr; // do not sync, we can just try to parse next stuff to avoid over-sync
+                }
+            }
+            else
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                       "Expected an expression or statement at this point");
+                return nullptr; // Do not sync, we can just try to move to next thing.
+            }
+        }
+        return std::make_shared<BlockExpression>(loc, content);
+    }
+    else
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Expected BEGIN keyword");
+    }
+    return std::shared_ptr<BlockExpression>();
+}
+std::shared_ptr<ExpressionAST> Parser::parseStatement()
+{
+    switch (current()->getTokenType())
+    {
+    case TokenType::SYMBOL_BEGIN:
+        return parseBlock();
+    case TokenType::SYMBOL_SEMICOLON:
+    case TokenType::SYMBOL_END:
+        this->diagnosticsEngine->japc_warning_at(*current().get(), "Is this an empty statement?");
+        return std::make_shared<BlockExpression>(BlockExpression(current()->getTokenPos(), {}));
+    default:
+        if (std::shared_ptr<ExpressionAST> expre = parsePrimary())
+        {
+            if (current()->getTokenType() == TokenType::SYMBOL_COLON_EQUAL)
+            { // assign expression
+                Location loc = current()->getTokenPos();
+                std::shared_ptr<ExpressionAST> rhs = parseExpression();
+                if (rhs)
+                {
+                    expre = std::make_shared<AssignExpression>(AssignExpression(loc, expre, rhs));
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Expected expression in assignment");
+                }
+            }
+        }
+        break;
+    }
+    return nullptr; // Ideally you should not get here. We do not report anything as we may not be expecting that to
+                    // happend.
 }

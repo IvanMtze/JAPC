@@ -1,0 +1,14 @@
+<map id="Pascal::CompoundDeclaration::getSize" name="Pascal::CompoundDeclaration::getSize">
+<area shape="rect" id="node1" title=" " alt="" coords="499,229,697,269"/>
+<area shape="rect" id="node2" href="$classPascal_1_1ArrayDeclaration.html#a296467b2cf134d20ec3acb68f85f95c8" title=" " alt="" coords="254,5,421,45"/>
+<area shape="rect" id="node4" href="$classPascal_1_1EnumDeclaration.html#a61adbe4c8ca73e921cee04a6323238f8" title=" " alt="" coords="252,69,423,109"/>
+<area shape="rect" id="node6" href="$classPascal_1_1PointerDeclaration.html#ad3145baae85bf9911098b30285b7e30c" title=" " alt="" coords="249,133,426,173"/>
+<area shape="rect" id="node7" href="$classPascal_1_1FunctionDeclaration.html#aad71bd7f655a34515a82aa6aacc8d3cc" title=" " alt="" coords="244,197,431,237"/>
+<area shape="rect" id="node8" href="$classPascal_1_1FieldDeclaration.html#ae45bb121a0733de8945b9c1a9fff05f8" title=" " alt="" coords="255,261,419,301"/>
+<area shape="rect" id="node9" href="$classPascal_1_1FunctionPointerDeclaration.html#ae9cd470acbe61c48bb9cfa8f3b757f43" title=" " alt="" coords="224,325,451,365"/>
+<area shape="rect" id="node10" href="$classPascal_1_1FileDeclaration.html#adba7aa7027bbb74c396b63bce6a2695e" title=" " alt="" coords="259,389,416,429"/>
+<area shape="rect" id="node12" href="$classPascal_1_1SetDeclaration.html#a8ad97d4091ce2facd503f8bb8fb46a91" title=" " alt="" coords="259,453,415,493"/>
+<area shape="rect" id="node3" href="$classPascal_1_1StringDeclaration.html#a626c4fdd6760957c6d918d6847208c20" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" id="node5" href="$classPascal_1_1BoolDeclaration.html#af90df0b5787a4b3532e55b756a4e02ad" title=" " alt="" coords="9,69,172,109"/>
+<area shape="rect" id="node11" href="$classPascal_1_1TextDeclaration.html#a8c4e39f3ce10288e4206e4ec2ecfafec" title=" " alt="" coords="9,389,172,429"/>
+</map>

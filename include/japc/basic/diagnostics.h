@@ -4,7 +4,7 @@
 
 #ifndef JAPC_DIAGNOSTICS_H
 #define JAPC_DIAGNOSTICS_H
-#include "../scanner/scanner.h"
+#include "japc/scanner/scanner.h"
 #include <stdarg.h>
 #include <stdio.h>
 

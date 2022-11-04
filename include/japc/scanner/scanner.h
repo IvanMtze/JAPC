@@ -5,7 +5,6 @@
 #ifndef JAPC_SCANNER_H
 #define JAPC_SCANNER_H
 
-#include "japc/basic/ptr.h"
 #include <map>
 #include <memory>
 #include <regex>
@@ -87,6 +86,7 @@ enum class TokenType
     SYMBOL_WHILE,
     SYMBOL_WITH,
     SYMBOL_EXTERNAL,
+    SYMBOL_FORWARD,
 
     /*
      * SPECIAL-SYMBOLS. See ISO 10206 Page 19
@@ -313,7 +313,8 @@ class Scanner
         {"WHILE", TokenType::SYMBOL_WHILE},
         {"WITH", TokenType::SYMBOL_WITH},
         {"EXTERNAL", TokenType::SYMBOL_EXTERNAL},
-        {"STRING", TokenType::SYMBOL_STRING_KEYWORD}
+        {"STRING", TokenType::SYMBOL_STRING_KEYWORD},
+        {"FORWARD", TokenType::SYMBOL_FORWARD}
     };
 };
 } // namespace Pascal

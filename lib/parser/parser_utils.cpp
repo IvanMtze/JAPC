@@ -3,21 +3,11 @@
 //
 #include "japc/parser/parser_utils.h"
 
-bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::Token>& tkList)
-{
-    for (Pascal::Token tk : tkList)
-    {
-        if (tk.getTokenType() == to.getTokenType())
-        {
-            return true;
-        }
-    }
-    return false;
-}
+using namespace Pascal;
 
-bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::TokenType>& tkList)
+bool ParserUtils::isAnyOf(Token to, std::vector<TokenType> tkList)
 {
-    for (Pascal::TokenType tk : tkList)
+    for (TokenType tk : tkList)
     {
         if (tk == to.getTokenType())
         {
@@ -26,27 +16,27 @@ bool ParserUtils::isAnyOf(Pascal::Token to, std::vector<Pascal::TokenType>& tkLi
     }
     return false;
 }
-int ParserUtils::getPrecedence(Pascal::TokenType tk)
+int ParserUtils::getPrecedence(TokenType tk)
 {
     return 0;
 }
-std::shared_ptr<Pascal::ConstantDeclaration> ParserUtils::evaluateConstant(
-    const std::shared_ptr<Pascal::ConstantDeclaration> rhs, const Pascal::TokenType tk,
-    const std::shared_ptr<Pascal::ConstantDeclaration> lhs)
+std::shared_ptr<ConstantDeclaration> ParserUtils::evaluateConstant(
+    const std::shared_ptr<ConstantDeclaration> rhs, const TokenType tk,
+    const std::shared_ptr<ConstantDeclaration> lhs)
 {
     switch (tk)
     {
-    case Pascal::TokenType::SYMBOL_PLUS:
-        return lhs.get() + rhs.get();
+    case TokenType::SYMBOL_PLUS:
+        return lhs + rhs;
         break;
-    case Pascal::TokenType::SYMBOL_MINUS:
-        return lhs.get() - rhs.get();
+    case TokenType::SYMBOL_MINUS:
+        return lhs - rhs;
         break;
-    case Pascal::TokenType::SYMBOL_STAR:
-        return lhs.get() * rhs.get();
+    case TokenType::SYMBOL_STAR:
+        return lhs * rhs;
         break;
-    case Pascal::TokenType::SYMBOL_DIV:
-        return lhs.get() / rhs.get();
+    case TokenType::SYMBOL_DIV:
+        return lhs / rhs;
         break;
     default:
         break;
@@ -54,53 +44,53 @@ std::shared_ptr<Pascal::ConstantDeclaration> ParserUtils::evaluateConstant(
     return nullptr;
 }
 
-int64_t ParserUtils::constantDeclarationToInteger(const Pascal::ConstantDeclaration *c)
+int64_t ParserUtils::constantDeclarationToInteger(const ConstantDeclaration *c)
 {
-    if (auto ci = llvm::dyn_cast<Pascal::IntConstantDeclaration>(c))
+    if (auto ci = llvm::dyn_cast<IntConstantDeclaration>(c))
     {
         return ci->getValue();
     }
-    if (auto cc = llvm::dyn_cast<Pascal::CharConstantDeclaration>(c))
+    if (auto cc = llvm::dyn_cast<CharConstantDeclaration>(c))
     {
         return cc->getValue();
     }
-    if (auto ce = llvm::dyn_cast<Pascal::EnumConstantDeclaration>(c))
+    if (auto ce = llvm::dyn_cast<EnumConstantDeclaration>(c))
     {
         return ce->getValue();
     }
-    if (auto cb = llvm::dyn_cast<Pascal::BooleanConstantDeclaration>(c))
+    if (auto cb = llvm::dyn_cast<BooleanConstantDeclaration>(c))
     {
         return cb->getValue();
     }
     return -1;
 }
-bool ParserUtils::numericLiteralIsInteger(Pascal::Token tk)
+bool ParserUtils::numericLiteralIsInteger(Token tk)
 {
-    if (tk.getTokenType() != Pascal::TokenType::NUMERIC_LITERAL)
+    if (tk.getTokenType() != TokenType::NUMERIC_LITERAL)
     {
         return false;
     }
     return (tk.getValue().find(".") != std::string::npos);
 }
-std::shared_ptr<Pascal::ExpressionAST> ParserUtils::constantDeclarationToExpression(
-    const Pascal::Location loc, Pascal::ConstantDeclaration *constantDeclaration)
+std::shared_ptr<ExpressionAST> ParserUtils::constantDeclarationToExpression(
+    const Location loc, ConstantDeclaration *constantDeclaration)
 {
-    std::shared_ptr<Pascal::TypeDeclaration> type = constantDeclaration->getType();
+    std::shared_ptr<TypeDeclaration> type = constantDeclaration->getType();
     if (constantDeclaration->getType()->isIntegral())
     {
         int64_t val = ParserUtils::constantDeclarationToInteger(constantDeclaration);
-        return std::make_shared<Pascal::IntegerExpression>(loc, val, type);
+        return std::make_shared<IntegerExpression>(loc, val, type);
     }
-    if (auto rc = llvm::dyn_cast_or_null<Pascal::RealConstantDeclaration>(constantDeclaration))
+    if (auto rc = llvm::dyn_cast_or_null<RealConstantDeclaration>(constantDeclaration))
     {
-        return std::make_shared<Pascal::RealExpression>(loc, rc->getValue(), type);
+        return std::make_shared<RealExpression>(loc, rc->getValue(), type);
     }
     return nullptr;
 }
-std::shared_ptr<Pascal::TypeDeclaration> ParserUtils::copyWithInitialValue(
-    std::shared_ptr<Pascal::TypeDeclaration> typeDeclaration, std::shared_ptr<Pascal::ExpressionAST> initial)
+std::shared_ptr<TypeDeclaration> ParserUtils::copyWithInitialValue(
+    std::shared_ptr<TypeDeclaration> typeDeclaration, std::shared_ptr<ExpressionAST> initial)
 {
-    std::shared_ptr<Pascal::TypeDeclaration> typeDeclarationObj = typeDeclaration->clone();
+    std::shared_ptr<TypeDeclaration> typeDeclarationObj = typeDeclaration->clone();
     typeDeclarationObj->setInitialValue(initial);
     return typeDeclarationObj;
 }

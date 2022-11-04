@@ -7,11 +7,15 @@
 
 #include "japc/AST/expression.h"
 #include "japc/AST/type.h"
+#include <memory>
 
 namespace Pascal
 {
 class InitValue;
 class PrototypeExpression;
+class ExpressionAST;
+
+class ConstantDeclaration;
 enum class VariableDefinitionFlags
 {
     REFERENCE = 1 << 0,
@@ -309,21 +313,21 @@ class LabelDefinition : public NamedObject
     const static NamedObjectType namedObjectType = NamedObjectType::LABEL;
 };
 
-bool operator<(const VariableDefinition &lhs, const VariableDefinition &rhs)
+bool inline  operator<(const VariableDefinition lhs, const VariableDefinition rhs)
 {
     return lhs.getName() < rhs.getName();
 }
-constexpr VariableDefinitionFlags operator&(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
+constexpr inline VariableDefinitionFlags operator&(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
 {
     return static_cast<VariableDefinitionFlags>(static_cast<const int>(lhs) & static_cast<const int>(rhs));
 }
 
-constexpr VariableDefinitionFlags operator|(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
+constexpr inline VariableDefinitionFlags operator|(const VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
 {
     return static_cast<VariableDefinitionFlags>(static_cast<const int>(lhs) | static_cast<const int>(rhs));
 }
 
-constexpr VariableDefinitionFlags operator|=(VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
+constexpr inline VariableDefinitionFlags operator|=(VariableDefinitionFlags lhs, const VariableDefinitionFlags rhs)
 {
     lhs = lhs | rhs;
     return lhs;

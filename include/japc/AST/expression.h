@@ -15,7 +15,9 @@
 
 namespace Pascal
 {
-
+class RangeDeclaration;
+class VariableDefinition;
+std::shared_ptr<TypeDeclaration> getIntegerType();
 class ExpressionAST : public Visitable<ExpressionAST>
 {
   public:
@@ -81,7 +83,6 @@ class ExpressionAST : public Visitable<ExpressionAST>
         : location(location), expressionType(expressionType), typeDeclaration(typeDeclaration)
     {
     }
-    virtual ~ExpressionAST();
     void accept(ExpressionVisitor &visitor) override
     {
         visitor.visit(this);
@@ -486,7 +487,10 @@ class InitValue : public ExpressionAST
         : values(v), ExpressionAST(loc, ExpressionType::TYPE_INIT_VALUE)
     {
     }
-    std::shared_ptr<llvm::Value> codeGen() override;
+    std::shared_ptr<llvm::Value> codeGen() override
+    {
+        return ExpressionAST::codeGen();
+    }
     std::shared_ptr<TypeDeclaration> getTypeDeclaration() const override
     {
         return values[0]->getTypeDeclaration();
@@ -525,6 +529,10 @@ class BlockExpression : public ExpressionAST
 class AssignExpression : public ExpressionAST
 {
   public:
+    AssignExpression(const Location &location, std::shared_ptr<ExpressionAST> &lhs, std::shared_ptr<ExpressionAST> &rhs)
+        : ExpressionAST(location, ExpressionType::TYPE_ASSIGN_EXPRE), lhs(lhs), rhs(rhs)
+    {
+    }
     std::shared_ptr<llvm::Value> codeGen() override;
     static bool isClassOf(ExpressionAST *expressionAst)
     {

@@ -15,5 +15,5 @@ var searchData=
   ['nullexpression_12',['NullExpression',['../classPascal_1_1NullExpression.html#a609f6a971adceee6e8601d55372dc918',1,'Pascal::NullExpression::NullExpression()'],['../classPascal_1_1NullExpression.html',1,'Pascal::NullExpression']]],
   ['numeric_5fliteral_13',['NUMERIC_LITERAL',['../namespacePascal.html#ab2a7dea4a79cdebc706e08ea071c7a6da7c2af8c21977d7d66a69006680f09804',1,'Pascal']]],
   ['numeric_5fliteral_5fflags_14',['NUMERIC_LITERAL_FLAGS',['../namespacePascal.html#ab620a26ebcaa48455cae160e6d48a098add354befc3c709552a9b49b590e106a7',1,'Pascal']]],
-  ['numericliteralisinteger_15',['numericLiteralIsInteger',['../classParserUtils.html#a79c9349e16a1355d93f7280d90d50b64',1,'ParserUtils']]]
+  ['numericliteralisinteger_15',['numericLiteralIsInteger',['../classPascal_1_1ParserUtils.html#a57534125fed66ab403322fac6cd5e621',1,'Pascal::ParserUtils']]]
 ];

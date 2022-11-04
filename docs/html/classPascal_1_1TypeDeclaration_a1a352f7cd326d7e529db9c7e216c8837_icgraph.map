@@ -1,0 +1,11 @@
+<map id="Pascal::TypeDeclaration::getSubtype" name="Pascal::TypeDeclaration::getSubtype">
+<area shape="rect" id="node1" title=" " alt="" coords="513,165,679,205"/>
+<area shape="rect" id="node2" href="$classPascal_1_1ForwardDeclaration.html#af22e5abc464ec46a72dda3458f09881e" title=" " alt="" coords="257,5,440,45"/>
+<area shape="rect" id="node3" href="$classPascal_1_1CharDeclaration.html#a8ac073e5465f50d3f28fc682fb81a440" title=" " alt="" coords="267,69,431,109"/>
+<area shape="rect" id="node4" href="$classPascal_1_1VoidDeclaration.html#a34a93a1434034c9a0f87859c0cff4288" title=" " alt="" coords="267,133,430,173"/>
+<area shape="rect" id="node5" href="$classPascal_1_1FieldCollection.html#a7b49f5f0a78c0c77176164941d1cbd04" title=" " alt="" coords="271,197,427,237"/>
+<area shape="rect" id="node8" href="$classPascal_1_1MemberFunctionDeclaration.html#a63973296aa52a5179dd50564abecc2bb" title=" " alt="" coords="232,261,465,301"/>
+<area shape="rect" id="node9" href="$classPascal_1_1RangeDeclaration.html#a1ceb0475b5a75bbee325765fcb5a874b" title=" " alt="" coords="261,325,436,365"/>
+<area shape="rect" id="node6" href="$classPascal_1_1VariantDeclaration.html#ab7ed9844759c417445620b80dafb5f71" title=" " alt="" coords="6,165,183,205"/>
+<area shape="rect" id="node7" href="$classPascal_1_1RecordDeclaration.html#aeacfc3c507f239c4fc0617c9b10a16db" title=" " alt="" coords="5,229,184,269"/>
+</map>

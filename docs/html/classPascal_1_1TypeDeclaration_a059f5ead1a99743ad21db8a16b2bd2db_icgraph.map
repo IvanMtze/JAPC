@@ -1,0 +1,23 @@
+<map id="Pascal::TypeDeclaration::isAssignableType" name="Pascal::TypeDeclaration::isAssignableType">
+<area shape="rect" id="node1" title=" " alt="" coords="780,357,945,397"/>
+<area shape="rect" id="node2" href="$classPascal_1_1ForwardDeclaration.html#a32683ba40f759de2d6e79254a6303067" title=" " alt="" coords="524,133,707,173"/>
+<area shape="rect" id="node3" href="$classPascal_1_1VoidDeclaration.html#a29fdb3b141d431270126d84176ec0112" title=" " alt="" coords="534,197,697,237"/>
+<area shape="rect" id="node4" href="$classPascal_1_1CompoundDeclaration.html#a91c0741032b5de17df4be5001de60f58" title=" " alt="" coords="516,261,715,301"/>
+<area shape="rect" id="node15" href="$classPascal_1_1FieldCollection.html#a0c27de7c1b77280195c476c76ceae5cf" title=" " alt="" coords="537,325,693,365"/>
+<area shape="rect" id="node18" href="$classPascal_1_1MemberFunctionDeclaration.html#ad90e0c54690df1f4362f0a792c9d10bb" title=" " alt="" coords="499,389,732,429"/>
+<area shape="rect" id="node19" href="$classPascal_1_1RealDeclaration.html#a12058b420a54db6ce10e611a00aaa9bd" title=" " alt="" coords="534,453,697,493"/>
+<area shape="rect" id="node20" href="$classPascal_1_1CharDeclaration.html#acfc355c5cd2f42d72cc24691b182a4d9" title=" " alt="" coords="533,517,697,557"/>
+<area shape="rect" id="node21" href="$classPascal_1_1RangeDeclaration.html#a8c3fb9c609e86103e5b59548409efd25" title=" " alt="" coords="528,581,703,621"/>
+<area shape="rect" id="node5" href="$classPascal_1_1ArrayDeclaration.html#a058c11ed3891455452874806b8b3e11a" title=" " alt="" coords="254,5,421,45"/>
+<area shape="rect" id="node7" href="$classPascal_1_1EnumDeclaration.html#a9baf3e49cfaef089a351b7ef28df0f21" title=" " alt="" coords="252,69,423,109"/>
+<area shape="rect" id="node9" href="$classPascal_1_1PointerDeclaration.html#a46e0e2c80a2855dae2ee2ca3b729eca2" title=" " alt="" coords="249,133,426,173"/>
+<area shape="rect" id="node10" href="$classPascal_1_1FieldDeclaration.html#a3a2899ceaf38972b4399d99df9d8ed19" title=" " alt="" coords="255,197,419,237"/>
+<area shape="rect" id="node11" href="$classPascal_1_1FunctionPointerDeclaration.html#a85a2268f1b542345a59029f7cfb1b399" title=" " alt="" coords="224,261,451,301"/>
+<area shape="rect" id="node12" href="$classPascal_1_1FileDeclaration.html#a3227750e8520a2d18c13a3df5390fd50" title=" " alt="" coords="259,325,416,365"/>
+<area shape="rect" id="node14" href="$classPascal_1_1SetDeclaration.html#a0b764d8919bfc645f539786a648e5be5" title=" " alt="" coords="259,389,415,429"/>
+<area shape="rect" id="node6" href="$classPascal_1_1StringDeclaration.html#a703a105d2e660c10fd172c27e2ff287d" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" id="node8" href="$classPascal_1_1BoolDeclaration.html#ab9e2c82c8401aece617a3336a7090f07" title=" " alt="" coords="9,69,172,109"/>
+<area shape="rect" id="node13" href="$classPascal_1_1TextDeclaration.html#a10c31e53b4bba2dfb7c65077b33a2d33" title=" " alt="" coords="9,325,172,365"/>
+<area shape="rect" id="node16" href="$classPascal_1_1VariantDeclaration.html#aebb59d0c6fad03d444065da8d30c9e36" title=" " alt="" coords="249,453,426,493"/>
+<area shape="rect" id="node17" href="$classPascal_1_1RecordDeclaration.html#a04c8d805ca78df4db41f88da1491d019" title=" " alt="" coords="248,517,427,557"/>
+</map>

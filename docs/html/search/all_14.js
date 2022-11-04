@@ -85,9 +85,8 @@ var searchData=
   ['type_5fwith_5fexpre_82',['TYPE_WITH_EXPRE',['../classPascal_1_1ExpressionAST.html#afa0233e75ef9ebe629899dff1e1f5d93ad08272c63c7c1f1a5f6e07ecb597cf27',1,'Pascal::ExpressionAST']]],
   ['type_5fwrite_83',['TYPE_WRITE',['../classPascal_1_1ExpressionAST.html#afa0233e75ef9ebe629899dff1e1f5d93a030e5f9dd9bbd92db08ee1e9dc7967a8',1,'Pascal::ExpressionAST']]],
   ['typecastexpression_84',['TypeCastExpression',['../classPascal_1_1TypeCastExpression.html',1,'Pascal::TypeCastExpression'],['../classPascal_1_1TypeCastExpression.html#abf61bd42cf04792e71fb781bbf2e0223',1,'Pascal::TypeCastExpression::TypeCastExpression()']]],
-  ['typedeclaration_85',['TypeDeclaration',['../classPascal_1_1TypeDeclaration.html',1,'Pascal']]],
+  ['typedeclaration_85',['TypeDeclaration',['../classPascal_1_1TypeDeclaration.html',1,'Pascal::TypeDeclaration'],['../classPascal_1_1TypeDeclaration.html#acc47931bf9f0dff43085522e694d809f',1,'Pascal::TypeDeclaration::TypeDeclaration()']]],
   ['typedeclaration_86',['typeDeclaration',['../classPascal_1_1ExpressionAST.html#a35b2d0d734037dcacc24c16cc9c3218c',1,'Pascal::ExpressionAST']]],
-  ['typedeclaration_87',['TypeDeclaration',['../classPascal_1_1TypeDeclaration.html#acc47931bf9f0dff43085522e694d809f',1,'Pascal::TypeDeclaration']]],
-  ['typedefinition_88',['TypeDefinition',['../classPascal_1_1TypeDefinition.html',1,'Pascal::TypeDefinition'],['../classPascal_1_1TypeDefinition.html#a908a12b55d42aab2e60e0f01d7e88eda',1,'Pascal::TypeDefinition::TypeDefinition()']]],
-  ['typekind_89',['TypeKind',['../namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca',1,'Pascal']]]
+  ['typedefinition_87',['TypeDefinition',['../classPascal_1_1TypeDefinition.html',1,'Pascal::TypeDefinition'],['../classPascal_1_1TypeDefinition.html#a908a12b55d42aab2e60e0f01d7e88eda',1,'Pascal::TypeDefinition::TypeDefinition()']]],
+  ['typekind_88',['TypeKind',['../namespacePascal.html#ad38420edeb61e31ef1d7ed39f959e9ca',1,'Pascal']]]
 ];

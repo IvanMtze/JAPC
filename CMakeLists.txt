@@ -20,9 +20,13 @@ llvm_map_components_to_libnames(llvm_libs support core irreader)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories( ${PROJECT_SOURCE_DIR}/tools)
+include_directories( ${PROJECT_SOURCE_DIR}/utils)
+include_directories(${PROJECT_SOURCE_DIR}/lib)
+
 add_subdirectory(tools)
 add_subdirectory(utils)
 add_subdirectory(lib)
+
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

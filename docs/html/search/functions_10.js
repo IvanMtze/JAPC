@@ -3,7 +3,7 @@ var searchData=
   ['scan_0',['scan',['../classPascal_1_1Scanner.html#a05698053e40746a751c22d6b40fefb9c',1,'Pascal::Scanner']]],
   ['scanner_1',['Scanner',['../classPascal_1_1Scanner.html#a814d7bde6195c999d1332b1b23531e09',1,'Pascal::Scanner::Scanner()'],['../classPascal_1_1Scanner.html#a494589d9b187e8d861ab1b694f11de9e',1,'Pascal::Scanner::Scanner(std::string &amp;source_, int currentPos_=0)']]],
   ['semantics_2',['semantics',['../classPascal_1_1FunctionBaseBuiltin.html#a7ee68adaa86b73209dee3a3b75d51e78',1,'Pascal::FunctionBaseBuiltin']]],
-  ['setdeclaration_3',['SetDeclaration',['../classPascal_1_1SetDeclaration.html#a1369a5bd47cd704464798e073e372995',1,'Pascal::SetDeclaration']]],
+  ['setdeclaration_3',['SetDeclaration',['../classPascal_1_1SetDeclaration.html#aa861733e7e562f3b840cf5ec5f60a005',1,'Pascal::SetDeclaration']]],
   ['setemitwarnings_4',['setEmitWarnings',['../classPascal_1_1JAPCDiagnostics.html#ae7baf4e8631a514a0cc60fab365ad44d',1,'Pascal::JAPCDiagnostics']]],
   ['setemitwarningsaserrors_5',['setEmitWarningsAsErrors',['../classPascal_1_1JAPCDiagnostics.html#a260571861412753d26b0803bb4673328',1,'Pascal::JAPCDiagnostics']]],
   ['setend_6',['setEnd',['../classPascal_1_1Range.html#a14535c85bfc9ba42361bc8a9ce467b7f',1,'Pascal::Range']]],

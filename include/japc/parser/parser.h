@@ -9,7 +9,6 @@
 #include "japc/AST/stack.h"
 #include "japc/AST/type.h"
 #include "japc/basic/diagnostics.h"
-#include "japc/basic/ptr.h"
 #include "parser_utils.h"
 #include <deque>
 #include <list>
@@ -45,7 +44,7 @@ class Parser
     bool isAtEnd();
     bool match(TokenType tokenType);
     bool match(std::vector<TokenType> tokensToMatch);
-    void parseExpression();
+    std::shared_ptr<ExpressionAST> parseExpression();
     void parseFactor();
     void parseLabel();
     std::shared_ptr<InitValue> parseInitValue(std::shared_ptr<TypeDeclaration> typeOfInitialization);
@@ -53,7 +52,7 @@ class Parser
     void parseSimpleExpression();
     void parseTerm();
     std::shared_ptr<ArrayDeclaration> parseArrayDeclaration();
-    void parsePrimary();
+    std::shared_ptr<ExpressionAST> parsePrimary();
     bool isSign(TokenType tk);
     bool isRelationalOperator(TokenType tk);
     bool isAddingOperator(TokenType tk);
@@ -76,7 +75,7 @@ class Parser
                                                                 std::shared_ptr<ConstantDeclaration> leftSide);
     void parseTypeDefinitionPart();
     std::shared_ptr<TypeDeclaration> parseType();
-    VariableDeclarationExpression *parseVariableDeclarationPart();
+    std::shared_ptr<VariableDeclarationExpression> parseVariableDeclarationPart();
     std::shared_ptr<RangeDeclaration> parseRangeDeclaration(std::shared_ptr<TypeDeclaration> type, TokenType end,
                                                             TokenType alternative);
     void parseProcedureAndDefinitionPart();
@@ -92,6 +91,7 @@ class Parser
     void parseFunctionAccess();
     void parseParenthesizedExpression();
     void parseNegatedPrimary();
+    std::shared_ptr<BlockExpression> parseBlock();
     std::shared_ptr<EnumDeclaration> parseEnumDefinition();
     std::shared_ptr<SetDeclaration> parseSetDeclaration();
     void parseConstantAccess();
@@ -100,9 +100,10 @@ class Parser
     std::shared_ptr<TypeDeclaration> getTypeDeclaration(std::string nameToSearch);
     void parseStructuredValueConstructor();
     void parseDiscriminantIdentifier();
+    std::shared_ptr<ExpressionAST> parseStatement();
     void parseConstantDefinition();
     std::shared_ptr<StringDeclaration> parseStringDeclaration();
-    void parseFunction();
+    std::shared_ptr<Function> parseFunction();
     std::shared_ptr<FunctionPointerDeclaration> parseFunctionType();
     void parseProcedure();
 };

@@ -6,9 +6,6 @@
 #define JAPC_BUILDER_H
 
 #include "japc/AST/expression.h"
-#include "japc/AST/context.h"
-#include "japc/AST/namespace.h"
-#include "japc/AST/moduledef.h"
 #include "japc/AST/type.h"
 
 namespace Pascal

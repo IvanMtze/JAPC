@@ -2,9 +2,10 @@
 // Created by wuser on 3/10/22.
 //
 #include "japc/basic/diagnostics.h"
-using namespace Pascal;
 #define LOCATION_ERROR "%s: %d: error: "
 #define LOCATION_WARNING "%s: %d: warning: "
+
+using namespace Pascal;
 void JAPCDiagnostics::japc_error_at(Token tk, const char *error, ...)
 {
     this->setHasErrors(HAS_ERROR);
