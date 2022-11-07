@@ -48,11 +48,27 @@ void SourceManager::insertFile(std::string path, File::FileType fileType)
     {
         this->sourcesMap.insert(std::pair<std::shared_ptr<File>, std::string>(ptr_file, path));
     }else{
-
+        fprintf(stderr, "Unable to find %s", path.c_str());
+        exit(-1);
     }
 
 }
-void SourceManager::getFile(std::string name)
+std::shared_ptr<File> SourceManager::getFile(std::string name)
 {
-    this->sourcesMap;
+    for(auto const& x: this->sourcesMap){
+        if(x.second == name){
+            return x.first;
+        }
+    }
+    return nullptr;
+}
+
+std::vector<std::string> SourceManager::getFileNameByType(File::FileType fileType){
+    std::vector<std::string> fileNames;
+    for(auto const& x: this->sourcesMap){
+        if(x.first->getFileType() == fileType){
+            fileNames.push_back(x.second);
+        }
+    }
+    return fileNames;
 }

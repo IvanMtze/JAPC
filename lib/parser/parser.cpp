@@ -18,9 +18,9 @@ using namespace Pascal;
 // 'XYZ'        THE TERMNAL SYMBOL XYZ
 //
 
-Parser::Parser(std::unique_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine)
+Parser::Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine)
 {
-    this->scanner = std::move(scanner);
+    this->scanner = scanner;
     this->diagnosticsEngine = std::move(diagnosticsEngine);
 }
 void Parser::parseFile()
@@ -82,19 +82,33 @@ std::unique_ptr<Token> Parser::previous()
 }
 void Parser::sync()
 {
-    while (!ParserUtils::isAnyOf(*current().get(),
-                                 std::vector<TokenType>{TokenType::SYMBOL_FILE, TokenType::SYMBOL_SEMICOLON,
-                                                        TokenType::SYMBOL_CONST, TokenType::SYMBOL_VAR,
-                                                        TokenType ::SYMBOL_PROCEDURE, TokenType::SYMBOL_FUNCTION}))
+
+    std::vector<TokenType> tk;
+    tk.push_back(TokenType::SYMBOL_FUNCTION);
+    tk.push_back(TokenType::SYMBOL_BEGIN);
+    tk.push_back(TokenType::SYMBOL_VAR);
+    tk.push_back(TokenType::SYMBOL_TYPE);
+    tk.push_back(TokenType::SYMBOL_PROCEDURE);
+    tk.push_back(TokenType::SYMBOL_EXTERNAL);
+    tk.push_back(TokenType::SYMBOL_LABEL);
+    tk.push_back(TokenType::SYMBOL_GOTO);
+    while (!ParserUtils::isAnyOf(*current().get(), tk))
     {
         advance();
         if (current()->getTokenType() == TokenType::END_OF_FILE)
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+            this->currentState = ParserState::ERROR_EOF;
             break;
         }
     }
+    if (this->currentState != ParserState::ERROR_EOF)
+    {
+        this->currentState = ParserState::ERROR_RECOVERING;
+    }
+    throw this->currentState;
 }
+
 bool Parser::match(std::vector<TokenType> tokensToMatch)
 {
 }
@@ -193,7 +207,14 @@ bool Parser::isMultiplyingOperator(TokenType tk)
 void Parser::parseProgram()
 {
     //  ISO 10206 -  6.12
-    parseMainProgramDeclaration();
+    try
+    {
+        parseMainProgramDeclaration();
+    }
+    catch (ParserState parserState)
+    {
+        return;
+    }
 }
 void Parser::parseProgramComponent()
 {
@@ -214,12 +235,14 @@ void Parser::parseMainProgramDeclaration()
     {
         // TODO: Error unexpected end of file
         this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+        this->sync();
     }
     parseImportPart();
     if (isAtEnd())
     {
         // TODO: Error unexpected end of file
         this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+        throw this->currentState;
     }
     parseMainProgramBlock();
 }
@@ -228,7 +251,8 @@ void Parser::parseProgramHeading()
     if (current()->getTokenType() != TokenType::SYMBOL_PROGRAM)
     {
         //  TODO: Missing program declaration error, do not sync
-        return;
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Missing program declaration here!");
+        this->sync();
     }
     else
     {
@@ -236,7 +260,8 @@ void Parser::parseProgramHeading()
         if (current()->getTokenType() != TokenType::IDENTIFIER)
         {
             //  TODO: Missing program identifier and sync
-            sync();
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected program keyword here!");
+            this->sync();
         }
         else
         {
@@ -248,6 +273,7 @@ void Parser::parseProgramHeading()
                 if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
                 {
                     //  TODO: Error missing paren close of program param list
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ')' after program param list");
                     sync();
                 }
                 advance();
@@ -260,34 +286,48 @@ void Parser::parseMainProgramBlock()
     std::vector<std::shared_ptr<ExpressionAST>> expressions;
     while (!isAtEnd() && current()->getTokenType() != TokenType::SYMBOL_BEGIN)
     {
-        std::shared_ptr<ExpressionAST> currentExpr;
-        switch (current()->getTokenType())
+        try
         {
-        case TokenType::SYMBOL_LABEL:
-            parseLabel();
-        case TokenType::SYMBOL_TYPE:
-            parseTypeDefinitionPart();
-            break;
-        case TokenType::SYMBOL_VAR:
-            currentExpr = parseVarDeclarations();
-            break;
-        case TokenType::SYMBOL_CONST:
-            parseConstantDefinition();
-            break;
-        case TokenType::SYMBOL_PROCEDURE:
-            parseProcedure();
-            break;
-        case TokenType::SYMBOL_FUNCTION:
-            parseFunction();
-            break;
-        default:
-            //  TODO: ERROR ??
-            sync();
-            break;
+            std::shared_ptr<ExpressionAST> currentExpr;
+            switch (current()->getTokenType())
+            {
+            case TokenType::SYMBOL_LABEL:
+                parseLabel();
+            case TokenType::SYMBOL_TYPE:
+                parseTypeDefinitionPart();
+                break;
+            case TokenType::SYMBOL_VAR:
+                currentExpr = parseVarDeclarations();
+                break;
+            case TokenType::SYMBOL_CONST:
+                parseConstantDefinition();
+                break;
+            case TokenType::SYMBOL_PROCEDURE:
+                parseProcedure();
+                break;
+            case TokenType::SYMBOL_FUNCTION:
+                parseFunction();
+                break;
+            default:
+                //  TODO: ERROR ??
+                sync();
+                break;
+            }
+            if (currentExpr)
+            {
+                expressions.push_back(currentExpr);
+            }
         }
-        if (currentExpr)
+        catch (ParserState state)
         {
-            expressions.push_back(currentExpr);
+            if (state == ParserState::ERROR_EOF)
+            {
+                throw this->currentState;
+            }
+            else
+            {
+                this->currentState = ParserState::OK;
+            }
         }
     }
     if (isAtEnd())
@@ -590,6 +630,10 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParams()
         {
             std::vector<std::shared_ptr<VariableDefinition>> parsedDefs = parseFunctionParameter(flags, paramNames);
             defs.insert(defs.end(), parsedDefs.begin(), parsedDefs.end());
+            if (current()->getTokenType() == TokenType::END_OF_FILE)
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+            }
         }
         advance();
     }
@@ -657,6 +701,7 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(
         else
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting a type expression after colon.");
+            this->sync();
             return varDefs;
         }
     }
@@ -665,7 +710,17 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(
         if (current()->getTokenType() != TokenType::SYMBOL_COMMA)
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expected IDENTIFIER as parameter");
+            this->sync();
             return varDefs;
+        }
+        else
+        {
+            if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
+            {
+                this->diagnosticsEngine->japc_error_at(
+                    *current().get(), "Expected ')' or ',' after type or identifier definition in function params.");
+                this->sync();
+            }
         }
     }
     return varDefs;
@@ -826,7 +881,7 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
             else
             {
                 diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier after TYPE OF expression.");
-                //  TODO: Sync
+                this->sync();
             }
         }
         else
@@ -834,7 +889,7 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
             diagnosticsEngine->japc_error_at(
                 *current().get(),
                 "Expected OF keyword! I could simply add it by my self but I'm tired now, do it by yourself please");
-            //  TODO: Sync
+            this->sync();
         }
         break;
     case TokenType::IDENTIFIER:
@@ -873,11 +928,13 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
     case TokenType::SYMBOL_FUNCTION: {
         parseFunctionType();
     }
-    default:
+    default: {
         this->diagnosticsEngine->japc_error_at(*current().get(),
                                                "Huh ? I was expecting a declaration here... a %s was a complete "
                                                "surprise to me at this point in your program!",
                                                Scanner::tokenTypeToStr(current()->getTokenType()).c_str());
+        this->sync();
+    }
     }
 }
 std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<TypeDeclaration> type, TokenType end,
@@ -1006,6 +1063,7 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
     if (current()->getTokenType() != TokenType::IDENTIFIER)
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Missing function identifier");
+        this->sync();
     }
     else
     {
@@ -1050,12 +1108,14 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
             {
                 this->diagnosticsEngine->japc_error_at(*current().get(),
                                                        "Expected type identifier as function return type");
+                this->sync();
             }
         }
         else
         {
             this->diagnosticsEngine->japc_error_at(*current().get(),
                                                    "Expected ':' after ')' in a function or procedure declaration");
+            this->sync();
         }
     }
 }
@@ -1174,6 +1234,7 @@ std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
                     else
                     {
                         this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting ']'.");
+                        this->sync();
                     }
                 }
                 else
@@ -1205,6 +1266,7 @@ std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
                         else
                         {
                             this->diagnosticsEngine->japc_error_at(*current().get(), "Expecting ']'.");
+                            this->sync();
                         }
                     }
                     else
@@ -1244,6 +1306,7 @@ std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
             if (!rangeDeclaration)
             {
                 this->diagnosticsEngine->japc_error_at(*current().get(), "I was expecting to see a type here");
+                this->sync();
             }
             else
             {
@@ -1257,7 +1320,7 @@ std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
         if (rangeVector.empty())
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expected size of array now");
-            return nullptr;
+            this->sync();
         }
         if (current()->getTokenType() == TokenType::SYMBOL_OF)
         {
@@ -1267,13 +1330,13 @@ std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
         else
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expected OF keyword");
-            return nullptr;
+            this->sync();
         }
     }
     else
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '[' after array keyword");
-        return nullptr;
+        this->sync();
     }
 }
 std::shared_ptr<RangeDeclaration> Parser::parseArrayDeclarationRange()
@@ -1321,11 +1384,13 @@ std::shared_ptr<FileDeclaration> Parser::parseFileDeclaration()
         else
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expected OF keyword now");
+            this->sync();
         }
     }
     else
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Expected FILE keyword now");
+        this->sync();
     }
     return nullptr;
 }
@@ -1373,11 +1438,13 @@ std::shared_ptr<SetDeclaration> Parser::parseSetDeclaration()
         else
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expected OF keyword now");
+            this->sync();
         }
     }
     else
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Expected SET keyword now");
+        this->sync();
     }
     return nullptr;
 }
@@ -1400,16 +1467,19 @@ std::shared_ptr<EnumDeclaration> Parser::parseEnumDefinition()
                 else if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
                 {
                     this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ',' of ')' in enum declaration");
+                    this->sync();
                 }
             }
             else
             {
                 this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in enum declaration");
+                this->sync();
             }
         } while (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE);
         if (names.empty())
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Enum declaration cannot be empty");
+            this->sync();
         }
         else
         {
@@ -1431,6 +1501,7 @@ std::shared_ptr<EnumDeclaration> Parser::parseEnumDefinition()
     else
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Expected '(' for enum declaration");
+        this->sync();
     }
     return nullptr;
 }
@@ -1459,7 +1530,8 @@ void Parser::parseConstantDefinition()
                         if (!this->objects->insert(name,
                                                    std::make_shared<ConstantDefinition>(name, constantDeclaration)))
                         {
-                            this->diagnosticsEngine->japc_error_at(*current().get(), "Is already defined.");
+                            this->diagnosticsEngine->japc_error_at(*current().get(), "%s Is already defined.",
+                                                                   name.c_str());
                         }
                         else
                         {
@@ -1467,6 +1539,7 @@ void Parser::parseConstantDefinition()
                             {
                                 this->diagnosticsEngine->japc_error_at(*current().get(),
                                                                        "Expected ';' after a constant definition");
+                                this->sync();
                             }
                             else
                             {
@@ -1484,12 +1557,14 @@ void Parser::parseConstantDefinition()
             else
             {
                 this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in constant definition.");
+                this->sync();
             }
         } while (current()->getTokenType() == TokenType::IDENTIFIER);
     }
     else
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Expected CONST keyword in constant definition.");
+        this->sync();
     }
 }
 void Parser::sync(std::vector<TokenType> tokensToFind)
@@ -1500,6 +1575,7 @@ void Parser::sync(std::vector<TokenType> tokensToFind)
         if (current()->getTokenType() == TokenType::END_OF_FILE)
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Unexpected EOF");
+            this->sync();
         }
     }
 }
@@ -1570,6 +1646,7 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
                 else
                 {
                     this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in var definition");
+                    this->sync();
                 }
             } while (current()->getTokenType() == TokenType::SYMBOL_COMMA);
             advance();
@@ -1706,6 +1783,7 @@ std::shared_ptr<BlockExpression> Parser::parseBlock()
     else
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Expected BEGIN keyword");
+        this->sync();
     }
     return std::shared_ptr<BlockExpression>();
 }
@@ -1733,6 +1811,7 @@ std::shared_ptr<ExpressionAST> Parser::parseStatement()
                 else
                 {
                     this->diagnosticsEngine->japc_error_at(*current().get(), "Expected expression in assignment");
+                    this->sync();
                 }
             }
         }

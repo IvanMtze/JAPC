@@ -2,17 +2,17 @@
 // Created by wuser on 3/10/22.
 //
 #include "japc/basic/diagnostics.h"
-#define LOCATION_ERROR "%s: %d: error: "
-#define LOCATION_WARNING "%s: %d: warning: "
+#define LOCATION_ERROR "%s: %d: error: %s\n"
+#define LOCATION_WARNING "%s: %d: warning: %s\n"
 
 using namespace Pascal;
 void JAPCDiagnostics::japc_error_at(Token tk, const char *error, ...)
 {
     this->setHasErrors(HAS_ERROR);
-    const char *message = this->getPreformattedMessage(LOCATION_ERROR, error, tk);
+    std::string fmt = this->getPreformattedMessage(LOCATION_ERROR, error, tk);
     va_list args;
-    va_start(args, message);
-    vprintf(message, args);
+    va_start(args, error);
+    vfprintf(stderr, fmt.c_str(), args);
     va_end(args);
 }
 void JAPCDiagnostics::japc_warning_at(Token tk, const char *error, ...)
@@ -22,11 +22,11 @@ void JAPCDiagnostics::japc_warning_at(Token tk, const char *error, ...)
         this->japc_error_at(tk, error);
         return;
     }
-    const char *message = this->getPreformattedMessage(LOCATION_WARNING, error, tk);
+    std::string fmt = this->getPreformattedMessage(LOCATION_WARNING, error, tk);
     this->setHasWarnings(HAS_WARNING);
     va_list args;
-    va_start(args, message);
-    vprintf(message, args);
+    va_start(args, error);
+    vfprintf(stderr, fmt.c_str(), args);
     va_end(args);
 }
 int JAPCDiagnostics::shouldEmitWarnings()
@@ -61,12 +61,15 @@ void JAPCDiagnostics::setHasWarnings(unsigned int hasWarnings)
 {
     this->state |= hasWarnings;
 }
-const char *JAPCDiagnostics::getPreformattedMessage(const char *message, const char *error, Token tk)
+std::string JAPCDiagnostics::getPreformattedMessage(const char *message, const char *error, Token tk)
 {
-    size_t neededSize = sizeof(error) / sizeof(char) + sizeof(message) / sizeof(char) +
-                        sizeof(tk.getTokenPos().getFileName().c_str()) / sizeof(char);
-    char buff[neededSize];
-    sprintf(buff, message, tk.getTokenPos().getFileName().c_str(), tk.getTokenPos().getLineNo());
-    strcat(buff, error);
-    return buff;
+    char *buff;
+    asprintf(&buff, message, tk.getTokenPos().getFileName().c_str (), tk.getTokenPos().getLineNo(), error);
+    std::string str(buff);
+    free(buff);
+    return str;
+}
+JAPCDiagnostics::JAPCDiagnostics()
+{
+    this->state = 0;
 }

@@ -21,15 +21,21 @@ enum class SyncParserContext
     functionDeclaration,
     functionParamList,
 };
+enum class ParserState{
+    ERROR_RECOVERING,
+    ERROR_EOF,
+    OK
+};
 class Parser
 {
   public:
-    Parser(std::unique_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine);
+    Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine);
     void parseFile();
 
   private:
+    ParserState currentState = ParserState::OK;
     std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> objects;
-    std::unique_ptr<Scanner> scanner;
+    std::shared_ptr<Scanner> scanner;
     int currentTokenPos;
     std::string moduleName;
     std::unique_ptr<JAPCDiagnostics> diagnosticsEngine;
@@ -106,6 +112,7 @@ class Parser
     std::shared_ptr<Function> parseFunction();
     std::shared_ptr<FunctionPointerDeclaration> parseFunctionType();
     void parseProcedure();
+
 };
 
 } // namespace Pascal

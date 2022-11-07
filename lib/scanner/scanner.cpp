@@ -1186,3 +1186,7 @@ void Scanner::setSkipComments(bool skipComments)
 {
     this->skipComments;
 }
+void Scanner::setFileName(std::string filename)
+{
+    this->filename = filename;
+}

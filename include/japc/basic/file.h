@@ -34,7 +34,8 @@ class SourceManager{
   public:
     SourceManager();
     void insertFile(std::string path, File::FileType fileType);
-    void getFile(std::string name);
+    std::shared_ptr<File> getFile(std::string name);
+    std::vector<std::string> getFileNameByType(File::FileType fileType);
     typedef std::map<std::shared_ptr<File>, std::string> SourcesMap;
   private:
     SourcesMap sourcesMap;

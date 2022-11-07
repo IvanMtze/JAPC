@@ -187,7 +187,7 @@ class Token
     }
     Location getTokenPos()
     {
-        return this->getTokenPos();
+        return this->tokenPos;
     }
 
   private:
@@ -215,6 +215,7 @@ class Scanner
     TokenType scan();
     std::string getTextSource();
     void setTextSource(std::string source);
+    void setFileName(std::string filename);
     void setSkipTrivia(bool skipTrivia);
     static std::string tokenTypeToStr(TokenType token);
     Token getCurrentTokenObject();

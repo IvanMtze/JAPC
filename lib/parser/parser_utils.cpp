@@ -5,7 +5,7 @@
 
 using namespace Pascal;
 
-bool ParserUtils::isAnyOf(Token to, std::vector<TokenType> tkList)
+bool ParserUtils::isAnyOf(Token to, std::vector<TokenType>& tkList)
 {
     for (TokenType tk : tkList)
     {

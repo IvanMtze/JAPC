@@ -13,7 +13,7 @@ namespace Pascal
 class ParserUtils
 {
   public:
-    static bool isAnyOf(Token to, std::vector<TokenType> tkList);
+    static bool isAnyOf(Token to, std::vector<TokenType>& tkList);
     static int getPrecedence(TokenType tk);
     static std::shared_ptr<ConstantDeclaration> evaluateConstant(
         const std::shared_ptr<ConstantDeclaration> rhs, const TokenType tk,

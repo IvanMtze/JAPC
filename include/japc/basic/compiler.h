@@ -11,7 +11,8 @@
 #include "japc/parser/parser.h"
 #include "japc/scanner/scanner.h"
 #include "japc/AST/type.h"
-
+#include "japc/basic/options_parser.h"
+#include "japc/basic/file.h"
 #include <memory>
 #include <vector>
 
@@ -21,13 +22,16 @@ namespace Pascal
 class Compiler
 {
   private:
+    ParsedOptions config;
+    std::unique_ptr<SourceManager> sourceManager;
     std::shared_ptr<Stack<NamedObject>> stack;
     std::shared_ptr<Scanner> scanner;
     std::shared_ptr<Parser> parser;
+    std::unique_ptr<JAPCDiagnostics> diagnosticsEngine;
     void initCompiler();
     void addBuiltinType(std::string name, std::shared_ptr<TypeDeclaration> type);
   public:
-    Compiler();
+    Compiler(ParsedOptions config);
     enum Status
     {
         FAILED_WITH_ERROR,
