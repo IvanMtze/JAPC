@@ -10,8 +10,12 @@
 #include "japc/AST/type.h"
 #include "japc/basic/diagnostics.h"
 #include "parser_utils.h"
+#include <cfloat>
 #include <deque>
+#include <errno.h>
+#include <limits>
 #include <list>
+#include <stdlib.h>
 #include <vector>
 
 namespace Pascal
@@ -21,7 +25,8 @@ enum class SyncParserContext
     functionDeclaration,
     functionParamList,
 };
-enum class ParserState{
+enum class ParserState
+{
     ERROR_RECOVERING,
     ERROR_EOF,
     OK
@@ -29,7 +34,8 @@ enum class ParserState{
 class Parser
 {
   public:
-    Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine);
+    Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine,
+           std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> &stack);
     void parseFile();
 
   private:
@@ -67,6 +73,7 @@ class Parser
     bool isMultiplyingOperator(TokenType tk);
     void parseProgram();
     void parseIdentifier();
+    std::shared_ptr<TypeDeclaration> parseSimpleType();
     void parseProgramComponent();
     void parseMainProgramDeclaration();
     void parseProgramHeading();
@@ -82,12 +89,13 @@ class Parser
     void parseTypeDefinitionPart();
     std::shared_ptr<TypeDeclaration> parseType();
     std::shared_ptr<VariableDeclarationExpression> parseVariableDeclarationPart();
-    std::shared_ptr<RangeDeclaration> parseRangeDeclaration(std::shared_ptr<TypeDeclaration> type, TokenType end,
+    std::shared_ptr<RangeDeclaration> parseRangeDeclaration(std::shared_ptr<TypeDeclaration> &type, TokenType end,
                                                             TokenType alternative);
     void parseProcedureAndDefinitionPart();
     void parseProcedureDeclaration();
     std::shared_ptr<PrototypeExpression> parseFunctionDeclaration();
     std::shared_ptr<PrototypeExpression> parseFunctionHeader();
+    std::shared_ptr<PrototypeExpression> parseProcedureHeader();
     std::vector<std::shared_ptr<VariableDefinition>> parseFunctionParams();
     std::vector<std::shared_ptr<VariableDefinition>> parseFunctionParameter(VariableDefinitionFlags &flags,
                                                                             std::vector<std::string> &names);
@@ -111,8 +119,7 @@ class Parser
     std::shared_ptr<StringDeclaration> parseStringDeclaration();
     std::shared_ptr<Function> parseFunction();
     std::shared_ptr<FunctionPointerDeclaration> parseFunctionType();
-    void parseProcedure();
-
+    std::shared_ptr<Function> parseProcedure();
 };
 
 } // namespace Pascal

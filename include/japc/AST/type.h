@@ -269,11 +269,15 @@ class RealDeclaration : public BaseTypeDeclaration
     }
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override
     {
-        return TypeDeclaration::isCompatibleType(ty);
+        if (isSameAs(ty) || ty->getTypeKind() == TypeKind::TYPE_INTEGER || ty->getTypeKind() == TypeKind::TYPE_LONG_INT)
+        {
+            return this;
+        }
+        return nullptr;
     }
     const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const override
     {
-        return TypeDeclaration::isAssignableType(ty);
+        return isCompatibleType(ty);
     }
     unsigned bits() const override
     {
@@ -303,6 +307,49 @@ class RealDeclaration : public BaseTypeDeclaration
     }
 };
 
+template <int bit, TypeKind tk> class IntegerXDecl : public BaseTypeDeclaration
+{
+  public:
+    IntegerXDecl() : BaseTypeDeclaration(tk)
+    {
+    }
+    bool isIntegral() const override
+    {
+        return true;
+    }
+    unsigned bits() const override
+    {
+        return bit;
+    }
+    const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override
+    {
+        if (ty->getKind() == tk)
+        {
+            return this;
+        }
+        return nullptr;
+    }
+    const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const override
+    {
+        if (ty->getKind() == tk)
+        {
+            return this;
+        }
+        return nullptr;
+    }
+    static bool classof(const TypeDeclaration *e)
+    {
+        return e->getKind() == tk;
+    }
+
+  protected:
+    std::shared_ptr<llvm::Type> getLlvmType() const override
+    {
+    }
+};
+
+using IntegerDeclaration = IntegerXDecl<32, TypeKind::TYPE_INTEGER>;
+using LongIntegerDeclaration = IntegerXDecl<64, TypeKind::TYPE_LONG_INT>;
 class CharDeclaration : public BaseTypeDeclaration
 {
   public:
@@ -410,6 +457,9 @@ class CompoundDeclaration : public TypeDeclaration
         : TypeDeclaration(typeKind), baseType(typeDeclaration)
     {
     }
+    CompoundDeclaration(TypeKind typeKind) : TypeDeclaration(typeKind)
+    {
+    }
     bool isSameAs(const TypeDeclaration *ty) const override;
     bool isCompound() const override
     {
@@ -424,6 +474,8 @@ class CompoundDeclaration : public TypeDeclaration
         return baseType->hasLlvmType();
     }
     static bool isClassOf(const TypeDeclaration *e);
+    static bool classof(const TypeDeclaration *e);
+    void setBaseType(const std::shared_ptr<TypeDeclaration> &baseType);
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override
@@ -478,8 +530,6 @@ class ArrayDeclaration : public CompoundDeclaration
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
-
-  private:
     std::vector<std::shared_ptr<RangeDeclaration>> ranges;
 };
 
@@ -512,14 +562,20 @@ class EnumDeclaration : public CompoundDeclaration
     EnumDeclaration(TypeKind tk, const std::vector<std::string> &nmv, std::shared_ptr<TypeDeclaration> ty)
         : CompoundDeclaration(tk, ty)
     {
+        setValues(nmv);
     }
     EnumDeclaration(const std::vector<std::string> &nmv, std::shared_ptr<TypeDeclaration> ty)
         : EnumDeclaration(TypeKind::TYPE_ENUM, nmv, ty)
     {
     }
+    EnumDeclaration(TypeKind tk, const std::vector<std::string> &nmv)
+        : CompoundDeclaration(tk)
+    {
+        setValues(nmv);
+    }
 
   private:
-    void SetValues(const std::vector<std::string> &nmv);
+    void setValues(const std::vector<std::string> &nmv);
 
   public:
     std::shared_ptr<Range> getRange() const override
@@ -580,16 +636,15 @@ class BoolDeclaration : public EnumDeclaration
     virtual bool isCompound() const;
     virtual unsigned int bits() const;
     BoolDeclaration()
-        : EnumDeclaration(TypeKind::TYPE_BOOLEAN, std::vector<std::string>{"false", "true"}, shared_from_this())
+        : EnumDeclaration(TypeKind::TYPE_BOOLEAN, std::vector<std::string>{"false", "true"})
     {
+        auto ptr = std::shared_ptr<BoolDeclaration>( this, [](BoolDeclaration*){} );
+        EnumDeclaration::setBaseType(shared_from_this());
     }
+    void init();
     bool isSameAs(const TypeDeclaration *ty) const override
     {
         return ty == this;
-    }
-    bool hasLlvmType() const override
-    {
-        return EnumDeclaration::hasLlvmType();
     }
 
   protected:
@@ -826,6 +881,10 @@ class FieldCollection : public TypeDeclaration
         return e->getKind() == TypeKind::TYPE_VRIANT || e->getKind() == TypeKind::TYPE_RECORD ||
                e->getKind() == TypeKind::TYPE_CLASS;
     }
+    static bool classof(const TypeDeclaration *e)
+    {
+        return isClassOf(e);
+    }
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override
@@ -908,6 +967,10 @@ class RecordDeclaration : public FieldCollection
     static bool isClassOf(const TypeDeclaration *e)
     {
         return e->getKind() == TypeKind::TYPE_RECORD;
+    }
+    static bool classof(const TypeDeclaration *e)
+    {
+        return isClassOf(e);
     }
     bool hasLlvmType() const override
     {
@@ -1103,6 +1166,7 @@ class StringDeclaration : public ArrayDeclaration
                   1, std::make_shared<RangeDeclaration>(std::make_shared<Range>(Range(0, size)), getIntegerType())))
     {
     }
+    int getCapacity() const;
     static bool isClassOf(const TypeDeclaration *e)
     {
         return e->getKind() == TypeKind::TYPE_STRING;
@@ -1152,6 +1216,10 @@ class RangeDeclaration : public TypeDeclaration
     static bool isClassOf(const TypeDeclaration *typeDeclaration)
     {
         return typeDeclaration->getKind() == TypeKind::TYPE_RANGE;
+    }
+    static bool classof(const TypeDeclaration *typeDeclaration)
+    {
+        return isClassOf(typeDeclaration);
     }
     bool isSameAs(const TypeDeclaration *ty) const override;
     unsigned bits() const override;
@@ -1206,10 +1274,7 @@ class SetDeclaration : public CompoundDeclaration
         range = rangeDecl;
     }
     void UpdateSubtype(std::shared_ptr<TypeDeclaration> ty);
-    bool isSameAs(const TypeDeclaration *ty) const
-    {
-        return true;
-    }
+    bool isSameAs(const TypeDeclaration *ty) const;
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override;
     bool hasLlvmType() const override
     {
@@ -1243,6 +1308,14 @@ class ConstantDeclaration
     const Location &getLoc() const
     {
         return loc;
+    }
+    static bool isClassOf(const ConstantDeclaration *constantDeclaration)
+    {
+        return constantDeclaration->getConstantKind() == ConstantKind::CONSTANT_DECLARATION;
+    }
+    static bool classof(const ConstantDeclaration *namedObject)
+    {
+        return isClassOf(namedObject);
     }
 
   protected:
@@ -1282,6 +1355,10 @@ class EnumConstantDeclaration : public ConstantDeclaration
         : value(value), ConstantDeclaration(getIntegerType(), ConstantKind::ENUM_CONSTANT_DECLARATION, loc)
     {
     }
+    EnumConstantDeclaration(std::shared_ptr<TypeDeclaration> type, const Location &loc, uint64_t value)
+        : value(value), ConstantDeclaration(type, ConstantKind::ENUM_CONSTANT_DECLARATION, loc)
+    {
+    }
     static bool isClassOf(const ConstantDeclaration *constantDeclaration)
     {
         return constantDeclaration->getConstantKind() == ConstantKind::ENUM_CONSTANT_DECLARATION;
@@ -1302,7 +1379,7 @@ class EnumConstantDeclaration : public ConstantDeclaration
 class RealConstantDeclaration : public ConstantDeclaration
 {
   public:
-    RealConstantDeclaration(const Location &loc, double value)
+    RealConstantDeclaration(const Location &loc, long double value)
         : value(value), ConstantDeclaration(getRealType(), ConstantKind::REAL_CONSTANT_DECLARATION, loc)
     {
     }
@@ -1310,7 +1387,7 @@ class RealConstantDeclaration : public ConstantDeclaration
     {
         return constantDeclaration->getConstantKind() == ConstantKind::REAL_CONSTANT_DECLARATION;
     }
-    double getValue() const
+    long double getValue() const
     {
         return value;
     }
@@ -1320,7 +1397,7 @@ class RealConstantDeclaration : public ConstantDeclaration
     }
 
   private:
-    double value;
+    long double value;
 };
 
 class CharConstantDeclaration : public ConstantDeclaration
@@ -1396,21 +1473,48 @@ class StringConstantDeclaration : public ConstantDeclaration
 };
 
 inline std::shared_ptr<ConstantDeclaration> operator+(std::shared_ptr<ConstantDeclaration> const &lhs,
-                                               std::shared_ptr<ConstantDeclaration> const &rhs)
+                                                      std::shared_ptr<ConstantDeclaration> const &rhs)
 {
 }
 inline std::shared_ptr<ConstantDeclaration> operator-(const std::shared_ptr<ConstantDeclaration> &lhs,
-                                               const std::shared_ptr<ConstantDeclaration> &rhs)
+                                                      const std::shared_ptr<ConstantDeclaration> &rhs)
 {
 }
 inline std::shared_ptr<ConstantDeclaration> operator*(const std::shared_ptr<ConstantDeclaration> &lhs,
-                                               const std::shared_ptr<ConstantDeclaration> &rhs)
+                                                      const std::shared_ptr<ConstantDeclaration> &rhs)
 {
 }
 inline std::shared_ptr<ConstantDeclaration> operator/(const std::shared_ptr<ConstantDeclaration> &lhs,
-                                               const std::shared_ptr<ConstantDeclaration> &rhs)
+                                                      const std::shared_ptr<ConstantDeclaration> &rhs)
 {
 }
 
+inline bool operator==(const TypeDeclaration &lty, const TypeDeclaration &rty)
+{
+    return lty.isSameAs(&rty);
+}
+inline bool operator!=(const TypeDeclaration &lty, const TypeDeclaration &rty)
+{
+    return !(lty == rty);
+}
+
+inline bool operator==(const Range &a, const Range &b)
+{
+    return (a.getStart() == b.getStart() && a.getEnd() == b.getEnd());
+}
+
+inline bool operator!=(const Range &a, const Range &b)
+{
+    return !(b == a);
+}
+
+inline bool operator==(const EnumDeclaration::EnumValue &a, const EnumDeclaration::EnumValue &b)
+{
+    return (a.value == b.value && a.name == b.name);
+}
+inline bool operator!=(const EnumDeclaration::EnumValue &a, const EnumDeclaration::EnumValue &b)
+{
+    return !(a == b);
+}
 } // namespace Pascal
 #endif // JAPC_TYPE_H

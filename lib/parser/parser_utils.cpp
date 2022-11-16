@@ -70,7 +70,10 @@ bool ParserUtils::numericLiteralIsInteger(Token tk)
     {
         return false;
     }
-    return (tk.getValue().find(".") != std::string::npos);
+    char* p;
+    long converted =
+        strtol(tk.getValue().c_str(), &p, 10);
+    return *p==0;
 }
 std::shared_ptr<ExpressionAST> ParserUtils::constantDeclarationToExpression(
     const Location loc, ConstantDeclaration *constantDeclaration)

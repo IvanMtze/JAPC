@@ -46,6 +46,7 @@ void SourceManager::insertFile(std::string path, File::FileType fileType)
     auto ptr_file = std::make_shared<File>(File(path, fileType));
     if(ptr_file->verifyFile())
     {
+        ptr_file->readFile();
         this->sourcesMap.insert(std::pair<std::shared_ptr<File>, std::string>(ptr_file, path));
     }else{
         fprintf(stderr, "Unable to find %s", path.c_str());

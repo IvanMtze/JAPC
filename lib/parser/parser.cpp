@@ -18,10 +18,12 @@ using namespace Pascal;
 // 'XYZ'        THE TERMNAL SYMBOL XYZ
 //
 
-Parser::Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine)
+Parser::Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine,
+               std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> &stack)
 {
     this->scanner = scanner;
     this->diagnosticsEngine = std::move(diagnosticsEngine);
+    this->objects = stack;
 }
 void Parser::parseFile()
 {
@@ -47,6 +49,7 @@ std::unique_ptr<Token> Parser::advance()
     else
     {
         //  TODO: Error unexpected EOF while parsing
+        return current();
     }
     return old;
 }
@@ -206,6 +209,7 @@ bool Parser::isMultiplyingOperator(TokenType tk)
 }
 void Parser::parseProgram()
 {
+    StackWrapper<std::shared_ptr<NamedObject>> wrapper(this->objects);
     //  ISO 10206 -  6.12
     try
     {
@@ -614,8 +618,99 @@ std::shared_ptr<FunctionPointerDeclaration> Parser::parseFunctionType()
     std::shared_ptr<PrototypeExpression> prototype = parseFunctionHeader();
     // TODO: FIX ME
 }
-void Parser::parseProcedure()
+std::shared_ptr<Function> Parser::parseProcedure()
 {
+    std::string name;
+    std::shared_ptr<PrototypeExpression> prototype = parseProcedureHeader();
+    if (!prototype || current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Error??");
+        return nullptr;
+    }
+    advance();
+    Location loc = current()->getTokenPos();
+    name = prototype->getName();
+    std::shared_ptr<NamedObject> namedObject;
+    std::shared_ptr<NamedObject> definition = this->objects->find(name);
+    FunctionDefinition *functionDef = llvm::dyn_cast_or_null<FunctionDefinition>(definition.get());
+    if (!(functionDef && functionDef->getPrototype() && functionDef->getPrototype() == prototype))
+    {
+        // This seems to be a way to handle with abstract classes using smart ptrs
+        std::shared_ptr<FunctionDeclaration> functionDeclaration = std::make_shared<FunctionDeclaration>(prototype);
+        std::shared_ptr<TypeDeclaration> typeDeclaration = functionDeclaration;
+        namedObject = std::make_shared<FunctionDefinition>(name, typeDeclaration, prototype);
+        if (!this->objects->insert(name, namedObject))
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "%s already exists.", name.c_str());
+        }
+        //advance();
+        if (current()->getTokenType() == TokenType::SYMBOL_FORWARD)
+        {
+            prototype->setIsForward(true);
+            advance();
+            if (current()->getTokenType() != TokenType::SYMBOL_SEMICOLON)
+            {
+                this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ';' after forward keyword");
+                this->sync();
+            }
+            return std::make_shared<Function>(Function(current()->getTokenPos(), prototype, {}, nullptr));
+        }
+    }
+    this->objects->addLevel();
+    if (name != "")
+    {
+        if (namedObject)
+        {
+            this->objects->insert(name, namedObject);
+        }
+    }
+    for (auto v : prototype->getArgs())
+    {
+        std::shared_ptr<VariableDefinition> varDefs =
+            std::make_shared<VariableDefinition>(v->getName(), v->getTypeDeclaration());
+        if (!this->objects->insert(v->getName(), varDefs))
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Duplicated %s in prototype.",
+                                                   v->getName().c_str());
+        }
+    }
+    std::vector<std::shared_ptr<VariableDeclarationExpression>> variableDeclarations;
+    std::shared_ptr<BlockExpression> body;
+    std::vector<std::shared_ptr<Function>> innerFunctions;
+    for (;;)
+    {
+        switch (current()->getTokenType())
+        {
+        case TokenType::SYMBOL_VAR:
+            if (std::shared_ptr<VariableDeclarationExpression> vars = parseVarDeclarations())
+            {
+                variableDeclarations.push_back(vars);
+            }
+            else
+            {
+                return nullptr;
+            }
+            break;
+        case TokenType::SYMBOL_LABEL:
+            parseLabel();
+            break;
+        case TokenType::SYMBOL_TYPE:
+            parseTypeDefinitionPart();
+            break;
+        case TokenType::SYMBOL_CONST:
+            parseConstantDefinition();
+            break;
+        case TokenType::SYMBOL_FUNCTION:
+        case TokenType::SYMBOL_PROCEDURE:
+            if (std::shared_ptr<Function> function = parseFunction())
+            {
+                innerFunctions.push_back(function);
+            }
+            break;
+        case TokenType::SYMBOL_BEGIN:
+            break;
+        }
+    }
 }
 std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParams()
 {
@@ -892,8 +987,13 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
             this->sync();
         }
         break;
-    case TokenType::IDENTIFIER:
-        break;
+    case TokenType::IDENTIFIER: {
+        std::string name = current()->getValue();
+        if (!llvm::dyn_cast_or_null<EnumDefinition>(this->objects->find(name).get()))
+        {
+            return parseSimpleType();
+        }
+    }
     case TokenType::NUMERIC_LITERAL:
     case TokenType::SYMBOL_MINUS:
     case TokenType::STRING_LITERAL: {
@@ -937,7 +1037,7 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
     }
     }
 }
-std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<TypeDeclaration> type, TokenType end,
+std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<TypeDeclaration> &type, TokenType end,
                                                                 TokenType alternative)
 {
     std::shared_ptr<ConstantDeclaration> startConstantDec = parseConstantExpression({TokenType::SYMBOL_DOT_DOT});
@@ -1026,6 +1126,145 @@ std::shared_ptr<ConstantDeclaration> Parser::parseConstantTerm()
     default:
         break;
     }
+    switch (current()->getTokenType())
+    {
+    case TokenType::SYMBOL_PAREN_OPEN:
+        constantTerm = this->parseConstantExpression({TokenType::SYMBOL_PAREN_CLOSE});
+        if (current()->getTokenType() != TokenType::SYMBOL_PAREN_CLOSE)
+        {
+            return nullptr;
+        }
+        break;
+    case TokenType::STRING_LITERAL:
+        if (multiplicative != 1 && (tk == TokenType::SYMBOL_PLUS || tk == TokenType::SYMBOL_NOT))
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Unary operator are not allowed for strings!");
+            // TODO:: return null or find next semicolon
+            this->sync();
+        }
+        if (current()->getValue().size() == 1)
+        {
+            const char *temp = current()->getValue().c_str();
+            constantTerm = std::make_shared<CharConstantDeclaration>(current()->getTokenPos(), temp[0]);
+        }
+        else
+        {
+            constantTerm = std::make_shared<StringConstantDeclaration>(current()->getTokenPos(), current()->getValue());
+        }
+        break;
+    case TokenType::NUMERIC_LITERAL:
+    case TokenType::BIG_INTEGER:
+        if (tk == TokenType::SYMBOL_NOT)
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(),
+                                                   "Unary operator NOT is not allowed for numeric literal!");
+            break; // TODO: FIX ME
+        }
+        if (ParserUtils::numericLiteralIsInteger(*current()))
+        {
+            char *endptr;
+            errno = 0;
+            int64_t val = strtoll(current()->getValue().c_str(), &endptr, 10);
+            if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) || (errno != 0 && val == 0))
+            {
+                this->diagnosticsEngine->japc_warning_at(*current().get(),
+                                                         "%s is too large for an integer. It exceed MAX_INTEGER size",
+                                                         current()->getValue().c_str());
+                val = LONG_MAX - 1;
+            }
+            constantTerm = std::make_shared<IntConstantDeclaration>(current()->getTokenPos(), val * multiplicative);
+        }
+        else
+        {
+            long double val;
+            try
+            {
+                val = std::stod(current()->getValue());
+            }
+            catch (const std::out_of_range &oor)
+            {
+                this->diagnosticsEngine->japc_warning_at(*current().get(),
+                                                         "%s is too large for an integer. It exceed LDBL_MAX size",
+                                                         current()->getValue().c_str());
+                val = LDBL_MAX - 1.0;
+            }
+            constantTerm = std::make_shared<RealConstantDeclaration>(current()->getTokenPos(), val * multiplicative);
+        }
+        break;
+    case TokenType::IDENTIFIER:
+        std::string name = current()->getValue();
+        if (EnumDefinition *enumDefinition = llvm::dyn_cast_or_null<EnumDefinition>(this->objects->find(name).get()))
+        {
+            if (this->objects->find(name) &&
+                enumDefinition->getTypeDeclaration()->getTypeKind() == TypeKind::TYPE_BOOLEAN)
+            {
+                uint64_t val = enumDefinition->getValue();
+                if (tk == TokenType::SYMBOL_NOT)
+                    val = !val;
+                else if (tk == TokenType::SYMBOL_MINUS || tk == TokenType::SYMBOL_PLUS)
+                {
+                    this->diagnosticsEngine->japc_error_at(
+                        *current().get(), "+ or - is not allowed for boolean value, did you mean NOT operator?");
+                    break;
+                }
+                constantTerm = std::shared_ptr<BooleanConstantDeclaration>(
+                    new BooleanConstantDeclaration(current()->getTokenPos(), val));
+            }
+            else
+            {
+                if (tk == TokenType::SYMBOL_MINUS || tk == TokenType::SYMBOL_PLUS)
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "+ or - is not allowed for enum values.");
+                    break;
+                }
+                constantTerm = std::shared_ptr<EnumConstantDeclaration>(new EnumConstantDeclaration(
+                    enumDefinition->getTypeDeclaration(), current()->getTokenPos(), enumDefinition->getValue()));
+            }
+        }
+        else
+        {
+            std::shared_ptr<ConstantDeclaration> constantDeclaration;
+            if (const ConstantDefinition *constantDefinition =
+                    llvm::dyn_cast_or_null<const ConstantDefinition>(this->objects->find(name).get()))
+            {
+                constantTerm = constantDefinition->getConstValue();
+                if (!constantTerm)
+                {
+                    this->diagnosticsEngine->japc_error_at(*current().get(), "Expected constant name");
+                    break;
+                }
+            }
+            if (constantDeclaration.get() && llvm::isa<BooleanConstantDeclaration>(constantDeclaration.get()) &&
+                tk == TokenType::SYMBOL_NOT)
+            {
+                BooleanConstantDeclaration *booleanConstantDeclaration =
+                    llvm::dyn_cast_or_null<BooleanConstantDeclaration>(constantDeclaration.get());
+                constantTerm = std::shared_ptr<BooleanConstantDeclaration>(
+                    new BooleanConstantDeclaration(current()->getTokenPos(), !booleanConstantDeclaration->getValue()));
+            }
+            if (multiplicative == -1)
+            {
+                if (constantTerm.get() && llvm::isa<RealConstantDeclaration>(*constantTerm.get()))
+                {
+                    RealConstantDeclaration *rd = llvm::dyn_cast_or_null<RealConstantDeclaration>(constantTerm.get());
+                    constantTerm = std::make_shared<RealConstantDeclaration>(current()->getTokenPos(), -rd->getValue());
+                }
+                else if (constantTerm.get() && llvm::isa<RealConstantDeclaration>(*constantTerm.get()))
+                {
+                    IntConstantDeclaration *id = llvm::dyn_cast_or_null<IntConstantDeclaration>(constantTerm.get());
+                    constantTerm = std::make_shared<IntConstantDeclaration>(current()->getTokenPos(), -id->getValue());
+                }
+                else
+                {
+                    this->diagnosticsEngine->japc_error_at(
+                        *current().get(), "You can only use - operator with Int or Real types. Did you mean NOT?");
+                    break;
+                }
+            }
+        }
+    }
+    advance();
+    return constantTerm;
 }
 std::shared_ptr<ConstantDeclaration> Parser::parseConstantRightSide(int precedence,
                                                                     std::shared_ptr<ConstantDeclaration> leftSide)
@@ -1059,7 +1298,7 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
 {
     std::string name;
     bool isForwarded = false;
-    advance();
+    advance(); // eat FUNCTION/PROCEDURE
     if (current()->getTokenType() != TokenType::IDENTIFIER)
     {
         this->diagnosticsEngine->japc_error_at(*current().get(), "Missing function identifier");
@@ -1069,7 +1308,7 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
     {
         name = current()->getValue();
         FunctionDefinition *functionDefinition;
-        advance();
+        advance(); // eat function/procedure identifiers
         if (std::shared_ptr<NamedObject> def = objects->find(name))
         {
             functionDefinition = llvm::dyn_cast_or_null<FunctionDefinition>(def.get());
@@ -1081,7 +1320,11 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
                     return std::make_shared<PrototypeExpression>(*functionDefinition->getPrototype().get());
             }
         }
-        std::vector<std::shared_ptr<VariableDefinition>> vars = parseFunctionParams();
+        std::vector<std::shared_ptr<VariableDefinition>> vars;
+        if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+        {
+            vars = parseFunctionParams();
+        }
         advance();
         if (current()->getTokenType() == TokenType::SYMBOL_COLON)
         {
@@ -1117,6 +1360,44 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
                                                    "Expected ':' after ')' in a function or procedure declaration");
             this->sync();
         }
+    }
+}
+
+std::shared_ptr<PrototypeExpression> Parser::parseProcedureHeader()
+{
+    std::string name;
+    bool isForwarded = false;
+    advance(); // eat FUNCTION/PROCEDURE
+    if (current()->getTokenType() != TokenType::IDENTIFIER)
+    {
+        this->diagnosticsEngine->japc_error_at(*current().get(), "Missing function identifier");
+        this->sync();
+    }
+    else
+    {
+        name = current()->getValue();
+        FunctionDefinition *functionDefinition;
+        advance(); // eat function/procedure identifiers
+        if (std::shared_ptr<NamedObject> def = objects->find(name))
+        {
+            functionDefinition = llvm::dyn_cast_or_null<FunctionDefinition>(def.get());
+            if (functionDefinition && functionDefinition->getPrototype() &&
+                functionDefinition->getPrototype()->isForwarded())
+            {
+                functionDefinition->getPrototype()->setIsForward(false);
+                if (current()->getTokenType() == TokenType::SYMBOL_SEMICOLON)
+                    return std::make_shared<PrototypeExpression>(*functionDefinition->getPrototype().get());
+            }
+        }
+        std::vector<std::shared_ptr<VariableDefinition>> vars;
+        if (current()->getTokenType() == TokenType::SYMBOL_PAREN_OPEN)
+        {
+            vars = parseFunctionParams();
+            advance();
+        }
+        PrototypeExpression prototypeExpression =
+            PrototypeExpression(current()->getTokenPos(), name, vars, getVoidType());
+        return std::make_shared<PrototypeExpression>(prototypeExpression);
     }
 }
 std::shared_ptr<Function> Parser::parseFunction()
@@ -1294,14 +1575,14 @@ std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
 }
 std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
 {
+    advance(); // eat array keyword
     if (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_OPEN)
     {
         advance();
         std::vector<std::shared_ptr<RangeDeclaration>> rangeVector;
         std::shared_ptr<TypeDeclaration> typeDeclaration;
-        while (current()->getTokenType() == TokenType::SYMBOL_SQUARE_BRACKET_CLOSE)
+        while (current()->getTokenType() != TokenType::SYMBOL_SQUARE_BRACKET_CLOSE)
         {
-            advance();
             std::shared_ptr<RangeDeclaration> rangeDeclaration = this->parseArrayDeclarationRange();
             if (!rangeDeclaration)
             {
@@ -1317,6 +1598,7 @@ std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
                 advance();
             }
         }
+        advance();
         if (rangeVector.empty())
         {
             this->diagnosticsEngine->japc_error_at(*current().get(), "Expected size of array now");
@@ -1324,6 +1606,7 @@ std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
         }
         if (current()->getTokenType() == TokenType::SYMBOL_OF)
         {
+            advance(); // eat of keyword
             std::shared_ptr<TypeDeclaration> typeDeclaration = this->parseType();
             return std::make_shared<ArrayDeclaration>(ArrayDeclaration(typeDeclaration, rangeVector));
         }
@@ -1516,7 +1799,7 @@ void Parser::parseConstantDefinition()
             {
                 advance();
                 std::string name = current()->getValue();
-                if (current()->getTokenType() == TokenType::SYMBOL_COLON_EQUAL)
+                if (current()->getTokenType() == TokenType::SYMBOL_EQUAL) // Constants are defined using = not :=
                 {
                     advance();
                     std::shared_ptr<ConstantDeclaration> constantDeclaration =
@@ -1648,8 +1931,7 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
                     this->diagnosticsEngine->japc_error_at(*current().get(), "Expected identifier in var definition");
                     this->sync();
                 }
-            } while (current()->getTokenType() == TokenType::SYMBOL_COMMA);
-            advance();
+            } while (current()->getTokenType() == TokenType::SYMBOL_COMMA && advance());
             if (current()->getTokenType() == TokenType::SYMBOL_COLON)
             {
                 advance();
@@ -1705,6 +1987,15 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
                 this->sync();
             }
         } while (current()->getTokenType() == TokenType::IDENTIFIER);
+        if (current()->getTokenType() == TokenType::SYMBOL_SEMICOLON)
+        {
+            advance();
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "Expected ';'");
+            this->sync();
+        }
     }
     else
     {
@@ -1819,4 +2110,21 @@ std::shared_ptr<ExpressionAST> Parser::parseStatement()
     }
     return nullptr; // Ideally you should not get here. We do not report anything as we may not be expecting that to
                     // happend.
+}
+std::shared_ptr<TypeDeclaration> Parser::parseSimpleType()
+{
+    if (current()->getTokenType() == TokenType::IDENTIFIER)
+    {
+        std::string name = current()->getValue();
+        std::shared_ptr<TypeDeclaration> ty;
+        if (const TypeDefinition *typeDef =
+                llvm::dyn_cast_or_null<const TypeDefinition>(this->objects->find(name).get()))
+        {
+            return typeDef->getTypeDeclaration();
+        }
+        else
+        {
+            this->diagnosticsEngine->japc_error_at(*current().get(), "%s is not a type", name.c_str());
+        }
+    }
 }

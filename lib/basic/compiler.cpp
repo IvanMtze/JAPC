@@ -6,22 +6,23 @@ using namespace Pascal;
 
 void Compiler::addBuiltinType(std::string name, std::shared_ptr<TypeDeclaration> type)
 {
-    this->stack->insert(name, TypeDefinition(name, type, false));
+    this->stack->insert(name, std::make_shared<TypeDefinition>(name, type, false));
 }
 void Compiler::initCompiler()
 {
-    addBuiltinType("integer", getIntegerType());
-    addBuiltinType("real", getRealType());
-    addBuiltinType("char", getCharType());
-    addBuiltinType("text", getCharType());
-    addBuiltinType("timestamp", getTimeStampType());
-    addBuiltinType("boolean", getBooleanType());
+    addBuiltinType("INTEGER", getIntegerType());
+    addBuiltinType("LONGINT", getLongIntType());
+    addBuiltinType("REAL", getRealType());
+    addBuiltinType("CHAR", getCharType());
+    addBuiltinType("TEXT", getCharType());
+    addBuiltinType("TIMESTAMP", getTimeStampType());
+    addBuiltinType("BOOLEAN", getBooleanType());
 }
 Compiler::Status Compiler::compile()
 {
     this->scanner = std::make_shared<Scanner>(Scanner());
     this->scanner->setSkipTrivia(true);
-    this->parser = std::make_shared<Parser>(this->scanner,std::move(this->diagnosticsEngine));
+    this->parser = std::make_shared<Parser>(this->scanner,std::move(this->diagnosticsEngine), this->stack);
     for(auto file: sourceManager->getFileNameByType(File::FileType::DEPENDENCY)){
         auto fileReaded = this->sourceManager->getFile(file);
         this->scanner->setFileName(file);
@@ -38,12 +39,10 @@ Compiler::Status Compiler::compile()
 }
 Compiler::Compiler(ParsedOptions config)
 {
-    Stack<NamedObject> stack;
+    this->stack = std::make_shared<Stack<std::shared_ptr<NamedObject>>>();
     this->diagnosticsEngine = std::unique_ptr<JAPCDiagnostics>(new JAPCDiagnostics());
     this->sourceManager = std::unique_ptr<SourceManager>(new SourceManager());
-    this->stack = std::make_shared<Stack<NamedObject>>(stack);
     this->config = config;
-
     this->diagnosticsEngine->setEmitWarningsAsErrors(this->config.warningOptions.werror);
     this->diagnosticsEngine->setEmitWarnings(this->config.warningOptions.wall);
     for(auto filepath: this->config.files){

@@ -198,6 +198,12 @@ class ConstantDefinition : public NamedObject
     static bool classof(const NamedObject *namedObject){
         return isClassOf(namedObject);
     }
+  public:
+    const std::shared_ptr<ConstantDeclaration> getConstValue() const
+    {
+        return constValue;
+    }
+
   private:
     const static NamedObjectType namedObjectType = NamedObjectType::CONST;
     std::shared_ptr<ConstantDeclaration> constValue;
@@ -213,10 +219,6 @@ class EnumDefinition : public NamedObject
     int getValue() const
     {
         return value;
-    }
-    static bool isClassOf(NamedObject *namedObject)
-    {
-        return namedObject->getNamedObjectType() == namedObjectType;
     }
     static bool isClassOf(const NamedObject *namedObject)
     {

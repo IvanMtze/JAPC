@@ -24,7 +24,7 @@ class Compiler
   private:
     ParsedOptions config;
     std::unique_ptr<SourceManager> sourceManager;
-    std::shared_ptr<Stack<NamedObject>> stack;
+    std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> stack;
     std::shared_ptr<Scanner> scanner;
     std::shared_ptr<Parser> parser;
     std::unique_ptr<JAPCDiagnostics> diagnosticsEngine;

@@ -8,47 +8,108 @@ using namespace Pascal;
 
 std::shared_ptr<TypeDeclaration> Pascal::getIntegerType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<IntegerDeclaration>(IntegerDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getLongIntType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<LongIntegerDeclaration>(LongIntegerDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getCharType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<CharDeclaration>(CharDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getBooleanType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<BoolDeclaration>(BoolDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getRealType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<RealDeclaration>(RealDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getVoidType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<VoidDeclaration>(VoidDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getTextType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<TextDeclaration>(TextDeclaration());
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getStringType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<StringDeclaration>(StringDeclaration(255));
+    }
+    return type;
 }
 std::shared_ptr<TypeDeclaration> Pascal::getTimeStampType()
 {
-    return std::shared_ptr<TypeDeclaration>();
+    static std::shared_ptr<TypeDeclaration> type;
+    if (!type)
+    {
+        type = std::make_shared<StringDeclaration>(StringDeclaration(255));
+    }
+    return type;
 }
 
 const TypeDeclaration *TypeDeclaration::isCompatibleType(const Pascal::TypeDeclaration *ty) const
 {
+    if (isSameAs(ty))
+    {
+        return this;
+    }
+    return nullptr;
 }
 std::shared_ptr<Range> TypeDeclaration::getRange() const
 {
-    return std::shared_ptr<Range>();
+    if(isIntegral()){
+        switch (kind)
+        {
+        case TYPE_CHAR:
+            return std::make_shared<Range>(Range(0, UCHAR_MAX));
+        case TYPE_INTEGER:
+            return std::make_shared<Range>(Range(INT_MIN, INT_MAX));
+        default:
+            return 0;
+        }
+    }
+    return nullptr;
 }
 size_t TypeDeclaration::getSize() const
 {
@@ -62,17 +123,44 @@ size_t TypeDeclaration::getAllignSize() const
 SetDeclaration::SetDeclaration(std::shared_ptr<RangeDeclaration> range, std::shared_ptr<TypeDeclaration> ty)
     : CompoundDeclaration(TypeKind::TYPE_SET, ty), range(range)
 {
+    if (range)
+    {
+        assert(range->getRange()->getSize() <= 1000 && "Set too large");
+    }
 }
 std::shared_ptr<Range> SetDeclaration::getRange() const
 {
-    return TypeDeclaration::getRange();
+    if (range)
+    {
+        return range->getRange();
+    }
+    return nullptr;
 }
 void SetDeclaration::UpdateSubtype(std::shared_ptr<TypeDeclaration> ty)
 {
+    baseType = ty;
 }
 const TypeDeclaration *SetDeclaration::isCompatibleType(const TypeDeclaration *ty) const
 {
-    return TypeDeclaration::isCompatibleType(ty);
+    if (const SetDeclaration* sty = llvm::dyn_cast<SetDeclaration>(ty))
+    {
+        if (*baseType == *sty->baseType)
+        {
+            return this;
+        }
+    }
+    return 0;
+}
+bool SetDeclaration::isSameAs(const TypeDeclaration *ty) const
+{
+    if (CompoundDeclaration::isSameAs(ty))
+    {
+        if (const SetDeclaration* sty = llvm::dyn_cast<SetDeclaration>(ty))
+        {
+            return sty->range && *range == *sty->range;
+        }
+    }
+    return false;
 }
 TypeKind SetDeclaration::getTypeKind() const
 {
@@ -148,19 +236,70 @@ std::shared_ptr<TypeDeclaration> CharDeclaration::clone() const
 }
 const TypeDeclaration *CharDeclaration::isCompatibleType(const TypeDeclaration *ty) const
 {
-    return TypeDeclaration::isCompatibleType(ty);
+    if (*this == *ty || ty->getTypeKind() == TypeKind::TYPE_CHAR)
+    {
+        return this;
+    }
+    return nullptr;
 }
 const TypeDeclaration *CharDeclaration::isAssignableType(const TypeDeclaration *ty) const
 {
-    return TypeDeclaration::isAssignableType(ty);
+    if (*this == *ty)
+    {
+        return this;
+    };
+    return nullptr;
 }
+template <> const TypeDeclaration *IntegerDeclaration::isCompatibleType(const TypeDeclaration *ty) const
+{
+    if (ty->getTypeKind() == TypeKind::TYPE_INTEGER)
+    {
+        return this;
+    }
+    if (ty->getTypeKind() == TypeKind::TYPE_LONG_INT || ty->getTypeKind() == TypeKind::TYPE_REAL)
+    {
+        return ty;
+    }
+    return nullptr;
+}
+template <> const TypeDeclaration *IntegerDeclaration::isAssignableType(const TypeDeclaration *ty) const
+{
+    if (isSameAs(ty))
+    {
+        return ty;
+    }
+    return nullptr;
+}
+
+template <> const TypeDeclaration *LongIntegerDeclaration::isCompatibleType(const TypeDeclaration *ty) const
+{
+    if (ty->getTypeKind() == TypeKind::TYPE_LONG_INT || ty->getTypeKind() == TypeKind::TYPE_INTEGER)
+    {
+        return this;
+    }
+    if (ty->getTypeKind() == TypeKind::TYPE_REAL)
+    {
+        return ty;
+    }
+    return nullptr;
+}
+
+template <> const TypeDeclaration *LongIntegerDeclaration::isAssignableType(const TypeDeclaration *ty) const
+{
+    if (isSameAs(ty) || ty->getTypeKind() == TypeKind::TYPE_INTEGER)
+    {
+        return this;
+    }
+    return nullptr;
+}
+
 std::shared_ptr<llvm::Type> CharDeclaration::getLlvmType() const
 {
     return BaseTypeDeclaration::getLlvmType();
 }
 TypeKind VoidDeclaration::getTypeKind() const
 {
-    return TypeDeclaration::getTypeKind();
+    return TypeKind::TYPE_VOID;
 }
 bool VoidDeclaration::isIncomplete() const
 {
@@ -256,11 +395,42 @@ std::shared_ptr<TypeDeclaration> CompoundDeclaration::clone() const
 }
 bool CompoundDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
-    return false;
+    if (this == ty)
+    {
+        return true;
+    }
+    if (getTypeKind() != ty->getTypeKind())
+    {
+        return false;
+    }
+    const CompoundDeclaration *cty = llvm::dyn_cast<CompoundDeclaration>(ty);
+    return cty && *cty->getSubtype() == *baseType;
 }
 bool CompoundDeclaration::isClassOf(const TypeDeclaration *e)
 {
+    return classof(e);
+}
+bool CompoundDeclaration::classof(const TypeDeclaration *e)
+{
+    switch (e->getTypeKind())
+    {
+    case TypeKind::TYPE_ARRAY:
+    case TypeKind::TYPE_STRING:
+    case TypeKind::TYPE_POINTER:
+    case TypeKind::TYPE_FIELD:
+    case TypeKind::TYPE_FUNCION_POINTER:
+    case TypeKind::TYPE_FILE:
+    case TypeKind::TYPE_TEXT:
+    case TypeKind::TYPE_SET:
+        return true;
+    default:
+        break;
+    }
     return false;
+}
+void CompoundDeclaration::setBaseType(const std::shared_ptr<TypeDeclaration> &baseType)
+{
+    CompoundDeclaration::baseType = baseType;
 }
 TypeKind ArrayDeclaration::getTypeKind() const
 {
@@ -308,11 +478,46 @@ std::shared_ptr<TypeDeclaration> ArrayDeclaration::getSubtype() const
 }
 bool ArrayDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
-    return CompoundDeclaration::isSameAs(ty);
+    if (CompoundDeclaration::isSameAs(ty))
+    {
+        if (const ArrayDeclaration *aty = llvm::dyn_cast<ArrayDeclaration>(ty))
+        {
+            if (ranges.size() != aty->getRanges().size())
+            {
+                return false;
+            }
+            for (size_t i = 0; i < ranges.size(); i++)
+            {
+                if (*ranges[i] != *aty->getRanges()[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    return false;
 }
 const TypeDeclaration *ArrayDeclaration::isCompatibleType(const TypeDeclaration *ty) const
 {
-    return CompoundDeclaration::isCompatibleType(ty);
+    if (isSameAs(ty))
+    {
+        return this;
+    }
+    if (const ArrayDeclaration *aty = llvm::dyn_cast<ArrayDeclaration>(ty))
+    {
+        if (ty->getSubtype() == getSubtype() && ranges.size() == aty->getRanges().size())
+        {
+            for (size_t i = 0; i < ranges.size(); i++)
+            {
+                if (ranges[i]->getSize() != aty->getRanges()[i]->getSize())
+                {
+                    return 0;
+                }
+            }
+        }
+    }
+    return this;
 }
 std::shared_ptr<llvm::Type> ArrayDeclaration::getLlvmType() const
 {
@@ -350,8 +555,14 @@ std::shared_ptr<TypeDeclaration> EnumDeclaration::getSubtype() const
 {
     return CompoundDeclaration::getSubtype();
 }
-void EnumDeclaration::SetValues(const std::vector<std::string> &nmv)
+void EnumDeclaration::setValues(const std::vector<std::string> &nmv)
 {
+    unsigned int v = 0;
+    for (auto n : nmv)
+    {
+        values.push_back(EnumValue(n, v));
+        v++;
+    }
 }
 unsigned EnumDeclaration::bits() const
 {
@@ -359,7 +570,25 @@ unsigned EnumDeclaration::bits() const
 }
 bool EnumDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
-    return CompoundDeclaration::isSameAs(ty);
+    if (const EnumDeclaration *ety = llvm::dyn_cast<EnumDeclaration>(ty))
+    {
+        if (ety->getTypeKind() != getTypeKind() || values.size() != ety->values.size())
+        {
+            return false;
+        }
+        for (size_t i = 0; i < values.size(); i++)
+        {
+            if (values[i] != ety->values[i])
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+    return true;
 }
 TypeKind BoolDeclaration::getTypeKind() const
 {
@@ -416,6 +645,10 @@ unsigned int BoolDeclaration::bits() const
 std::shared_ptr<llvm::Type> BoolDeclaration::getLlvmType() const
 {
     return EnumDeclaration::getLlvmType();
+}
+void BoolDeclaration::init()
+{
+    EnumDeclaration::setBaseType(shared_from_this());
 }
 TypeKind PointerDeclaration::getTypeKind() const
 {
@@ -603,13 +836,58 @@ std::shared_ptr<TypeDeclaration> FieldCollection::clone() const
 }
 int FieldCollection::Element(const std::string &name) const
 {
-    return 0;
+    int i = 0;
+    for (auto f : fields)
+    {
+        // Check for special record type
+        if (f->getName() == "")
+        {
+            RecordDeclaration *rd = llvm::dyn_cast<RecordDeclaration>(f->getFieldType().get());
+            assert(rd && "Expected record declarataion here!");
+            if (rd->Element(name) >= 0)
+            {
+                return i;
+            }
+        }
+        if (f->getName() == name)
+        {
+            return i;
+        }
+        i++;
+    }
+    return -1;
 }
 void FieldCollection::ensureSized() const
 {
+    if (opaqueType && opaqueType->isOpaque())
+    {
+        std::shared_ptr<llvm::Type> ty = getLlvmType();
+        // TODO: REVIEW
+        (void)ty.get();
+    }
 }
 bool FieldCollection::isSameAs(const TypeDeclaration *ty) const
 {
+    if (getTypeKind() != ty->getTypeKind())
+    {
+        return false;
+    }
+
+    if (const FieldCollection *fty = llvm::dyn_cast<FieldCollection>(ty))
+    {
+        if (fields.size() != fty->fields.size())
+        {
+            return false;
+        }
+        for (size_t i = 0; i < fields.size(); i++)
+        {
+            if (fields[i] != fty->fields[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     return false;
 }
 TypeKind VariantDeclaration::getTypeKind() const
@@ -742,7 +1020,8 @@ bool RecordDeclaration::isCompound() const
 }
 size_t RecordDeclaration::getSize() const
 {
-    return FieldCollection::getSize();
+    ensureSized();
+    return TypeDeclaration::getSize();
 }
 std::shared_ptr<llvm::Type> RecordDeclaration::getLlvmType() const
 {
@@ -854,7 +1133,19 @@ FunctionPointerDeclaration::FunctionPointerDeclaration(std::shared_ptr<Prototype
 }
 bool FunctionPointerDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
-    return CompoundDeclaration::isSameAs(ty);
+    if (ty->getTypeKind() == TypeKind::TYPE_FUNCION_POINTER)
+    {
+        const FunctionPointerDeclaration *fty = llvm::dyn_cast<FunctionPointerDeclaration>(ty);
+        assert(fty && "Expect to convert to function pointer!");
+        return *proto == *fty->proto;
+    }
+    if (ty->getTypeKind() == TypeKind::TYPE_FUNCTION)
+    {
+        const FunctionPointerDeclaration *fty = llvm::dyn_cast<FunctionPointerDeclaration>(ty);
+        assert(fty && "Expect to convert to function declaration");
+        return *proto == *fty->getPrototype();
+    }
+    return false;
 }
 std::shared_ptr<llvm::Type> FunctionPointerDeclaration::getLlvmType() const
 {
@@ -996,6 +1287,10 @@ const TypeDeclaration *StringDeclaration::isAssignableType(const TypeDeclaration
 {
     return ArrayDeclaration::isAssignableType(ty);
 }
+int StringDeclaration::getCapacity() const{
+    std::shared_ptr<RangeDeclaration> range = ranges[0];
+    return range->getRange()->getSize() - 1;
+}
 size_t StringDeclaration::getSize() const
 {
     return ArrayDeclaration::getSize();
@@ -1022,7 +1317,29 @@ std::shared_ptr<llvm::Type> StringDeclaration::getLlvmType() const
 }
 const TypeDeclaration *StringDeclaration::isCompatibleType(const TypeDeclaration *ty) const
 {
-    return ArrayDeclaration::isCompatibleType(ty);
+    if (isSameAs(ty) || ty->getTypeKind() == TypeKind::TYPE_CHAR)
+    {
+        return this;
+    }
+    if (ty->getTypeKind() == TypeKind::TYPE_STRING)
+    {
+        if (llvm::dyn_cast<StringDeclaration>(ty)->getCapacity() > getCapacity())
+        {
+            return ty;
+        }
+        return this;
+    }
+    if (ty->getTypeKind() == TypeKind::TYPE_ARRAY)
+    {
+        if (const ArrayDeclaration* aty = llvm::dyn_cast<ArrayDeclaration>(ty))
+        {
+            if (aty->getRanges().size() == 1)
+            {
+                return this;
+            }
+        }
+    }
+    return 0;
 }
 TypeKind RangeDeclaration::getTypeKind() const
 {
@@ -1050,19 +1367,35 @@ std::shared_ptr<TypeDeclaration> RangeDeclaration::clone() const
 }
 const TypeDeclaration *RangeDeclaration::isCompatibleType(const TypeDeclaration *ty) const
 {
-    return TypeDeclaration::isCompatibleType(ty);
+    if (*this == *ty)
+    {
+        return this;
+    }
+    if (ty->getTypeKind() == getTypeKind())
+    {
+        return ty;
+    }
+    return nullptr;
 }
 const TypeDeclaration *RangeDeclaration::isAssignableType(const TypeDeclaration *ty) const
 {
-    return TypeDeclaration::isAssignableType(ty);
+    if (isSameAs(ty) || ty->getTypeKind() == getTypeKind())
+    {
+        return ty;
+    }
+    return nullptr;
 }
 bool RangeDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
-    return false;
+    if (const RangeDeclaration *rty = llvm::dyn_cast<RangeDeclaration>(ty))
+    {
+        return rty->getTypeKind() == getTypeKind() && *range == *rty->range;
+    }
+    return getTypeKind() == ty->getTypeKind();
 }
 unsigned RangeDeclaration::bits() const
 {
-    return TypeDeclaration::bits();
+    return baseType->bits();
 }
 TypeKind ForwardDeclaration::getTypeKind() const
 {

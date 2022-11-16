@@ -487,7 +487,16 @@ std::pair<TokenType, std::string> Scanner::scanNumber()
     }
     if (!decimalFragment.empty() || tokenFlags & static_cast<int>(TokenFlags::SCIENTIFIC))
     {
+        result.first = TokenType::NUMERIC_LITERAL;
+        result.second = tokenValue;
+    }else{
+        tokenValue = res;
+        // const type = checkBigIntSuffix(); // if value is an integer, check whether it is a bigint
+        //             checkForIdentifierStartAfterNumericLiteral(start);
+        result.first = TokenType::NUMERIC_LITERAL;
+        result.second = tokenValue;
     }
+    return result;
 }
 std::string Scanner::scanString()
 {
@@ -683,6 +692,7 @@ std::string Scanner::scanBinaryOrOctalDigits(int base)
 }
 TokenType Scanner::getIdentifierToken()
 {
+    // AS PASCAL IS CASE INSENSITIVE, CONSIDER EVERYTHING AS UPPER CASE
     tokenValue = string_utils::toUpperCase(tokenValue);
     if (keywordsToTokenMap.count(tokenValue))
     {
@@ -1171,7 +1181,7 @@ std::string Scanner::tokenTypeToStr(TokenType token)
 
 Token Scanner::getCurrentTokenObject()
 {
-    const int lastNewLine = source.find_last_of('\n');
+    const int lastNewLine = source.substr(0, currentPos).find_last_of('\n');
     const int lastReturnCar = source.find_last_of('\r');
     const int charLinePos = lastNewLine > lastReturnCar ? currentPos - lastNewLine : currentPos - lastReturnCar;
     Location tkPos = Location(curLine, charLinePos, filename);

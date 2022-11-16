@@ -2,8 +2,8 @@
 // Created by wuser on 3/10/22.
 //
 #include "japc/basic/diagnostics.h"
-#define LOCATION_ERROR "%s: %d: error: %s\n"
-#define LOCATION_WARNING "%s: %d: warning: %s\n"
+#define LOCATION_ERROR "%s: [%d,%d]: error: %s\n"
+#define LOCATION_WARNING "%s: [%d,%d]: warning: %s\n"
 
 using namespace Pascal;
 void JAPCDiagnostics::japc_error_at(Token tk, const char *error, ...)
@@ -64,7 +64,7 @@ void JAPCDiagnostics::setHasWarnings(unsigned int hasWarnings)
 std::string JAPCDiagnostics::getPreformattedMessage(const char *message, const char *error, Token tk)
 {
     char *buff;
-    asprintf(&buff, message, tk.getTokenPos().getFileName().c_str (), tk.getTokenPos().getLineNo(), error);
+    asprintf(&buff, message, tk.getTokenPos().getFileName().c_str (), tk.getTokenPos().getLineNo(),tk.getTokenPos().getCharNo(), error);
     std::string str(buff);
     free(buff);
     return str;
