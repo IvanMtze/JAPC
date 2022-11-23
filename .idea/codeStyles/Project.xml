@@ -1,8 +1,0 @@
-<component name="ProjectCodeStyleConfiguration">
-  <code_scheme name="Project" version="173">
-    <option name="ENABLE_SECOND_REFORMAT" value="true" />
-    <clangFormatSettings>
-      <option name="ENABLED" value="true" />
-    </clangFormatSettings>
-  </code_scheme>
-</component>

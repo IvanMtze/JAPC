@@ -1,7 +1,0 @@
-<map id="Pascal::CharExpression" name="Pascal::CharExpression">
-<area shape="rect" id="node1" title=" " alt="" coords="11,684,178,768"/>
-<area shape="rect" id="node2" href="$classPascal_1_1IntegerExpression.html" title=" " alt="" coords="5,507,184,635"/>
-<area shape="rect" id="node3" href="$classPascal_1_1ExpressionAST.html" title=" " alt="" coords="12,271,177,457"/>
-<area shape="rect" id="node4" href="$classPascal_1_1Visitable.html" title=" " alt="" coords="29,137,161,221"/>
-<area shape="rect" id="node5" href="$classPascal_1_1Visitable.html" title=" " alt="" coords="17,5,173,75"/>
-</map>

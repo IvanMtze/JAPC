@@ -1,9 +1,0 @@
-<map id="Pascal::CompoundDeclaration::getLlvmType" name="Pascal::CompoundDeclaration::getLlvmType">
-<area shape="rect" id="node1" title=" " alt="" coords="499,101,697,141"/>
-<area shape="rect" id="node2" href="$classPascal_1_1ArrayDeclaration.html#a666f0e51124a09fcdf8d18516013389b" title=" " alt="" coords="254,5,421,45"/>
-<area shape="rect" id="node4" href="$classPascal_1_1PointerDeclaration.html#a383cb331cff0aa5259a8a8c65dc6dc84" title=" " alt="" coords="249,69,426,109"/>
-<area shape="rect" id="node5" href="$classPascal_1_1FunctionPointerDeclaration.html#a3673e3e7fd16fd53954a47c8c7b10edb" title=" " alt="" coords="224,133,451,173"/>
-<area shape="rect" id="node6" href="$classPascal_1_1FileDeclaration.html#a58f103171e761b8715474eca7b2f680b" title=" " alt="" coords="259,197,416,237"/>
-<area shape="rect" id="node3" href="$classPascal_1_1StringDeclaration.html#a9a691e8ea5228de857986e06308699f0" title=" " alt="" coords="5,5,176,45"/>
-<area shape="rect" id="node7" href="$classPascal_1_1TextDeclaration.html#a647c179e4c98ee952e63c821a6088e35" title=" " alt="" coords="9,197,172,237"/>
-</map>

@@ -1,5 +1,0 @@
-FILE(GLOB BASIC_SOURCES *.cpp)
-add_library(basic STATIC ${BASIC_SOURCES})
-target_link_libraries(basic INTERFACE ast)
-target_link_libraries(basic INTERFACE parser)
-target_include_directories(basic INTERFACE .)
