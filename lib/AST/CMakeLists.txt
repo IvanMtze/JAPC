@@ -1,0 +1,5 @@
+FILE(GLOB AST_SOURCES *.cpp)
+FILE(GLOB AST_HEADERS ${CMAKE_SOURCE_DIR}/include/japc/AST/*.h)
+add_library(ast STATIC ${AST_HEADERS} ${AST_SOURCES})
+target_link_libraries(ast PUBLIC scanner)
+target_link_libraries(ast PUBLIC basic)

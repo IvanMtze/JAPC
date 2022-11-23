@@ -1,0 +1,69 @@
+\input texinfo
+@settitle Sample Manual 1.0
+
+@copying
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright @copyright{} 2022 Gerardo Ivan Martinez Espinosa.
+@end copying
+
+@titlepage
+@title Sample Title
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+@node Top
+@top JAPC User Manual
+
+This manual is for JAPC
+
+@menu
+* First Chapter::    The first chapter is the
+                      only chapter in this sample.
+* Index::            Complete index.
+@end menu
+
+
+@node First Chapter
+@chapter First Chapter
+
+@cindex chapter, first
+This is the first chapter.
+@cindex index entry, another
+
+Here is a numbered list.
+
+@enumerate
+@item
+This is the first item.
+
+@item
+This is the second item.
+@end enumerate
+
+
+@node First Section
+@section First Section
+
+First section of first chapter.
+
+
+@node Second Section
+@section Second Section
+
+Second section of first chapter.
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@bye
