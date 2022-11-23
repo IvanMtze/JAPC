@@ -40,12 +40,11 @@ jobs:
           mkdir JAPC/build && cd JAPC/build
           cmake -DBUILD_DOC=ON ..
           make internal-docs
-          mv ../docs ../../docs
       - name: Upload documentation
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: './docs/html/'
+          path: '.JAPC/docs/html/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1

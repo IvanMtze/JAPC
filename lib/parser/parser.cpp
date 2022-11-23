@@ -2936,7 +2936,7 @@ std::shared_ptr<ExpressionAST> Parser::createCallExpression(const std::shared_pt
     }
     else
     {
-        assert(0 && "Huh?");
+        assert(0 && "Huh?\n");
     }
     if (expr)
     {

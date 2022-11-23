@@ -1,5 +1,5 @@
 \input texinfo
-@settitle Sample Manual 1.0
+@settitle JAPC Manual 0.0.1
 
 @copying
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,7 +11,7 @@ Copyright @copyright{} 2022 Gerardo Ivan Martinez Espinosa.
 @end copying
 
 @titlepage
-@title Sample Title
+@title JAPC manual
 @page
 @vskip 0pt plus 1filll
 @insertcopying
@@ -22,11 +22,11 @@ Copyright @copyright{} 2022 Gerardo Ivan Martinez Espinosa.
 @node Top
 @top JAPC User Manual
 
-This manual is for JAPC
+This manual is for JAPC or Just Another Pascal Compiler. A simple compiler front-end for Extended Pascal using LLVM as back-end.
 
 @menu
-* First Chapter::    The first chapter is the
-                      only chapter in this sample.
+* Overview of JAPC::    The first chapter is the
+                        only chapter in this sample.
 * Index::            Complete index.
 @end menu
 
