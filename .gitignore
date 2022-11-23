@@ -10,8 +10,8 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-docs/html/
-docs/out/
+**/docs/html/**
+**/docs/out/**
 *.html
 *.png
 docs/readme.md
