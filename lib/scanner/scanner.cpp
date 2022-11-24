@@ -265,19 +265,12 @@ TokenType Scanner::scan()
             currentPos++;
             commentClosed = false;
             lastLineStart = currentPos;
-            if (string_utils::getCharAt(currentPos, source) != ASTERISK)
-            {
-                curToken = TokenType::SYMBOL_BRACE_OPEN;
-                tokenValue = '{';
-                return curToken;
-            }
-            currentPos++;
             while (currentPos < end)
             {
                 const char ch = string_utils::getCharAt(currentPos, source);
-                if (ch == ASTERISK && string_utils::getCharAt(currentPos + 1, source) == CLOSE_BRACE)
+                if (ch == CLOSE_BRACE)
                 {
-                    currentPos += 2;
+                    currentPos += 1;
                     commentClosed = true;
                     break;
                 }

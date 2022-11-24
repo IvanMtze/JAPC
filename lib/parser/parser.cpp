@@ -94,8 +94,15 @@ void Parser::sync()
             this->currentState = ParserState::ERROR_EOF;
             break;
         }
+        if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_SEMICOLON)
+        {
+            advance(); // EAT SEMICOLON
+            this->currentState = ParserState::SEMICOLON_EATED;
+            break;
+        }
     }
-    if (this->currentState != ParserState::ERROR_EOF)
+    // Eated semicolon is not recovered, assume already in recovered
+    if (this->currentState != ParserState::ERROR_EOF && this->currentState != ParserState::SEMICOLON_EATED)
     {
         this->currentState = ParserState::ERROR_RECOVERING;
     }
@@ -175,7 +182,7 @@ std::shared_ptr<Function> Parser::parseProgramBlock()
     {
         Token tk = _CUR_TOKEN_OBJ_;
         std::shared_ptr<BlockExpression> mainProgramBody = parseBlock();
-        if (!mainProgramBody)
+        if (mainProgramBody)
         {
             std::shared_ptr<PrototypeExpression> prototype = std::make_shared<PrototypeExpression>(
                 tk.getTokenPos(), "_MAIN_", std::vector<std::shared_ptr<VariableDefinition>>(), getVoidType());
@@ -283,13 +290,14 @@ std::shared_ptr<ExpressionAST> Parser::parseMainProgramBlock()
                 currentExpr = parseFunction();
                 break;
             default:
-                //  TODO: ERROR ??
-                sync();
+                this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Unexpected token %s",
+                                                       current()->getValue().c_str());
+                advance();
                 break;
             }
             if (currentExpr)
             {
-                ast.push_back(currentExpr);
+                this->ast.push_back(currentExpr);
             }
         }
         catch (ParserState state)
@@ -307,6 +315,8 @@ std::shared_ptr<ExpressionAST> Parser::parseMainProgramBlock()
     if (isAtEnd())
     {
         //  TODO: THROW ERROR NO MAIN PROGRAM BLOCK DECLARATION FOUND, END OF FILE REACHED INSTEAD.
+        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Unexpected EOF before main function");
+        return nullptr;
     }
     Token tk = _CUR_TOKEN_OBJ_;
     std::shared_ptr<Function> function = parseProgramBlock();
@@ -953,7 +963,6 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
                     }
                     else
                     {
-                        advance();
                         return namedObject->getTypeDeclaration();
                     }
                 }
@@ -1084,15 +1093,13 @@ std::shared_ptr<ConstantDeclaration> Parser::parseConstantExpression(std::vector
     std::shared_ptr<ConstantDeclaration> cd;
     do
     {
-        cd = this->parseConstantTerm();
-        if (!cd)
+        if (!(cd = this->parseConstantTerm()))
         {
             return nullptr;
         }
         if (!ParserUtils::isAnyOf(_CUR_TOKEN_OBJ_, terminator))
         {
-            cd = parseConstantRightSide(0, cd);
-            if (!cd)
+            if (!(cd = parseConstantRightSide(0, cd)))
             {
                 return nullptr;
             }
@@ -1282,7 +1289,14 @@ std::shared_ptr<ConstantDeclaration> Parser::parseConstantRightSide(int preceden
                 return nullptr;
             }
         }
-        leftSide = ParserUtils::evaluateConstant(leftSide, tkType, rightSide);
+        try
+        {
+            leftSide = ParserUtils::evaluateConstant(leftSide, tkType, rightSide);
+        }
+        catch (std::string message)
+        {
+            this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, message.c_str());
+        }
     }
 }
 std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
@@ -1786,52 +1800,65 @@ void Parser::parseConstantDefinition()
         advance();
         do
         {
-            if (_CUR_TOKEN_TYPE_ == TokenType::IDENTIFIER)
+            try
             {
-                advance();
-                std::string name = current()->getValue();
-                if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_EQUAL) // Constants are defined using = not :=
+                if (_CUR_TOKEN_TYPE_ == TokenType::IDENTIFIER)
                 {
                     advance();
-                    std::shared_ptr<ConstantDeclaration> constantDeclaration =
-                        parseConstantExpression({TokenType::SYMBOL_SEMICOLON});
-                    if (!constantDeclaration)
+                    std::string name = current()->getValue();
+                    if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_EQUAL) // Constants are defined using = not :=
                     {
-                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Constant is not well defined");
-                    }
-                    else
-                    {
-                        if (!this->objects->insert(name,
-                                                   std::make_shared<ConstantDefinition>(name, constantDeclaration)))
+                        advance();
+                        std::shared_ptr<ConstantDeclaration> constantDeclaration =
+                            parseConstantExpression({TokenType::SYMBOL_SEMICOLON});
+                        if (!constantDeclaration)
                         {
-                            this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "%s Is already defined.",
-                                                                   name.c_str());
+                            this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Constant is not well defined");
+                            this->sync();
                         }
                         else
                         {
-                            if (_CUR_TOKEN_TYPE_ != TokenType::SYMBOL_SEMICOLON)
+                            if (!this->objects->insert(name,
+                                                       std::make_shared<ConstantDefinition>(name, constantDeclaration)))
                             {
-                                this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_,
-                                                                       "Expected ';' after a constant definition");
-                                this->sync();
+                                this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "%s Is already defined.",
+                                                                       name.c_str());
                             }
                             else
                             {
-                                advance();
+                                if (_CUR_TOKEN_TYPE_ != TokenType::SYMBOL_SEMICOLON)
+                                {
+                                    this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_,
+                                                                           "Expected ';' after a constant definition");
+                                    this->sync();
+                                }
+                                else
+                                {
+                                    advance();
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_,
+                                                               "Constants must be initialized at definition time.");
+                        this->sync();
                     }
                 }
                 else
                 {
                     this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_,
-                                                           "Constants must be initialized at definition time.");
+                                                           "Expected identifier in constant definition.");
+                    this->sync();
                 }
             }
-            else
+            catch (ParserState curState)
             {
-                this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected identifier in constant definition.");
-                this->sync();
+                if (curState != ParserState::SEMICOLON_EATED)
+                {
+                    throw curState;
+                }
             }
         } while (_CUR_TOKEN_TYPE_ == TokenType::IDENTIFIER);
     }
@@ -1966,8 +1993,7 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
                     }
                     else
                     {
-                        advance();
-                        return std::make_shared<VariableDeclarationExpression>(current().get()->getTokenPos(), varDefs);
+                        advance(); // eat semicolon
                     }
                 }
                 else
@@ -1983,15 +2009,7 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
                 this->sync();
             }
         } while (_CUR_TOKEN_TYPE_ == TokenType::IDENTIFIER);
-        if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_SEMICOLON)
-        {
-            advance();
-        }
-        else
-        {
-            this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected ';'");
-            this->sync();
-        }
+        return std::make_shared<VariableDeclarationExpression>(current().get()->getTokenPos(), varDefs);
     }
     else
     {
@@ -2003,6 +2021,7 @@ std::shared_ptr<InitValue> Parser::parseInitValue(std::shared_ptr<TypeDeclaratio
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_SQUARE_BRACKET_OPEN)
     {
+        // TODO:ADD
     }
     else
     {

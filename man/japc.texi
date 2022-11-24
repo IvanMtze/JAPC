@@ -1,13 +1,20 @@
 \input texinfo
-@settitle JAPC Manual 0.0.1
+@settitle JAPC User's Manual 0.0.1
 
 @copying
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-Copyright @copyright{} 2022 Gerardo Ivan Martinez Espinosa.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright @copyright{} @today{} Gerardo Ivan Martinez Espinosa.
 @end copying
 
 @titlepage
@@ -17,53 +24,117 @@ Copyright @copyright{} 2022 Gerardo Ivan Martinez Espinosa.
 @insertcopying
 @end titlepage
 
-@contents
-
 @node Top
 @top JAPC User Manual
 
-This manual is for JAPC or Just Another Pascal Compiler. A simple compiler front-end for Extended Pascal using LLVM as back-end.
+@contents
 
-@menu
-* Overview of JAPC::    The first chapter is the
-                        only chapter in this sample.
-* Index::            Complete index.
-@end menu
+@node Introduction
+@chapter Introduction
+@cindex Introduction
+
+Content
+
+@node About this document
+@section About this document.
+
+This is the user's guide for JAPC. It describes the installation and use of the JAPC compiler front-end on the different
+supported platforms. It does attempt to give an exhaustive list of all supported commands, but not a definition of the
+Pascal language. For a description of the possibilities and the inner workings of the compiler, see the
+@url{https://ivanmtze.github.io/JAPC/, Programmer's Guide}. In the appendices of this document you will find lists of
+compiler error messages (with descriptions).
+
+This document describes the compiler as it is/functions at the time of writing.
+
+@node About the project
+@section About the project.
+
+JAPC was conceived as an Extended Pascal Compiler front-end using LLVM (version 12.0.1) as backend.
+
+JAPC is designed to be, as much as possible, compatible with ISO Extended Pascal and Pascal. As of the date this manual
+is written (@today{}) not all Extended Pascal and Pascal features are implemented. However you will find lists of this
+unimplemented features in the appendices of this document.
+
+@node Getting more information
+@section Getting more information.
+
+If the documentation doesn't give an answer to your questions, you can obtain more information on Github, at the
+following address.
+@itemize @bullet
+@item @url{https://ivanmtze.github.io/JAPC/} is the project main repository. Please do not hesitate on creating a issue
+about your question and mark it as documentation.
+@end itemize
+
+Finally, if you think something should be added to this user manual (more than possible), please do not hesitate and
+contact me at @email{ivanmtze96@@gmail.com} or @email{zS18003209@@estudiantes.uv.mx}.
+
+I really hope we can build something really useful.
 
 
-@node First Chapter
-@chapter First Chapter
+@node Installing the compiler
+@chapter Installing the compiler
+@cindex Installing the compiler
 
-@cindex chapter, first
-This is the first chapter.
-@cindex index entry, another
+Content
 
-Here is a numbered list.
+@node Before Installation: requirements
+@section Before Installation: requirements
 
+@node Hardware requirements
+@subsection Hardware requirements
+Memory and disk requirements:
+
+The memory and disk requirements vary from platform to platform. At least 250 megabytes are recomemded for a basic
+installation; 500 megabytes should be counted if you want to recompile the compiler and all it's contents.
+
+
+@node Software requirements
+@subsection Software requirements
+Under Linux (Linux Mint)
+
+Under Linux Mint you need to have the following programs installed:
 @enumerate
-@item
-This is the first item.
-
-@item
-This is the second item.
+@item LLVM (Version 12.0.1)
+@item doxygen (If programmer's guide to be build)
+@item clang (If recompiling the compiler)
+@item texinfo (If user's manual to be build)
+@item latex (If programmer's and/or user's manual to be build)
 @end enumerate
 
+@node Using the compiler
+@chapter Using the compiler
+@cindex Using the compiler
 
-@node First Section
-@section First Section
+Here we describe the essentials to compile a program.
 
-First section of first chapter.
+@node File searching
+@section File searching
+Before you start compiling a program, it is important for JAPC to know where it looks for its source files. In this
+section we discuss this, and we indicate how to influence this.
 
+Important: The use of slashes as directory separators is relevant, since the compiler has not been tested yet under
+platforms that make use of backslashes. However, if you find a problem related to the use of slashes and backslashes,
+please do not hesitate and contact me (see @ref{Getting more information}). Examples on this manual will be given using
+slashes, since this is the only officially supported platform at this moment.
 
-@node Second Section
-@section Second Section
+@node Command line files
+@subsection Command line files
 
-Second section of first chapter.
+The file that you specify on the command line, such as in:
 
+@command{japc foo.pas}
 
-@node Index
-@unnumbered Index
+will be looked for only in the current directory. If you specify the directory in the filename, then the compiler will
+look in that directory:
 
-@printindex cp
+@command{japc subdir/foo.pas}
+
+will look for foo.pas in the subdirectory subdir of the current directory.
+
+Under case sensitive file systems (such as Linux), the name of this file is case sensitive.
+
+@node Include files
+@subsection Include files
+When you compile a program that needs multiple files, you will need to provide the compiler with the path of such files.
 
 @bye

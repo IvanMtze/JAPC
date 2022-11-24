@@ -34,5 +34,5 @@ begin
   for i := 1 to nLoops do
   begin
     Sieve;
-  end; {* SieveOfEratosthenes *}
+  end; { SieveOfEratosthenes }
 end.

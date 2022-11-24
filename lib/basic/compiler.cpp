@@ -19,7 +19,7 @@ void Compiler::initCompiler()
     addBuiltinType("BOOLEAN", getBooleanType());
     // Add boolean values
     this->stack->insert("FALSE", std::make_shared<EnumDefinition>("FALSE", getBooleanType(), 0));
-    this->stack->insert("TRUE", std::make_shared<EnumDefinition>("FALSE", getBooleanType(), 0));
+    this->stack->insert("TRUE", std::make_shared<EnumDefinition>("TRUE", getBooleanType(), 0));
 }
 Compiler::Status Compiler::compile()
 {

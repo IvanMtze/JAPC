@@ -32,6 +32,7 @@ enum class ParserState
 {
     ERROR_RECOVERING,
     ERROR_EOF,
+    SEMICOLON_EATED,
     OK
 };
 class Parser

@@ -58,20 +58,53 @@ std::shared_ptr<ConstantDeclaration> ParserUtils::evaluateConstant(const std::sh
     switch (tk)
     {
     case TokenType::SYMBOL_PLUS:
-        return lhs + rhs;
+        try
+        {
+            return lhs + rhs;
+        }
+        catch (ConstantsOperatorError)
+        {
+            std::string message = "Types are not compatible for addition";
+            throw message;
+        }
         break;
     case TokenType::SYMBOL_MINUS:
-        return lhs - rhs;
+        try
+        {
+            return lhs - rhs;
+        }
+        catch (ConstantsOperatorError)
+        {
+            std::string message = "Types are not compatible for minus operator";
+            throw message;
+        }
         break;
     case TokenType::SYMBOL_STAR:
-        return lhs * rhs;
+        try
+        {
+            return lhs * rhs;
+        }
+        catch (ConstantsOperatorError)
+        {
+            std::string message = "Types are not compatible for multiplication";
+            throw message;
+        }
         break;
     case TokenType::SYMBOL_DIV:
-        return lhs / rhs;
+        try
+        {
+            return lhs / rhs;
+        }
+        catch (ConstantsOperatorError)
+        {
+            std::string message = "Types are not compatible for div";
+            throw message;
+        }
         break;
     default:
         break;
     }
+    assert(0 && "HUh??");
     return nullptr;
 }
 

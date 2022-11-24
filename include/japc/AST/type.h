@@ -19,6 +19,10 @@
 #define __SET_POW_TO_BITS__ 5
 namespace Pascal
 {
+
+enum ConstantsOperatorError{
+    TYPES_NOT_COMPATIBLE
+};
 class PrototypeExpression;
 class ExpressionAST;
 class TypeDeclaration;
@@ -1502,18 +1506,22 @@ class StringConstantDeclaration : public ConstantDeclaration
 inline std::shared_ptr<ConstantDeclaration> operator+(std::shared_ptr<ConstantDeclaration> const &lhs,
                                                       std::shared_ptr<ConstantDeclaration> const &rhs)
 {
+    throw ConstantsOperatorError::TYPES_NOT_COMPATIBLE;
 }
 inline std::shared_ptr<ConstantDeclaration> operator-(const std::shared_ptr<ConstantDeclaration> &lhs,
                                                       const std::shared_ptr<ConstantDeclaration> &rhs)
 {
+    throw ConstantsOperatorError::TYPES_NOT_COMPATIBLE;
 }
 inline std::shared_ptr<ConstantDeclaration> operator*(const std::shared_ptr<ConstantDeclaration> &lhs,
                                                       const std::shared_ptr<ConstantDeclaration> &rhs)
 {
+    throw ConstantsOperatorError::TYPES_NOT_COMPATIBLE;
 }
 inline std::shared_ptr<ConstantDeclaration> operator/(const std::shared_ptr<ConstantDeclaration> &lhs,
                                                       const std::shared_ptr<ConstantDeclaration> &rhs)
 {
+    throw ConstantsOperatorError::TYPES_NOT_COMPATIBLE;
 }
 
 inline bool operator==(const TypeDeclaration &lty, const TypeDeclaration &rty)
