@@ -51,6 +51,7 @@ int ParserUtils::getPrecedence(TokenType tk)
     }
     return -1;
 }
+
 std::shared_ptr<ConstantDeclaration> ParserUtils::evaluateConstant(const std::shared_ptr<ConstantDeclaration> rhs,
                                                                    const TokenType tk,
                                                                    const std::shared_ptr<ConstantDeclaration> lhs)
@@ -107,6 +108,7 @@ std::shared_ptr<ConstantDeclaration> ParserUtils::evaluateConstant(const std::sh
     assert(0 && "HUh??");
     return nullptr;
 }
+
 
 int64_t ParserUtils::constantDeclarationToInteger(const ConstantDeclaration *c)
 {

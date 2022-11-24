@@ -1368,6 +1368,7 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
     }
 }
 
+
 std::shared_ptr<PrototypeExpression> Parser::parseProcedureHeader()
 {
     std::string name;
