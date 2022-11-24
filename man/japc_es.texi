@@ -1,0 +1,141 @@
+\input texinfo
+@settitle JAPC User's Manual 0.0.1
+
+@copying
+Por la presente se concede permiso, sin cargo, a cualquier persona que obtenga una copia de este software y
+archivos de documentación (el "Software"), para utilizar el Software sin restricciones, incluidos, entre otros, los
+derechos de uso, copia, modificación, fusión, publicación, distribución, sublicencia y/o venta de copias del Software, y
+para permitir personas a las que se proporciona el Software para hacerlo, sujeto a las siguientes condiciones:
+
+El aviso de derechos de autor anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del
+Software.
+
+EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO, ENTRE OTRAS, LA
+GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN FIN DETERMINADO Y NO VIOLACIÓN. EN NINGÚN CASO LOS AUTORES O
+LOS TITULARES DE LOS DERECHOS DE AUTOR SERÁN RESPONSABLES DE CUALQUIER RECLAMACIÓN, DAÑOS U OTRA RESPONSABILIDAD, YA SEA
+EN UNA ACCIÓN DE CONTRATO, AGRAVIO O DE OTRO MODO, QUE SURJAN DE O ESTÉN RELACIONADOS CON EL SOFTWARE O EL USO U OTROS
+TRATOS EN EL SOFTWARE.
+Copyright @copyright{} @today{}. Gerardo Ivan Martinez Espinosa.
+@end copying
+
+@titlepage
+@title JAPC Manual de usuario
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@node Top
+@top JAPC Manual de usuario
+
+@contents
+
+@node Introducción
+@chapter Introducción
+@cindex Introducción
+
+@node About this document
+@section About this document.
+
+Esta es la guía del usuario para JAPC. Describe la instalación y el uso del front-end del compilador JAPC en los diferentes
+plataformas soportadas. Intenta dar una lista exhaustiva de todos los comandos admitidos, pero no una definición del
+lenguaje pascual. Para obtener una descripción de las posibilidades y el funcionamiento interno del compilador, consulte la
+@url{https://ivanmtze.github.io/JAPC/, Guía del programador}. En los anexos de este documento encontrará listas de
+mensajes de error del compilador (con descripciones).
+
+Este documento describe el compilador tal como es/funciona en el momento de escribirlo.
+
+@node About the project
+@section About the project.
+
+JAPC se concibió como un front-end de Extended Pascal Compiler usando LLVM (versión 12.0.1) como back-end.
+
+JAPC está diseñado para ser, en la medida de lo posible, compatible con ISO Extended Pascal y Pascal. A la fecha de este
+manual está escrito (@today{}) no se implementan todas las características de Extended Pascal y Pascal. Sin embargo,
+encontrará listas de este características no implementadas en los apéndices de este documento.
+
+@node Getting more information
+@section Getting more information.
+
+Si la documentación no da respuesta a tus dudas, puedes obtener más información en Github, en el
+siguiente dirección.
+
+@itemize @bullet
+@item @url{https://ivanmtze.github.io/JAPC/} es el repositorio principal del proyecto. Por favor, no dude en crear un
+issue sobre su pregunta y márquela como documentación.
+@end itemize
+
+Finalmente, si cree que se debe agregar algo a este manual de usuario (más que posible), no lo dude y
+contactame en @email{ivanmtze96@@gmail.com} o @email{zS18003209@@estudiantes.uv.mx}.
+
+
+Realmente espero que podamos construir algo realmente útil.
+
+
+@node Installing the compiler
+@chapter Installing the compiler
+@cindex Installing the compiler
+
+
+@node Before Installation: requirements
+@section Before Installation: requirements
+
+@node Hardware requirements
+@subsection Hardware requirements
+Requisitos de memoria y disco:
+
+Los requisitos de memoria y disco varían de una plataforma a otra. Se recomiendan al menos 250 megabytes para una base
+instalación; Se deben contar 500 megabytes si desea volver a compilar el compilador y todo su contenido.
+
+
+@node Software requirements
+@subsection Software requirements
+Bajo Linux (Linux Mint)
+
+En Linux Mint, debe tener instalados los siguientes programas:
+@enumerate
+@item LLVM (Version 12.0.1)
+@item doxygen (Si se va a construir la guía del programador)
+@item clang (Si se vuelve a compilar el compilador)
+@item texinfo (Si se va a construir el manual del usuario)
+@item latex (Si se va a construir un manual del programador y/o del usuario)
+@end enumerate
+
+@node Using the compiler
+@chapter Using the compiler
+@cindex Using the compiler
+
+Aquí describimos lo esencial para compilar un programa.
+
+@node File searching
+@section File searching
+Antes de comenzar a compilar un programa, es importante que JAPC sepa dónde busca sus archivos fuente. En esto
+sección discutimos esto, e indicamos cómo influir en esto.
+
+Importante: El uso de barras como separadores de directorios es relevante, ya que el compilador aún no ha sido probado
+bajo plataformas que hacen uso de barras invertidas. Sin embargo, si encuentra un problema relacionado con el uso de
+barras y barras invertidas, no dude en ponerse en contacto conmigo (consulte @ref{Obtención de más información}). Se
+darán ejemplos en este manual usando barras, ya que esta es la única plataforma compatible oficialmente en este momento.
+
+@node Command line files
+@subsection Command line files
+
+El archivo que especifica en la línea de comando, como en:
+
+@command{japc foo.pas}
+
+se buscará sólo en el directorio actual. Si especifica el directorio en el nombre del archivo, entonces el compilador
+busca en ese directorio:
+
+@command{japc subdir/foo.pas}
+
+buscará foo.pas en el subdirectorio subdir del directorio actual.
+
+En los sistemas de archivos que distinguen entre mayúsculas y minúsculas (como Linux), el nombre de este archivo
+distingue entre mayúsculas y minúsculas.
+
+@node Include files
+@subsection Include files
+When you compile a program that needs multiple files, you will need to provide the compiler with the path of such files.
+
+@bye

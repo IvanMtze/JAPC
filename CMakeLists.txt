@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.4.3)
 project(japc)
-
-option(BUILD_DOC "Build documentation" ON)
+include(CTest) # For testing
+option(BUILD_DOC "Build documentation" OFF)
 
 include(GNUInstallDirs)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 find_package(LLVM REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
@@ -22,14 +22,16 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories( ${PROJECT_SOURCE_DIR}/tools)
 include_directories( ${PROJECT_SOURCE_DIR}/utils)
 include_directories(${PROJECT_SOURCE_DIR}/lib)
+include_directories(${PROJECT_SOURCE_DIR}/test)
 
 add_subdirectory(tools)
 add_subdirectory(utils)
 add_subdirectory(lib)
-
+add_subdirectory(test)
 
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+
+if(BUILD_DOC AND DOXYGEN_FOUND)
     message("BUILDING DOCUMENTATION")
     set(DOXYGEN_IN docs/Doxyfile.in)
     set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
@@ -40,6 +42,7 @@ if(DOXYGEN_FOUND)
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
             COMMENT "Generating documentation with Doxygen"
             VERBATIM )
-else(DOXYGEN_FOUND)
+else(BUILD_DOC AND DOXYGEN_FOUND)
     message("DOXYGEN NOT FOUND!")
-endif(DOXYGEN_FOUND)
+endif(BUILD_DOC AND DOXYGEN_FOUND)
+
