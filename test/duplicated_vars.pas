@@ -9,8 +9,7 @@ procedure Sieve; var
 begin
   for i := 1 to maxNum do
     Data[i] := true;
-
-  for i := 2 to maxNum do
+for i := 2 to maxNum do
   begin
     if Data[i] then
     begin
@@ -25,10 +24,11 @@ begin
 end;
 var
   i: integer;
-
+  j:integer;
+  j:integer;
 begin
   for i := 1 to nLoops do
   begin
-    Sieve;
+    ; {this is an empty statement}
   end; { duplicated_vars }
 end.

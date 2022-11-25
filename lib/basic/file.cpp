@@ -49,7 +49,7 @@ void SourceManager::insertFile(std::string path, File::FileType fileType)
         ptr_file->readFile();
         this->sourcesMap.insert(std::pair<std::shared_ptr<File>, std::string>(ptr_file, path));
     }else{
-        fprintf(stderr, "Unable to find %s", path.c_str());
+        fprintf(stderr, "Unable to find %s\n", path.c_str());
         exit(-1);
     }
 

@@ -9,18 +9,15 @@ ParsedOptions Pascal::parseJapcOptions(int argc, char **argv)
         {
         case 'W':
         case 'w':
-            printf("Option w has arg: %s\n", optarg);
             parseWarningOptions(optarg, parsedOptions.warningOptions);
             break;
         case 'I':
-            printf("Option I has arg: %s\n", optarg);
             parseIncludeOptions(optarg, parsedOptions);
             break;
         case 'h':
             print_help();
             break;
         case 'o':
-            printf("Option o was provided\n");
             parsedOptions.output = std::string(optarg);
             break;
         }
@@ -37,20 +34,21 @@ ParsedOptions Pascal::parseJapcOptions(int argc, char **argv)
 }
 
 void Pascal::parseWarningOptions(char* optarg, struct WarningOptions &warningOptions){
-    if(strcmp(optarg, "all")){
+    if(!strcmp(optarg, "all")){
         warningOptions.wall = 1;
-    }else if(strcmp(optarg, "unimplemented")){
+    }else if(!strcmp(optarg, "unimplemented")){
         warningOptions.wunimplemented = 1;
-    }else if(strcmp(optarg, "error")){
+    }else if(!strcmp(optarg, "error")){
         warningOptions.werror = 1;
     }else{
         warningOptions.invalid = 1;
-        printf("Invalid option argument in -w\n");
+        printf("Invalid option argument %s in -w\n", optarg);
+        exit(1);
     }
 };
 
 void Pascal::print_help(){
-
+    printf("This help is to be done!\n");
 }
 void Pascal::parseIncludeOptions(char* optarg,struct ParsedOptions &parsedOptions){
     parsedOptions.include.push_back(std::string(optarg));

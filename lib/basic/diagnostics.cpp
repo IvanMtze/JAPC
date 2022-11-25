@@ -22,6 +22,8 @@ void JAPCDiagnostics::japc_warning_at(Token tk, const char *error, ...)
         this->japc_error_at(tk, error);
         return;
     }
+    if (!this->shouldEmitWarnings())
+        return;
     std::string fmt = this->getPreformattedMessage(LOCATION_WARNING, error, tk);
     this->setHasWarnings(HAS_WARNING);
     va_list args;
@@ -47,11 +49,13 @@ int JAPCDiagnostics::shouldEmitWarningsAsErrors()
 }
 void JAPCDiagnostics::setEmitWarnings(unsigned int emitWarnings)
 {
-    this->state |= emitWarnings;
+    if(emitWarnings)
+        this->state |= OMIT_WARNING;
 }
 void JAPCDiagnostics::setEmitWarningsAsErrors(unsigned int emitWarningsAsErrors)
 {
-    this->state |= emitWarningsAsErrors;
+    if(emitWarningsAsErrors)
+        this->state |= ERROR_AS_WAR;
 }
 void JAPCDiagnostics::setHasErrors(unsigned int hasErrors)
 {
@@ -64,7 +68,8 @@ void JAPCDiagnostics::setHasWarnings(unsigned int hasWarnings)
 std::string JAPCDiagnostics::getPreformattedMessage(const char *message, const char *error, Token tk)
 {
     char *buff;
-    asprintf(&buff, message, tk.getTokenPos().getFileName().c_str (), tk.getTokenPos().getLineNo(),tk.getTokenPos().getCharNo(), error);
+    asprintf(&buff, message, tk.getTokenPos().getFileName().c_str(), tk.getTokenPos().getLineNo(),
+             tk.getTokenPos().getCharNo(), error);
     std::string str(buff);
     free(buff);
     return str;

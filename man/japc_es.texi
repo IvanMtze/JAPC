@@ -34,8 +34,8 @@ Copyright @copyright{} @today{}. Gerardo Ivan Martinez Espinosa.
 @chapter Introducción
 @cindex Introducción
 
-@node About this document
-@section About this document.
+@node Acerca de este documento
+@section Acerca de este documento.
 
 Esta es la guía del usuario para JAPC. Describe la instalación y el uso del front-end del compilador JAPC en los diferentes
 plataformas soportadas. Intenta dar una lista exhaustiva de todos los comandos admitidos, pero no una definición del
@@ -54,8 +54,8 @@ JAPC está diseñado para ser, en la medida de lo posible, compatible con ISO Ex
 manual está escrito (@today{}) no se implementan todas las características de Extended Pascal y Pascal. Sin embargo,
 encontrará listas de este características no implementadas en los apéndices de este documento.
 
-@node Getting more information
-@section Getting more information.
+@node Obteniendo más información
+@section Obteniendo más información.
 
 Si la documentación no da respuesta a tus dudas, puedes obtener más información en Github, en el
 siguiente dirección.
@@ -72,24 +72,24 @@ contactame en @email{ivanmtze96@@gmail.com} o @email{zS18003209@@estudiantes.uv.
 Realmente espero que podamos construir algo realmente útil.
 
 
-@node Installing the compiler
-@chapter Installing the compiler
-@cindex Installing the compiler
+@node Instalando el compilador
+@chapter Instalando el compilador
+@cindex Instalando el compilador
 
 
-@node Before Installation: requirements
-@section Before Installation: requirements
+@node Antes de instalar: requerimientos
+@section Antes de instalar: requerimientos
 
-@node Hardware requirements
-@subsection Hardware requirements
+@node Requerimientos de hardware
+@subsection Requerimientos de hardware
 Requisitos de memoria y disco:
 
 Los requisitos de memoria y disco varían de una plataforma a otra. Se recomiendan al menos 250 megabytes para una base
 instalación; Se deben contar 500 megabytes si desea volver a compilar el compilador y todo su contenido.
 
 
-@node Software requirements
-@subsection Software requirements
+@node Requerimientos del software
+@subsection Requerimientos del software
 Bajo Linux (Linux Mint)
 
 En Linux Mint, debe tener instalados los siguientes programas:
@@ -101,14 +101,14 @@ En Linux Mint, debe tener instalados los siguientes programas:
 @item latex (Si se va a construir un manual del programador y/o del usuario)
 @end enumerate
 
-@node Using the compiler
-@chapter Using the compiler
-@cindex Using the compiler
+@node Usando el compilador
+@chapter Usando el compilador
+@cindex Usando el compilador
 
 Aquí describimos lo esencial para compilar un programa.
 
-@node File searching
-@section File searching
+@node Buscando archivos
+@section Buscando archivos
 Antes de comenzar a compilar un programa, es importante que JAPC sepa dónde busca sus archivos fuente. En esto
 sección discutimos esto, e indicamos cómo influir en esto.
 
@@ -117,8 +117,8 @@ bajo plataformas que hacen uso de barras invertidas. Sin embargo, si encuentra u
 barras y barras invertidas, no dude en ponerse en contacto conmigo (consulte @ref{Obtención de más información}). Se
 darán ejemplos en este manual usando barras, ya que esta es la única plataforma compatible oficialmente en este momento.
 
-@node Command line files
-@subsection Command line files
+@node Archivos por linea de comandos
+@subsection Archivos por linea de comandos
 
 El archivo que especifica en la línea de comando, como en:
 
@@ -134,8 +134,8 @@ buscará foo.pas en el subdirectorio subdir del directorio actual.
 En los sistemas de archivos que distinguen entre mayúsculas y minúsculas (como Linux), el nombre de este archivo
 distingue entre mayúsculas y minúsculas.
 
-@node Include files
-@subsection Include files
+@node Archivos a incluir
+@subsection Archivos a incluir
 When you compile a program that needs multiple files, you will need to provide the compiler with the path of such files.
 
 @bye

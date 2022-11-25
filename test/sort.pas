@@ -1,4 +1,4 @@
-PROGRAM Sort(input, output);
+PROGRAM Sort;
 CONST
   {* Max array size. *}
   MaxElts = 50;
