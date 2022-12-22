@@ -25,7 +25,7 @@ Compiler::Status Compiler::compile()
 {
     this->scanner = std::make_shared<Scanner>(Scanner());
     this->scanner->setSkipTrivia(true);
-    this->parser = std::make_shared<Parser>(this->scanner, std::move(this->diagnosticsEngine), this->stack);
+    this->parser = std::make_shared<Parser>(this->scanner, this->diagnosticsEngine, this->stack);
     for (auto file : sourceManager->getFileNameByType(File::FileType::DEPENDENCY))
     {
         auto fileReaded = this->sourceManager->getFile(file);
@@ -38,14 +38,16 @@ Compiler::Status Compiler::compile()
         auto fileReaded = this->sourceManager->getFile(file);
         this->scanner->setFileName(file);
         this->scanner->setTextSource(fileReaded->getContent());
-        this->parser->parseFile();
+        std::shared_ptr<ExpressionAST> expressionAst = this->parser->parseFile();
+        SemanticAnalizer semaAnalizer(this->diagnosticsEngine);
+        semaAnalizer.analize(expressionAst);
     }
     return Compiler::FAILED_WITH_WARNINGS;
 }
 Compiler::Compiler(ParsedOptions config)
 {
     this->stack = std::make_shared<Stack<std::shared_ptr<NamedObject>>>();
-    this->diagnosticsEngine = std::unique_ptr<JAPCDiagnostics>(new JAPCDiagnostics());
+    this->diagnosticsEngine = std::shared_ptr<JAPCDiagnostics>(new JAPCDiagnostics());
     this->sourceManager = std::unique_ptr<SourceManager>(new SourceManager());
     this->config = config;
     this->diagnosticsEngine->setEmitWarningsAsErrors(this->config.warningOptions.werror);

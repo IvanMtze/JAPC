@@ -13,6 +13,7 @@
 #include "japc/AST/type.h"
 #include "japc/basic/options_parser.h"
 #include "japc/basic/file.h"
+#include "japc/sema/sema.h"
 #include <memory>
 #include <vector>
 
@@ -27,7 +28,7 @@ class Compiler
     std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> stack;
     std::shared_ptr<Scanner> scanner;
     std::shared_ptr<Parser> parser;
-    std::unique_ptr<JAPCDiagnostics> diagnosticsEngine;
+    std::shared_ptr<JAPCDiagnostics> diagnosticsEngine;
     void initCompiler();
     void addBuiltinType(std::string name, std::shared_ptr<TypeDeclaration> type);
   public:

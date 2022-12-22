@@ -23,11 +23,6 @@
 
 namespace Pascal
 {
-enum class SyncParserContext
-{
-    functionDeclaration,
-    functionParamList,
-};
 enum class ParserState
 {
     ERROR_RECOVERING,
@@ -38,9 +33,9 @@ enum class ParserState
 class Parser
 {
   public:
-    Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine,
+    Parser(std::shared_ptr<Scanner> scanner, std::shared_ptr<JAPCDiagnostics> diagnosticsEngine,
            std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> &stack);
-    void parseFile();
+    std::shared_ptr<ExpressionAST> parseFile();
 
   private:
     ParserState currentState = ParserState::OK;
@@ -48,7 +43,7 @@ class Parser
     std::shared_ptr<Scanner> scanner;
     int currentTokenPos;
     std::string moduleName;
-    std::unique_ptr<JAPCDiagnostics> diagnosticsEngine;
+    std::shared_ptr<JAPCDiagnostics> diagnosticsEngine;
     std::unique_ptr<std::vector<Token>> tokenList;
     std::vector<std::shared_ptr<ExpressionAST>> ast;
     std::unique_ptr<Token> lookAhead(const int num);
@@ -76,7 +71,7 @@ class Parser
     std::shared_ptr<ArrayDeclaration> parseArrayDeclaration();
     std::shared_ptr<ExpressionAST> parsePrimary();
     std::shared_ptr<ConstantDeclaration> parseConstantExpression(std::vector<TokenType> terminator);
-    void parseProgram();
+    std::shared_ptr<ExpressionAST> parseProgram();
     std::shared_ptr<ExpressionAST> parseIdentifierExpression(Token tk);
     std::shared_ptr<ExpressionAST> parseIfExpr();
     std::shared_ptr<ExpressionAST> parseForExpr();

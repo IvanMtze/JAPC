@@ -897,57 +897,6 @@ class CaseExpression : public ExpressionAST
     std::shared_ptr<ExpressionAST> otherwise;
 };
 
-class ReadExpression : public ExpressionAST
-{
-  public:
-    ReadExpression(const Location &loc, VariableExpression *file, const std::vector<ExpressionAST> args, bool isLn)
-        : ExpressionAST(loc, ExpressionType::TYPE_READ), args(args), output(file), isReadToLn(isLn)
-    {
-    }
-    std::shared_ptr<llvm::Value> codeGen() override;
-    static bool isClassOf(const ExpressionAST *expressionAst)
-    {
-        return expressionAst->getExpressionType() == ExpressionType::TYPE_WRITE;
-    }
-    void accept(ExpressionVisitor &visitor) override;
-
-  private:
-    std::shared_ptr<VariableExpression> output;
-    std::vector<ExpressionAST> args;
-    bool isReadToLn;
-};
-
-class WriteExpression : public ExpressionAST
-{
-  public:
-    struct wargs
-    {
-        wargs() : expr(0), width(0), precision(0)
-        {
-        }
-        ExpressionAST *expr;
-        ExpressionAST *width;
-        ExpressionAST *precision;
-    };
-
-    WriteExpression(const Location &loc, std::shared_ptr<VariableExpression> out, const std::vector<wargs> &args,
-                    bool isWriteToLin)
-        : ExpressionAST(loc, ExpressionType::TYPE_WRITE), output(out), args(args), isWriteToLn(isWriteToLin)
-    {
-    }
-    std::shared_ptr<llvm::Value> codeGen() override;
-    static bool isClassOf(const ExpressionAST *expressionAst)
-    {
-        return expressionAst->getExpressionType() == ExpressionType::TYPE_WRITE;
-    }
-    void accept(ExpressionVisitor &expressionVisitor) override;
-
-  private:
-    std::shared_ptr<VariableExpression> output;
-    std::vector<wargs> args;
-    bool isWriteToLn;
-};
-
 class RepeatExpression : public ExpressionAST
 {
   public:
@@ -1124,6 +1073,62 @@ class UnitExpression : public ExpressionAST
   private:
     std::shared_ptr<Function> initFunc;
     std::vector<std::shared_ptr<ExpressionAST>> code;
+};
+
+class WriteExpression : public ExpressionAST
+{
+  public:
+    struct wargs
+    {
+        wargs() : expr(0), width(0), precision(0)
+        {
+        }
+        std::shared_ptr<ExpressionAST> expr;
+        std::shared_ptr<ExpressionAST> width;
+        std::shared_ptr<ExpressionAST> precision;
+    };
+
+    WriteExpression(const Location &loc, std::shared_ptr<VariableExpression> out, const std::vector<wargs> &args,
+                    bool isWriteToLin)
+        : ExpressionAST(loc, ExpressionType::TYPE_WRITE), output(out), args(args), isWriteToLn(isWriteToLin)
+    {
+    }
+    std::shared_ptr<llvm::Value> codeGen() override;
+    static bool isClassOf(const ExpressionAST *expressionAst)
+    {
+        return expressionAst->getExpressionType() == ExpressionType::TYPE_WRITE;
+    }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
+    void accept(ExpressionVisitor &expressionVisitor) override;
+
+  private:
+    std::shared_ptr<VariableExpression> output;
+    std::vector<wargs> args;
+    bool isWriteToLn;
+};
+
+class ReadExpression : public ExpressionAST
+{
+  public:
+    ReadExpression(const Location &w, AddressableExpression *fi, const std::vector<std::shared_ptr<ExpressionAST>> &a,
+                   bool isLn)
+        : ExpressionAST(w, ExpressionType::TYPE_READ), file(fi), args(a), isReadln(isLn)
+    {
+    }
+    std::shared_ptr<llvm::Value> codeGen() override;
+    static bool classof(const ExpressionAST *e)
+    {
+        return e->getExpressionType() == ExpressionType::TYPE_READ;
+    }
+    void accept(ExpressionVisitor &v) override;
+
+  private:
+    std::shared_ptr<AddressableExpression> file;
+    std::vector<std::shared_ptr<ExpressionAST>> args;
+    bool isReadln;
 };
 } // namespace Pascal
 #endif // JAPC_EXPRESSION_H

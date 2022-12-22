@@ -18,14 +18,23 @@ using namespace Pascal;
 // 'XYZ'        THE TERMNAL SYMBOL XYZ
 //
 
-Parser::Parser(std::shared_ptr<Scanner> scanner, std::unique_ptr<JAPCDiagnostics> diagnosticsEngine,
+/**
+ *
+ * @param scanner
+ * @param diagnosticsEngine
+ * @param stack
+ */
+Parser::Parser(std::shared_ptr<Scanner> scanner, std::shared_ptr<JAPCDiagnostics> diagnosticsEngine,
                std::shared_ptr<Stack<std::shared_ptr<NamedObject>>> &stack)
 {
     this->scanner = scanner;
     this->diagnosticsEngine = std::move(diagnosticsEngine);
     this->objects = stack;
 }
-void Parser::parseFile()
+/**
+ *
+ */
+std::shared_ptr<ExpressionAST> Parser::parseFile()
 {
     currentTokenPos = 0;
     std::vector<Token> vector;
@@ -36,9 +45,12 @@ void Parser::parseFile()
         Token tok = scanner->getCurrentTokenObject();
         tokenList->push_back(tok);
     } while (scanner->getCurrentTokenObject().getTokenType() != TokenType::END_OF_FILE);
-    parseProgram();
+    return parseProgram();
 }
-
+/**
+ *
+ * @return
+ */
 std::unique_ptr<Token> Parser::advance()
 {
     std::unique_ptr<Token> old = current();
@@ -46,11 +58,14 @@ std::unique_ptr<Token> Parser::advance()
         currentTokenPos++;
     else
     {
-        //  TODO: Error unexpected EOF while parsing
         return current();
     }
     return old;
 }
+/**
+ *
+ * @return
+ */
 std::unique_ptr<Token> Parser::current()
 {
     if (currentTokenPos < tokenList->size())
@@ -59,10 +74,19 @@ std::unique_ptr<Token> Parser::current()
     }
     return nullptr;
 }
+/**
+ *
+ * @return
+ */
 bool Parser::isAtEnd()
 {
     return _CUR_TOKEN_TYPE_ == TokenType::END_OF_FILE;
 }
+/**
+ *
+ * @param num
+ * @return
+ */
 std::unique_ptr<Token> Parser::lookAhead(const int num)
 {
     if (tokenList->size() <= currentTokenPos + num)
@@ -71,6 +95,9 @@ std::unique_ptr<Token> Parser::lookAhead(const int num)
     }
     return std::make_unique<Token>(tokenList->at(currentTokenPos + num));
 }
+/**
+ *
+ */
 std::unique_ptr<Token> Parser::previous()
 {
     if (currentTokenPos > 0)
@@ -78,6 +105,10 @@ std::unique_ptr<Token> Parser::previous()
         return std::make_unique<Token>(tokenList->at(currentTokenPos - 1));
     }
 }
+
+/**
+ *
+ */
 void Parser::sync()
 {
 
@@ -108,7 +139,10 @@ void Parser::sync()
     }
     throw this->currentState;
 }
-
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseExpression()
 {
     //  ISO 10206 -  6.8.1
@@ -120,6 +154,9 @@ std::shared_ptr<ExpressionAST> Parser::parseExpression()
     }
     return nullptr;
 }
+/**
+ *
+ */
 std::shared_ptr<ExpressionAST> Parser::parsePrimary()
 {
 
@@ -163,19 +200,27 @@ std::shared_ptr<ExpressionAST> Parser::parsePrimary()
                                                current()->getValue().c_str());
     }
 }
-void Parser::parseProgram()
+/**
+ *
+ */
+std::shared_ptr<ExpressionAST> Parser::parseProgram()
 {
     StackWrapper<std::shared_ptr<NamedObject>> wrapper(this->objects);
     //  ISO 10206 -  6.12
+    std::shared_ptr<ExpressionAST> expressionAst;
     try
     {
-        parseMainProgramDeclaration();
+        return parseMainProgramDeclaration();
     }
     catch (ParserState parserState)
     {
-        return;
+        return nullptr;
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<Function> Parser::parseProgramBlock()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_BEGIN)
@@ -207,6 +252,10 @@ std::shared_ptr<Function> Parser::parseProgramBlock()
     }
     return nullptr;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseMainProgramDeclaration()
 {
     parseProgramHeading();
@@ -231,6 +280,9 @@ std::shared_ptr<ExpressionAST> Parser::parseMainProgramDeclaration()
     }
     return parseMainProgramBlock();
 }
+/**
+ *
+ */
 void Parser::parseProgramHeading()
 {
     if (_CUR_TOKEN_TYPE_ != TokenType::SYMBOL_PROGRAM)
@@ -263,6 +315,10 @@ void Parser::parseProgramHeading()
         }
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseMainProgramBlock()
 {
     while (!isAtEnd() && _CUR_TOKEN_TYPE_ != TokenType::SYMBOL_BEGIN)
@@ -329,7 +385,9 @@ std::shared_ptr<ExpressionAST> Parser::parseMainProgramBlock()
         return nullptr;
     }
 }
-
+/**
+ *
+ */
 void Parser::parseImportPart()
 {
     while (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_IMPORT)
@@ -337,6 +395,9 @@ void Parser::parseImportPart()
         this->parseImportStatement();
     }
 }
+/**
+ *
+ */
 void Parser::parseTypeDefinitionPart()
 {
     std::vector<std::shared_ptr<PointerDeclaration>> incompletes;
@@ -430,6 +491,10 @@ void Parser::parseTypeDefinitionPart()
         }
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<VariableDeclarationExpression> Parser::parseVariableDeclarationPart()
 {
     advance(); // eat VAR keyword
@@ -467,7 +532,11 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVariableDeclarationP
     }
     advance();
 }
-
+/**
+ *
+ * @param tk
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseIdentifierExpression(Token tk)
 {
     std::shared_ptr<ExpressionAST> expre = parseFunctionCallOrVariableExpression(tk);
@@ -519,6 +588,9 @@ std::shared_ptr<ExpressionAST> Parser::parseIdentifierExpression(Token tk)
     }
     return expre;
 }
+/**
+ *
+ */
 void Parser::parseProgramParameterList()
 {
     int totalParams = 0;
@@ -564,6 +636,10 @@ void Parser::parseProgramParameterList()
         this->objects->insert(outputVariableName, std::make_shared<VariableDefinition>(VariableDefinition(output)));
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<FunctionPointerDeclaration> Parser::parseFunctionType()
 {
     std::string name;
@@ -574,6 +650,10 @@ std::shared_ptr<FunctionPointerDeclaration> Parser::parseFunctionType()
     std::shared_ptr<PrototypeExpression> prototype = parseFunctionHeader();
     // TODO: FIX ME
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<Function> Parser::parseProcedure()
 {
     std::string name;
@@ -714,6 +794,10 @@ std::shared_ptr<Function> Parser::parseProcedure()
         }
     }
 }
+/**
+ *
+ * @return
+ */
 std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParams()
 {
 
@@ -740,6 +824,12 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParams()
     }
     return defs;
 }
+/**
+ *
+ * @param flags
+ * @param names
+ * @return
+ */
 std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(VariableDefinitionFlags &flags,
                                                                                 std::vector<std::string> &names)
 {
@@ -757,9 +847,6 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(
     //  SCHEMA-NAME                         =   [ IMPORTED-INTERFACE-IDENTIFIER '.' ] SCHEMA-IDENTIFIER
     //  TYPE-INQUIRY                        =   'TYPE' 'OF' TYPE-INQUIRY-OBJECT
     //  TYPE-INQUIRY-OBJECT                 =   VARIABLE-NAME   | PARAMETER-IDENTIFIER
-
-    ;
-    // parseFunctionAccessModifier();
     std::vector<std::shared_ptr<VariableDefinition>> varDefs;
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_PROTECTED)
     {
@@ -806,7 +893,7 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(
     {
         if (_CUR_TOKEN_TYPE_ != TokenType::SYMBOL_COMMA)
         {
-            this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected IDENTIFIER as parameter");
+            this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected ',' after identifier");
             this->sync();
             return varDefs;
         }
@@ -822,6 +909,9 @@ std::vector<std::shared_ptr<VariableDefinition>> Parser::parseFunctionParameter(
     }
     return varDefs;
 }
+/**
+ *
+ */
 void Parser::parseImportStatement()
 {
     advance(); // eat IMPORT keyword
@@ -873,6 +963,9 @@ void Parser::parseImportStatement()
         }
     } while (_CUR_TOKEN_TYPE_ == TokenType::IDENTIFIER);
 }
+/**
+ *
+ */
 void Parser::parseImportList()
 {
     while (true)
@@ -893,6 +986,9 @@ void Parser::parseImportList()
         advance();
     }
 }
+/**
+ *
+ */
 void Parser::parseIdentifierList()
 {
     //  ISO 10206
@@ -922,6 +1018,10 @@ void Parser::parseIdentifierList()
         diagnosticsEngine->japc_error_at((_CUR_TOKEN_OBJ_), "Expected identifier in identifier list");
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<TypeDeclaration> Parser::parseType()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_PACKED)
@@ -935,6 +1035,7 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
         }
         else
         {
+            diagnosticsEngine->japc_warning_at(_CUR_TOKEN_OBJ_, "Packed is not supported yet!");
             advance();
         }
     }
@@ -1037,6 +1138,13 @@ std::shared_ptr<TypeDeclaration> Parser::parseType()
     }
     }
 }
+/**
+ *
+ * @param type
+ * @param end
+ * @param alternative
+ * @return
+ */
 std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<TypeDeclaration> &type, TokenType end,
                                                                 TokenType alternative)
 {
@@ -1072,7 +1180,7 @@ std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<
             {
                 this->diagnosticsEngine->japc_warning_at(_CUR_TOKEN_OBJ_,
                                                          "Expressions have the same value in range declaration. Call "
-                                                         "me paranoid but it may not be what you wan    t as a range.");
+                                                         "me paranoid but it may not be what you want as a range.");
             }
             else
             {
@@ -1088,6 +1196,9 @@ std::shared_ptr<RangeDeclaration> Parser::parseRangeDeclaration(std::shared_ptr<
     }
     return nullptr;
 }
+/**
+ *
+ */
 std::shared_ptr<ConstantDeclaration> Parser::parseConstantExpression(std::vector<TokenType> terminator)
 {
     std::shared_ptr<ConstantDeclaration> cd;
@@ -1107,6 +1218,10 @@ std::shared_ptr<ConstantDeclaration> Parser::parseConstantExpression(std::vector
     } while (!ParserUtils::isAnyOf(_CUR_TOKEN_OBJ_, terminator));
     return cd;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ConstantDeclaration> Parser::parseConstantTerm()
 {
     int multiplicative = 1;
@@ -1264,6 +1379,12 @@ std::shared_ptr<ConstantDeclaration> Parser::parseConstantTerm()
     advance();
     return constantTerm;
 }
+/**
+ *
+ * @param precedence
+ * @param leftSide
+ * @return
+ */
 std::shared_ptr<ConstantDeclaration> Parser::parseConstantRightSide(int precedence,
                                                                     std::shared_ptr<ConstantDeclaration> leftSide)
 {
@@ -1299,6 +1420,10 @@ std::shared_ptr<ConstantDeclaration> Parser::parseConstantRightSide(int preceden
         }
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
 {
     std::string name;
@@ -1367,8 +1492,10 @@ std::shared_ptr<PrototypeExpression> Parser::parseFunctionHeader()
         }
     }
 }
-
-
+/**
+ *
+ * @return
+ */
 std::shared_ptr<PrototypeExpression> Parser::parseProcedureHeader()
 {
     std::string name;
@@ -1406,6 +1533,9 @@ std::shared_ptr<PrototypeExpression> Parser::parseProcedureHeader()
         return std::make_shared<PrototypeExpression>(prototypeExpression);
     }
 }
+/**
+ *
+ */
 std::shared_ptr<Function> Parser::parseFunction()
 {
     std::string name;
@@ -1500,6 +1630,9 @@ std::shared_ptr<Function> Parser::parseFunction()
         }
     }
 }
+/**
+ *
+ */
 std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_STRING_KEYWORD)
@@ -1577,8 +1710,13 @@ std::shared_ptr<StringDeclaration> Parser::parseStringDeclaration()
     }
     else
     {
+        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected STRING keyword");
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
 {
     advance(); // eat array keyword
@@ -1628,6 +1766,10 @@ std::shared_ptr<ArrayDeclaration> Parser::parseArrayDeclaration()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<RangeDeclaration> Parser::parseArrayDeclarationRange()
 {
     std::shared_ptr<TypeDeclaration> typeDeclaration;
@@ -1648,6 +1790,11 @@ std::shared_ptr<RangeDeclaration> Parser::parseArrayDeclarationRange()
     return this->parseRangeDeclaration(typeDeclaration, TokenType::SYMBOL_SQUARE_BRACKET_CLOSE,
                                        TokenType::SYMBOL_COMMA);
 }
+/**
+ *
+ * @param nameToSearch
+ * @return
+ */
 std::shared_ptr<TypeDeclaration> Parser::getTypeDeclaration(std::string nameToSearch)
 {
     std::shared_ptr<NamedObject> findedTypeDef = this->objects->find(nameToSearch);
@@ -1657,6 +1804,10 @@ std::shared_ptr<TypeDeclaration> Parser::getTypeDeclaration(std::string nameToSe
     }
     return nullptr;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<FileDeclaration> Parser::parseFileDeclaration()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_FILE)
@@ -1683,6 +1834,10 @@ std::shared_ptr<FileDeclaration> Parser::parseFileDeclaration()
     }
     return nullptr;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<SetDeclaration> Parser::parseSetDeclaration()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_SET)
@@ -1737,6 +1892,10 @@ std::shared_ptr<SetDeclaration> Parser::parseSetDeclaration()
     }
     return nullptr;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<EnumDeclaration> Parser::parseEnumDefinition()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_PAREN_OPEN)
@@ -1794,6 +1953,9 @@ std::shared_ptr<EnumDeclaration> Parser::parseEnumDefinition()
     }
     return nullptr;
 }
+/**
+ *
+ */
 void Parser::parseConstantDefinition()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_CONST)
@@ -1869,6 +2031,10 @@ void Parser::parseConstantDefinition()
         this->sync();
     }
 }
+/**
+ *
+ * @param tokensToFind
+ */
 void Parser::sync(std::vector<TokenType> tokensToFind)
 {
     while (!ParserUtils::isAnyOf(_CUR_TOKEN_OBJ_, tokensToFind))
@@ -1881,6 +2047,9 @@ void Parser::sync(std::vector<TokenType> tokensToFind)
         }
     }
 }
+/**
+ *
+ */
 void Parser::parseLabel()
 {
     std::vector<int64_t> labelsNames;
@@ -1929,6 +2098,10 @@ void Parser::parseLabel()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_VAR)
@@ -2018,6 +2191,11 @@ std::shared_ptr<VariableDeclarationExpression> Parser::parseVarDeclarations()
         return nullptr;
     }
 }
+/**
+ *
+ * @param typeOfInitialization
+ * @return
+ */
 std::shared_ptr<InitValue> Parser::parseInitValue(std::shared_ptr<TypeDeclaration> typeOfInitialization)
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_SQUARE_BRACKET_OPEN)
@@ -2040,6 +2218,10 @@ std::shared_ptr<InitValue> Parser::parseInitValue(std::shared_ptr<TypeDeclaratio
         _CUR_TOKEN_OBJ_, "Expected constant integral or real expression or set expression in variable initialization");
     return nullptr;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<BlockExpression> Parser::parseBlock()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_BEGIN)
@@ -2102,6 +2284,10 @@ std::shared_ptr<BlockExpression> Parser::parseBlock()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseStatement()
 {
     switch (_CUR_TOKEN_TYPE_)
@@ -2154,6 +2340,10 @@ std::shared_ptr<ExpressionAST> Parser::parseStatement()
     return nullptr; // Ideally you should not get here. We do not report anything as we may not be expecting that to
                     // happend.
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<TypeDeclaration> Parser::parseSimpleType()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::IDENTIFIER)
@@ -2171,7 +2361,12 @@ std::shared_ptr<TypeDeclaration> Parser::parseSimpleType()
         }
     }
 }
-
+/**
+ *
+ * @param expression
+ * @param type
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseArrayExpression(std::shared_ptr<ExpressionAST> expression,
                                                             std::shared_ptr<TypeDeclaration> type)
 {
@@ -2235,6 +2430,12 @@ std::shared_ptr<ExpressionAST> Parser::parseArrayExpression(std::shared_ptr<Expr
     }
     return expression;
 }
+/**
+ *
+ * @param expression
+ * @param type
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parsePointerExpression(std::shared_ptr<ExpressionAST> expression,
                                                               std::shared_ptr<TypeDeclaration> type)
 {
@@ -2264,11 +2465,21 @@ std::shared_ptr<ExpressionAST> Parser::parsePointerExpression(std::shared_ptr<Ex
     }
     return std::shared_ptr<ExpressionAST>(); // You should not hit here
 }
+/**
+ *
+ * @param expression
+ * @param type
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseFieldExpression(std::shared_ptr<ExpressionAST> expression,
                                                             std::shared_ptr<TypeDeclaration> type)
 {
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseIfExpr()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_IF)
@@ -2319,6 +2530,10 @@ std::shared_ptr<ExpressionAST> Parser::parseIfExpr()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseForExpr()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_FOR)
@@ -2419,6 +2634,10 @@ std::shared_ptr<ExpressionAST> Parser::parseForExpr()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseWhile()
 {
     Location loc = current()->getTokenPos();
@@ -2449,18 +2668,78 @@ std::shared_ptr<ExpressionAST> Parser::parseWhile()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseRepeat()
 {
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseCaseExpr()
 {
+    if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_CASE)
+    {
+        advance();
+        std::shared_ptr<ExpressionAST> expr = parseExpression();
+        if (!expr)
+        {
+            return nullptr;
+        }
+        else if (_CUR_TOKEN_TYPE_ != TokenType::SYMBOL_OF)
+        {
+            return nullptr;
+        }
+        else
+        {
+            if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_OF)
+                advance();
+            std::vector<std::shared_ptr<LabelExpression>> labels;
+            std::vector<std::pair<int, int>> ranges;
+            std::shared_ptr<ExpressionAST> otherwiseExpression;
+            std::shared_ptr<TypeDeclaration> typeDeclaration;
+            do{
+                if(_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_OTHERWISE || _CUR_TOKEN_TYPE_ == TokenType::SYMBOL_ELSE){
+                    if(otherwiseExpression){
+                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Otherwise expression was already declared");
+                    }
+                    if(ranges.size()){
+                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Otherwise expression was already declared");
+                    }
+                    otherwiseExpression = parseStatement();
+                    
+                }
+            }while()
+        }
+    }
+    else
+    {
+    }
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseWithBlock()
 {
+    if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_WITH)
+    {
+        advance();
+    }
+    else
+    {
+    }
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseGoto()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_GOTO)
@@ -2503,6 +2782,11 @@ std::shared_ptr<ExpressionAST> Parser::parseGoto()
     };
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @param tk
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseFunctionCallOrVariableExpression(Token tk)
 {
     std::string value = tk.getValue();
@@ -2543,6 +2827,10 @@ std::shared_ptr<ExpressionAST> Parser::parseFunctionCallOrVariableExpression(Tok
     }
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseExpressionTerm()
 {
     Token tk = _CUR_TOKEN_OBJ_;
@@ -2580,6 +2868,7 @@ std::shared_ptr<ExpressionAST> Parser::parseExpressionTerm()
                 this->diagnosticsEngine->japc_warning_at(_CUR_TOKEN_OBJ_,
                                                          "%s is too large for an real. It exceed LDBL_MAX size",
                                                          current()->getValue().c_str());
+                val = LDBL_MAX - 1.0;
             }
             advance(); // EAT Value
             return std::make_shared<RealExpression>(current()->getTokenPos(), val, getRealType());
@@ -2611,6 +2900,12 @@ std::shared_ptr<ExpressionAST> Parser::parseExpressionTerm()
     }
     return nullptr;
 }
+/**
+ *
+ * @param expressionPrecedence
+ * @param leftSideExpression
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseBinaryOperatorRightSide(int expressionPrecedence,
                                                                     std::shared_ptr<ExpressionAST> leftSideExpression)
 {
@@ -2642,6 +2937,10 @@ std::shared_ptr<ExpressionAST> Parser::parseBinaryOperatorRightSide(int expressi
             std::make_shared<BinaryExpression>(*binaryOperator.get(), leftSideExpression, rightSideExpression);
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseDefaultExpression()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_DEFAULT)
@@ -2680,7 +2979,7 @@ std::shared_ptr<ExpressionAST> Parser::parseDefaultExpression()
             }
             else
             {
-                this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected ')' after expression");
+                this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Expected ')' after DEFAULT expression");
                 this->sync();
             }
         }
@@ -2695,6 +2994,11 @@ std::shared_ptr<ExpressionAST> Parser::parseDefaultExpression()
         return nullptr;
     }
 }
+/**
+ *
+ * @param tk
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseIntegerExpression(Token tk)
 {
     int64_t value = ParserUtils::convertStringToInteger(tk.getValue());
@@ -2711,6 +3015,10 @@ std::shared_ptr<ExpressionAST> Parser::parseIntegerExpression(Token tk)
     advance(); // current token
     return std::make_shared<IntegerExpression>(tk.getTokenPos(), value, type);
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseStringExpression()
 {
     int len = std::max(1, (int)(current()->getValue().length() - 1));
@@ -2723,6 +3031,10 @@ std::shared_ptr<ExpressionAST> Parser::parseStringExpression()
     advance(); // Eat string
     return stringExpression;
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseParenExpression()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_PAREN_OPEN)
@@ -2745,10 +3057,18 @@ std::shared_ptr<ExpressionAST> Parser::parseParenExpression()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseSetExpression()
 {
     return std::shared_ptr<ExpressionAST>();
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseUnaryOperatorExpression()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_MINUS || _CUR_TOKEN_TYPE_ == TokenType::SYMBOL_PLUS ||
@@ -2770,6 +3090,10 @@ std::shared_ptr<ExpressionAST> Parser::parseUnaryOperatorExpression()
         this->sync();
     }
 }
+/**
+ *
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseSizeOfExpression()
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_SIZEOF)
@@ -2824,6 +3148,11 @@ std::shared_ptr<ExpressionAST> Parser::parseSizeOfExpression()
         this->sync();
     }
 }
+/**
+ *
+ * @param namedObject
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::parseVariableExpression(std::shared_ptr<NamedObject> namedObject)
 {
     std::shared_ptr<AddressableExpression> expression;
@@ -2844,6 +3173,12 @@ std::shared_ptr<ExpressionAST> Parser::parseVariableExpression(std::shared_ptr<N
     }
     return expression;
 }
+/**
+ *
+ * @param def
+ * @param args
+ * @return
+ */
 bool Parser::parseArgs(std::shared_ptr<NamedObject> def, std::vector<std::shared_ptr<ExpressionAST>> &args)
 {
     if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_PAREN_OPEN)
@@ -2929,6 +3264,13 @@ bool Parser::parseArgs(std::shared_ptr<NamedObject> def, std::vector<std::shared
     }
     return true;
 }
+/**
+ *
+ * @param def
+ * @param funcName
+ * @param args
+ * @return
+ */
 std::shared_ptr<ExpressionAST> Parser::createCallExpression(const std::shared_ptr<NamedObject> def,
                                                             const std::string &funcName,
                                                             std::vector<std::shared_ptr<ExpressionAST>> &args)
