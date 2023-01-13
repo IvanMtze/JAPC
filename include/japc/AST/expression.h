@@ -16,6 +16,7 @@
 namespace Pascal
 {
 class RangeDeclaration;
+class FunctionPointerDeclaration;
 class VariableDefinition;
 std::shared_ptr<TypeDeclaration> getIntegerType();
 class ExpressionAST : public Visitable<ExpressionAST>
@@ -131,6 +132,11 @@ class RealExpression : public ExpressionAST
         return expressionAst->getExpressionType() == ExpressionType::TYPE_REAL_EXPRE;
     };
 
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
+
   private:
     double value;
 };
@@ -157,6 +163,10 @@ class IntegerExpression : public ExpressionAST
         return expressionAst->getExpressionType() == ExpressionType::TYPE_INTEGER_EXPRE ||
                expressionAst->getExpressionType() == ExpressionType::TYPE_CHAR_EXPRE;
     }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
 
   protected:
     int64_t value;
@@ -174,6 +184,10 @@ class CharExpression : public IntegerExpression
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_CHAR_EXPRE;
     }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
 };
 
 class NullExpression : public ExpressionAST
@@ -186,6 +200,10 @@ class NullExpression : public ExpressionAST
     static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_NIL_EXPRE;
+    }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
     }
 };
 
@@ -256,6 +274,7 @@ class SetExpression : public AddressableExpression
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_SET_EXPRE;
     }
+    const std::vector<std::shared_ptr<ExpressionAST>> &getValues() const;
 
   private:
     std::vector<std::shared_ptr<ExpressionAST>> values;
@@ -309,6 +328,10 @@ class ArrayExpression : public AddressableExpression
     }
 
     void accept(ExpressionVisitor &v) override;
+    const std::shared_ptr<VariableExpression> &getExpression() const;
+    const std::vector<std::shared_ptr<ExpressionAST>> &getIndices() const;
+    const std::vector<std::shared_ptr<RangeDeclaration>> &getRanges() const;
+    const std::vector<size_t> &getIndexmul() const;
 
   private:
     std::shared_ptr<VariableExpression> expression;
@@ -399,12 +422,15 @@ class VariantFieldExpression : public VariableExpression
 class BinaryExpression : public ExpressionAST
 {
   public:
+    Token &getOper();
+    std::shared_ptr<ExpressionAST> &getLhs();
+    std::shared_ptr<ExpressionAST> &getRhs();
     BinaryExpression(Token tok, std::shared_ptr<ExpressionAST> lhs, std::shared_ptr<ExpressionAST> rhs)
         : ExpressionAST(tok.getTokenPos(), ExpressionType::TYPE_BINARY_EXPRE), oper(tok), lhs(lhs), rhs(rhs)
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
-    static bool isClassOf(ExpressionAST *expressionAst)
+    static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_BINARY_EXPRE;
     }
@@ -414,6 +440,10 @@ class BinaryExpression : public ExpressionAST
         rhs->accept(visitor);
         lhs->accept(visitor);
         visitor.visit(this);
+    }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
     }
 
   private:
@@ -470,6 +500,10 @@ class RangeExpression : public ExpressionAST
     static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_RANGE_EXPRE;
+    }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
     }
     void accept(ExpressionVisitor &visitor) override
     {
@@ -537,9 +571,13 @@ class AssignExpression : public ExpressionAST
     {
     }
     std::shared_ptr<llvm::Value> codeGen() override;
-    static bool isClassOf(ExpressionAST *expressionAst)
+    static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_ASSIGN_EXPRE;
+    }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
     }
     void accept(ExpressionVisitor &visitor) override
     {
@@ -547,6 +585,10 @@ class AssignExpression : public ExpressionAST
         visitor.visit(this);
         rhs->accept(visitor);
     }
+    const std::shared_ptr<ExpressionAST> &getLhs() const;
+    const std::shared_ptr<ExpressionAST> &getRhs() const;
+    void setLhs(const std::shared_ptr<ExpressionAST> &lhs);
+    void setRhs(const std::shared_ptr<ExpressionAST> &rhs);
 
   private:
     std::shared_ptr<llvm::Value> assignStr();
@@ -760,7 +802,7 @@ class SizeOfExpression : public ExpressionAST
 class TypeCastExpression : public AddressableExpression
 {
   public:
-    TypeCastExpression(const Location &loc, ExpressionAST *expressionAst,
+    TypeCastExpression(const Location &loc, std::shared_ptr<ExpressionAST> expressionAst,
                        std::shared_ptr<TypeDeclaration> typeDeclaration)
         : expr(expressionAst), AddressableExpression(loc, ExpressionType::TYPE_TYPE_CAST_EXPRE, typeDeclaration){};
     std::shared_ptr<llvm::Value> codeGen() override;
@@ -889,7 +931,14 @@ class CaseExpression : public ExpressionAST
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_CASE_EXPRE;
     }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
     void accept(ExpressionVisitor &visitor) override;
+    const std::shared_ptr<ExpressionAST> &getExpre() const;
+    const std::vector<std::shared_ptr<LabelExpression>> &getLabels() const;
+    const std::shared_ptr<ExpressionAST> &getOtherwise() const;
 
   private:
     std::shared_ptr<ExpressionAST> expre;
@@ -955,7 +1004,21 @@ class ForExpression : public ExpressionAST
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_FOR_EXPRE;
     }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
     void accept(ExpressionVisitor &visitor) override;
+    bool isStepDown() const;
+    void setStepDown(bool stepDown);
+    const std::shared_ptr<VariableExpression> &getVariable() const;
+    void setVariable(const std::shared_ptr<VariableExpression> &variable);
+    const std::shared_ptr<ExpressionAST> &getStart() const;
+    void setStart(const std::shared_ptr<ExpressionAST> &start);
+    const std::shared_ptr<ExpressionAST> &getEnd() const;
+    void setEnd(const std::shared_ptr<ExpressionAST> &end);
+    const std::shared_ptr<ExpressionAST> &getBody() const;
+    void setBody(const std::shared_ptr<ExpressionAST> &body);
 
   private:
     std::shared_ptr<llvm::Value> forInGen();
@@ -1016,6 +1079,10 @@ class BuiltInExpression : public ExpressionAST
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_BUILTIN_EXPRE;
     }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
+    }
     void accept(ExpressionVisitor &visitor) override;
 
   private:
@@ -1036,6 +1103,10 @@ class CallFunctExpression : public ExpressionAST
     static bool isClassOf(const ExpressionAST *expressionAst)
     {
         return expressionAst->getExpressionType() == ExpressionType::TYPE_CALL_EXPRE;
+    }
+    static bool classof(const ExpressionAST *expressionAst)
+    {
+        return isClassOf(expressionAst);
     }
     const std::shared_ptr<PrototypeExpression> getPrototype()
     {
@@ -1129,6 +1200,27 @@ class ReadExpression : public ExpressionAST
     std::shared_ptr<AddressableExpression> file;
     std::vector<std::shared_ptr<ExpressionAST>> args;
     bool isReadln;
+};
+
+class TrampolineExpression : public FunctionExpression
+{
+  public:
+    TrampolineExpression(const Location &w, std::shared_ptr<FunctionExpression> fn,
+                         std::shared_ptr<ClosureExpression> c, std::shared_ptr<FunctionPointerDeclaration> fnPtrTy)
+        : FunctionExpression(w, fn->getPrototype()), func(fn), closure(c), funcPtrTy(fnPtrTy)
+    {
+    }
+    std::shared_ptr<llvm::Value> codeGen() override;
+    static bool classof(const ExpressionAST *e)
+    {
+        return e->getExpressionType() == ExpressionType::TYPE_TRAMPOLINE;
+    }
+    void accept(ExpressionVisitor &v) override;
+
+  private:
+    std::shared_ptr<FunctionExpression> func;
+    std::shared_ptr<ClosureExpression> closure;
+    std::shared_ptr<FunctionPointerDeclaration> funcPtrTy;
 };
 } // namespace Pascal
 #endif // JAPC_EXPRESSION_H

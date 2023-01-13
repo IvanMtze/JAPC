@@ -74,7 +74,41 @@ std::string JAPCDiagnostics::getPreformattedMessage(const char *message, const c
     free(buff);
     return str;
 }
+std::string JAPCDiagnostics::getPreformattedMessage(const char *message, const char *error, Location tk)
+{
+    char *buff;
+    asprintf(&buff, message, tk.getFileName().c_str(), tk.getLineNo(),
+             tk.getCharNo(), error);
+    std::string str(buff);
+    free(buff);
+    return str;
+}
 JAPCDiagnostics::JAPCDiagnostics()
 {
     this->state = 0;
+}
+void JAPCDiagnostics::japc_error_at(const Location loc, const char *error, ...)
+{
+    this->setHasErrors(HAS_ERROR);
+    std::string fmt = this->getPreformattedMessage(LOCATION_ERROR, error, loc);
+    va_list args;
+    va_start(args, error);
+    vfprintf(stderr, fmt.c_str(), args);
+    va_end(args);
+}
+void JAPCDiagnostics::japc_warning_at(const Location loc, const char *error, ...)
+{
+    if (this->shouldEmitWarningsAsErrors())
+    {
+        this->japc_error_at(loc, error);
+        return;
+    }
+    if (!this->shouldEmitWarnings())
+        return;
+    std::string fmt = this->getPreformattedMessage(LOCATION_WARNING, error, loc);
+    this->setHasWarnings(HAS_WARNING);
+    va_list args;
+    va_start(args, error);
+    vfprintf(stderr, fmt.c_str(), args);
+    va_end(args);
 }

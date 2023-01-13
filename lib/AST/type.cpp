@@ -87,6 +87,11 @@ std::shared_ptr<TypeDeclaration> Pascal::getTimeStampType()
     }
     return type;
 }
+bool Pascal::isCharArray(TypeDeclaration *typeDeclaration)
+{
+    return (typeDeclaration->getTypeKind() == TypeKind::TYPE_ARRAY &&
+            typeDeclaration->getSubtype()->getTypeKind() == TypeKind::TYPE_CHAR);
+}
 
 const TypeDeclaration *TypeDeclaration::isCompatibleType(const Pascal::TypeDeclaration *ty) const
 {
@@ -98,7 +103,8 @@ const TypeDeclaration *TypeDeclaration::isCompatibleType(const Pascal::TypeDecla
 }
 std::shared_ptr<Range> TypeDeclaration::getRange() const
 {
-    if(isIntegral()){
+    if (isIntegral())
+    {
         switch (kind)
         {
         case TYPE_CHAR:
@@ -144,13 +150,13 @@ std::shared_ptr<Range> SetDeclaration::getRange() const
     }
     return nullptr;
 }
-void SetDeclaration::UpdateSubtype(std::shared_ptr<TypeDeclaration> ty)
+void SetDeclaration::updateSubtype(std::shared_ptr<TypeDeclaration> ty)
 {
     baseType = ty;
 }
 const TypeDeclaration *SetDeclaration::isCompatibleType(const TypeDeclaration *ty) const
 {
-    if (const SetDeclaration* sty = llvm::dyn_cast<SetDeclaration>(ty))
+    if (const SetDeclaration *sty = llvm::dyn_cast<SetDeclaration>(ty))
     {
         if (*baseType == *sty->baseType)
         {
@@ -163,7 +169,7 @@ bool SetDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
     if (CompoundDeclaration::isSameAs(ty))
     {
-        if (const SetDeclaration* sty = llvm::dyn_cast<SetDeclaration>(ty))
+        if (const SetDeclaration *sty = llvm::dyn_cast<SetDeclaration>(ty))
         {
             return sty->range && *range == *sty->range;
         }
@@ -751,12 +757,12 @@ bool FunctionDeclaration::isSameAs(const TypeDeclaration *ty) const
     {
         if (ty->getTypeKind() == TypeKind::TYPE_FUNCION_POINTER)
         {
-            const FunctionPointerDeclaration* fty = llvm::dyn_cast<FunctionPointerDeclaration>(ty);
+            const FunctionPointerDeclaration *fty = llvm::dyn_cast<FunctionPointerDeclaration>(ty);
             return prototype == fty->getPrototype();
         }
         if (ty->getTypeKind() == TypeKind::TYPE_FUNCTION)
         {
-            const FunctionDeclaration* fty = llvm::dyn_cast<FunctionDeclaration>(ty);
+            const FunctionDeclaration *fty = llvm::dyn_cast<FunctionDeclaration>(ty);
             return prototype == fty->getPrototypeExpression();
         }
         return false;
@@ -1307,7 +1313,8 @@ const TypeDeclaration *StringDeclaration::isAssignableType(const TypeDeclaration
 {
     return ArrayDeclaration::isAssignableType(ty);
 }
-int StringDeclaration::getCapacity() const{
+int StringDeclaration::getCapacity() const
+{
     std::shared_ptr<RangeDeclaration> range = ranges[0];
     return range->getRange()->getSize() - 1;
 }
@@ -1351,7 +1358,7 @@ const TypeDeclaration *StringDeclaration::isCompatibleType(const TypeDeclaration
     }
     if (ty->getTypeKind() == TypeKind::TYPE_ARRAY)
     {
-        if (const ArrayDeclaration* aty = llvm::dyn_cast<ArrayDeclaration>(ty))
+        if (const ArrayDeclaration *aty = llvm::dyn_cast<ArrayDeclaration>(ty))
         {
             if (aty->getRanges().size() == 1)
             {
@@ -1416,6 +1423,10 @@ bool RangeDeclaration::isSameAs(const TypeDeclaration *ty) const
 unsigned RangeDeclaration::bits() const
 {
     return baseType->bits();
+}
+const std::shared_ptr<TypeDeclaration> &RangeDeclaration::getBaseType() const
+{
+    return baseType;
 }
 TypeKind ForwardDeclaration::getTypeKind() const
 {

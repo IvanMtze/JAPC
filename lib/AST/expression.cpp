@@ -110,6 +110,22 @@ void ArrayExpression::accept(ExpressionVisitor &v)
 {
     ExpressionAST::accept(v);
 }
+const std::shared_ptr<VariableExpression> &ArrayExpression::getExpression() const
+{
+    return expression;
+}
+const std::vector<std::shared_ptr<ExpressionAST>> &ArrayExpression::getIndices() const
+{
+    return indices;
+}
+const std::vector<std::shared_ptr<RangeDeclaration>> &ArrayExpression::getRanges() const
+{
+    return ranges;
+}
+const std::vector<size_t> &ArrayExpression::getIndexmul() const
+{
+    return indexmul;
+}
 
 // UNARY EXPRESSION
 std::shared_ptr<llvm::Value> UnaryExpression::codeGen()
@@ -129,6 +145,22 @@ std::shared_ptr<llvm::Value> AssignExpression::assignStr()
 std::shared_ptr<llvm::Value> AssignExpression::assignSet()
 {
     return std::shared_ptr<llvm::Value>();
+}
+const std::shared_ptr<ExpressionAST> &AssignExpression::getLhs() const
+{
+    return lhs;
+}
+const std::shared_ptr<ExpressionAST> &AssignExpression::getRhs() const
+{
+    return rhs;
+}
+void AssignExpression::setLhs(const std::shared_ptr<ExpressionAST> &lhs)
+{
+    AssignExpression::lhs = lhs;
+}
+void AssignExpression::setRhs(const std::shared_ptr<ExpressionAST> &rhs)
+{
+    AssignExpression::rhs = rhs;
 }
 
 // IF EXPRESSION
@@ -178,6 +210,18 @@ std::shared_ptr<llvm::Value> BinaryExpression::callStrFunc(const std::string &na
 std::shared_ptr<llvm::Value> BinaryExpression::callArrFunc(const std::string &name, size_t size)
 {
     return std::shared_ptr<llvm::Value>();
+}
+Token &BinaryExpression::getOper()
+{
+    return oper;
+}
+std::shared_ptr<ExpressionAST> &BinaryExpression::getLhs()
+{
+    return lhs;
+}
+std::shared_ptr<ExpressionAST> &BinaryExpression::getRhs()
+{
+    return rhs;
 }
 
 // WRITE EXPRESSION
@@ -243,6 +287,18 @@ void CaseExpression::accept(ExpressionVisitor &visitor)
 {
     ExpressionAST::accept(visitor);
 }
+const std::shared_ptr<ExpressionAST> &CaseExpression::getExpre() const
+{
+    return expre;
+}
+const std::vector<std::shared_ptr<LabelExpression>> &CaseExpression::getLabels() const
+{
+    return labels;
+}
+const std::shared_ptr<ExpressionAST> &CaseExpression::getOtherwise() const
+{
+    return otherwise;
+}
 
 // READ EXPRESSION
 std::shared_ptr<llvm::Value> ReadExpression::codeGen()
@@ -307,6 +363,10 @@ std::shared_ptr<llvm::Value> SetExpression::makeConstantSet(TypeDeclaration *typ
 {
     return std::shared_ptr<llvm::Value>();
 }
+const std::vector<std::shared_ptr<ExpressionAST>> &SetExpression::getValues() const
+{
+    return values;
+}
 
 // RANGE REDUCE EXPRESSION
 std::shared_ptr<llvm::Value> RangeReduceExpression::codeGen()
@@ -326,6 +386,46 @@ void ForExpression::accept(ExpressionVisitor &visitor)
 std::shared_ptr<llvm::Value> ForExpression::forInGen()
 {
     return std::shared_ptr<llvm::Value>();
+}
+bool ForExpression::isStepDown() const
+{
+    return stepDown;
+}
+void ForExpression::setStepDown(bool stepDown)
+{
+    ForExpression::stepDown = stepDown;
+}
+const std::shared_ptr<VariableExpression> &ForExpression::getVariable() const
+{
+    return variable;
+}
+void ForExpression::setVariable(const std::shared_ptr<VariableExpression> &variable)
+{
+    ForExpression::variable = variable;
+}
+const std::shared_ptr<ExpressionAST> &ForExpression::getStart() const
+{
+    return start;
+}
+void ForExpression::setStart(const std::shared_ptr<ExpressionAST> &start)
+{
+    ForExpression::start = start;
+}
+const std::shared_ptr<ExpressionAST> &ForExpression::getEnd() const
+{
+    return end;
+}
+void ForExpression::setEnd(const std::shared_ptr<ExpressionAST> &end)
+{
+    this->end = end;
+}
+const std::shared_ptr<ExpressionAST> &ForExpression::getBody() const
+{
+    return body;
+}
+void ForExpression::setBody(const std::shared_ptr<ExpressionAST> &body)
+{
+    ForExpression::body = body;
 }
 
 // FUNCTION EXPRESSION
@@ -407,4 +507,13 @@ std::shared_ptr<llvm::Value> UnitExpression::codeGen()
 }
 void UnitExpression::accept(Pascal::ExpressionVisitor &v)
 {
+}
+
+// TRAMPOLINE EXPRESSION
+
+std::shared_ptr<llvm::Value> TrampolineExpression::codeGen()
+{}
+void TrampolineExpression::accept(ExpressionVisitor &v)
+{
+    ExpressionAST::accept(v);
 }

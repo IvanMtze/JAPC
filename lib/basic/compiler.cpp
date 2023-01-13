@@ -31,7 +31,9 @@ Compiler::Status Compiler::compile()
         auto fileReaded = this->sourceManager->getFile(file);
         this->scanner->setFileName(file);
         this->scanner->setTextSource(fileReaded->getContent());
-        this->parser->parseFile();
+        std::shared_ptr<ExpressionAST> expressionAst = this->parser->parseFile();
+        SemanticAnalizer semaAnalizer(this->diagnosticsEngine);
+        semaAnalizer.analize(expressionAst);
     }
     for (auto file : sourceManager->getFileNameByType(File::FileType::MAIN_PROGRAM))
     {

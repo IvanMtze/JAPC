@@ -10,14 +10,11 @@ class SemanticAnalizer
 {
   private:
     int errorCount;
+  public:
     std::shared_ptr<JAPCDiagnostics> diagnosticsEngine;
 
-  public:
-    explicit SemanticAnalizer(const std::shared_ptr<JAPCDiagnostics> &diagnosticsEngine);
-
-  public:
+    SemanticAnalizer(const std::shared_ptr<JAPCDiagnostics> &diagnosticsEngine);
     SemanticAnalizer();
-    virtual ~SemanticAnalizer();
     void analize(std::shared_ptr<ExpressionAST> ast);
 };
 } // namespace Pascal

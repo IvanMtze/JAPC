@@ -28,7 +28,7 @@ class ExpressionAST;
 class TypeDeclaration;
 class RangeDeclaration;
 class FunctionPointerDeclaration;
-
+bool isCharArray(TypeDeclaration* typeDeclaration);
 enum TypeKind
 {
     TYPE_TYPE,
@@ -165,6 +165,7 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
         return 0;
     }
     virtual bool isSameAs(const TypeDeclaration *typeDeclaration) const = 0;
+
     virtual const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const;
     virtual const TypeDeclaration *isAssignableType(const TypeDeclaration *ty) const
     {
@@ -706,15 +707,14 @@ class PointerDeclaration : public CompoundDeclaration
         baseType = t;
         incomplete = false;
     }
-    static bool classof(const TypeDeclaration *e)
-    {
-        return isClassOf(e);
-    }
     bool isSameAs(const TypeDeclaration *ty) const override
     {
         return CompoundDeclaration::isSameAs(ty);
     }
-
+    static bool classof(const TypeDeclaration *e)
+    {
+        return isClassOf(e);
+    }
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override;
 
@@ -1236,6 +1236,7 @@ class RangeDeclaration : public TypeDeclaration
     {
         return baseType->hasLlvmType();
     }
+    const std::shared_ptr<TypeDeclaration> &getBaseType() const;
 
   protected:
     std::shared_ptr<llvm::Type> getLlvmType() const override
@@ -1268,6 +1269,10 @@ class SetDeclaration : public CompoundDeclaration
     {
         return e->getKind() == TypeKind::TYPE_SET;
     }
+    static bool classof(const TypeDeclaration *namedObject)
+    {
+        return isClassOf(namedObject);
+    }
     size_t SetWords() const
     {
         return (this->range->getRange()->getSize() + __SET_MASK__) >> __SET_POW_TO_BITS__;
@@ -1277,7 +1282,7 @@ class SetDeclaration : public CompoundDeclaration
     {
         range = rangeDecl;
     }
-    void UpdateSubtype(std::shared_ptr<TypeDeclaration> ty);
+    void updateSubtype(std::shared_ptr<TypeDeclaration> ty);
     bool isSameAs(const TypeDeclaration *ty) const;
     const TypeDeclaration *isCompatibleType(const TypeDeclaration *ty) const override;
     bool hasLlvmType() const override

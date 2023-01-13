@@ -2713,7 +2713,7 @@ std::shared_ptr<ExpressionAST> Parser::parseCaseExpr()
                     otherwiseExpression = parseStatement();
                     
                 }
-            }while()
+            }while(1);
         }
     }
     else

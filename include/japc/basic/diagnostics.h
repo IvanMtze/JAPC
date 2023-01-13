@@ -17,12 +17,15 @@
 
 namespace Pascal{
 class Token;
+class Location;
 class JAPCDiagnostics{
     //  TODO: there should be a better way to do it.
   public:
     JAPCDiagnostics();
     void japc_error_at(Token tk, const char* error, ...);
     void japc_warning_at(Token tk, const char* error, ...);
+    void japc_error_at(const Location loc, const char* error, ...);
+    void japc_warning_at(const Location loc, const char* error, ...);
     int shouldEmitWarnings();
     int hasErrors();
     int hasWanings();
@@ -32,6 +35,7 @@ class JAPCDiagnostics{
   private:
     unsigned int state : 4;
     std::string getPreformattedMessage(const char* message, const char *error,Token tk);
+    std::string getPreformattedMessage(const char *message, const char *error, Location tk);
     void setHasErrors(unsigned int hasErrors);
     void setHasWarnings(unsigned int hasWarnings);
 };
