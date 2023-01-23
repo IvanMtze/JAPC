@@ -6,6 +6,8 @@
 #define JAPC_PARSER_UTILS_H
 
 #include "japc/AST/type.h"
+#include "japc/AST/real_expression.h"
+#include "japc/AST/integer_expression.h"
 #include "japc/scanner/scanner.h"
 #include <memory>
 namespace Pascal

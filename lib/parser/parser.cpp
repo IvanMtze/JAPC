@@ -2,6 +2,7 @@
 // Created by wuser on 17/09/22.
 //
 #include "japc/parser/parser.h"
+
 using namespace Pascal;
 
 // NOTE:
@@ -2702,18 +2703,23 @@ std::shared_ptr<ExpressionAST> Parser::parseCaseExpr()
             std::vector<std::pair<int, int>> ranges;
             std::shared_ptr<ExpressionAST> otherwiseExpression;
             std::shared_ptr<TypeDeclaration> typeDeclaration;
-            do{
-                if(_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_OTHERWISE || _CUR_TOKEN_TYPE_ == TokenType::SYMBOL_ELSE){
-                    if(otherwiseExpression){
-                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Otherwise expression was already declared");
+            do
+            {
+                if (_CUR_TOKEN_TYPE_ == TokenType::SYMBOL_OTHERWISE || _CUR_TOKEN_TYPE_ == TokenType::SYMBOL_ELSE)
+                {
+                    if (otherwiseExpression)
+                    {
+                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_,
+                                                               "Otherwise expression was already declared");
                     }
-                    if(ranges.size()){
-                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_, "Otherwise expression was already declared");
+                    if (ranges.size())
+                    {
+                        this->diagnosticsEngine->japc_error_at(_CUR_TOKEN_OBJ_,
+                                                               "Otherwise expression was already declared");
                     }
                     otherwiseExpression = parseStatement();
-                    
                 }
-            }while(1);
+            } while (1);
         }
     }
     else

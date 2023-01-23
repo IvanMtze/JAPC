@@ -1,4 +1,5 @@
 #include "japc/sema/typecheck.h"
+
 using namespace Pascal;
 
 void TypeCheckVisitor::checkBinaryExpr(std::shared_ptr<BinaryExpression> binaryExpression)
@@ -309,6 +310,9 @@ void TypeCheckVisitor::checkCaseExpr(std::shared_ptr<CaseExpression> caseExpress
 }
 void TypeCheckVisitor::visit(ExpressionAST *elem)
 {
+    if (elem == nullptr){
+        return;
+    }
     if (BinaryExpression *b = llvm::dyn_cast<BinaryExpression>(elem))
     {
         checkBinaryExpr(std::shared_ptr<BinaryExpression>(b));

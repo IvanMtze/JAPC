@@ -3,6 +3,7 @@
 //
 #include "japc/basic/compiler.h"
 using namespace Pascal;
+llvm::Module* theModule;
 
 void Compiler::addBuiltinType(std::string name, std::shared_ptr<TypeDeclaration> type)
 {
@@ -41,8 +42,19 @@ Compiler::Status Compiler::compile()
         this->scanner->setFileName(file);
         this->scanner->setTextSource(fileReaded->getContent());
         std::shared_ptr<ExpressionAST> expressionAst = this->parser->parseFile();
+        if(this->diagnosticsEngine->hasErrors()){
+            return Compiler::FAILED_WITH_ERROR;
+        }
         SemanticAnalizer semaAnalizer(this->diagnosticsEngine);
         semaAnalizer.analize(expressionAst);
+        if(this->diagnosticsEngine->hasErrors()){
+            return Compiler::FAILED_WITH_ERROR;
+        }
+        if(!expressionAst->codeGen())
+        {
+            return Compiler::FAILED_UNKNOWN;
+        }
+        //backPatch();
     }
     return Compiler::FAILED_WITH_WARNINGS;
 }

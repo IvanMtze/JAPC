@@ -1,6 +1,7 @@
 #ifndef JAPC_TYPECHECK_UTILS_H
 #define JAPC_TYPECHECK_UTILS_H
 #include "japc/AST/expression.h"
+#include "japc/AST/typecast_expression.h"
 #include "japc/AST/type.h"
 #include "memory"
 

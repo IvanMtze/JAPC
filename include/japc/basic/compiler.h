@@ -11,15 +11,25 @@
 #include "japc/parser/parser.h"
 #include "japc/scanner/scanner.h"
 #include "japc/AST/type.h"
+#include "japc/AST/enum_definition.h"
+#include "japc/AST/type_definition.h"
 #include "japc/basic/options_parser.h"
 #include "japc/basic/file.h"
 #include "japc/sema/sema.h"
 #include <memory>
 #include <vector>
+#include <llvm/Analysis/Passes.h>
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/Support/CommandLine.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/Transforms/IPO.h>
+#include <llvm/Transforms/InstCombine/InstCombine.h>
+#include <llvm/Transforms/Scalar.h>
+#include <llvm/Transforms/Scalar/GVN.h>
+#include <llvm/Transforms/Utils.h>
 
 namespace Pascal
 {
-
 class Compiler
 {
   private:

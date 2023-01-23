@@ -3,7 +3,7 @@
 //
 
 #include "japc/AST/type.h"
-
+#include <japc/AST/prototype_expression.h>
 using namespace Pascal;
 
 std::shared_ptr<TypeDeclaration> Pascal::getIntegerType()
@@ -307,7 +307,7 @@ template <> const TypeDeclaration *LongIntegerDeclaration::isAssignableType(cons
     return nullptr;
 }
 
-std::shared_ptr<llvm::Type> CharDeclaration::getLlvmType() const
+llvm::Type* CharDeclaration::getLlvmType() const
 {
     return BaseTypeDeclaration::getLlvmType();
 }
@@ -359,7 +359,7 @@ std::shared_ptr<TypeDeclaration> VoidDeclaration::clone() const
 {
     return TypeDeclaration::clone();
 }
-std::shared_ptr<llvm::Type> VoidDeclaration::getLlvmType() const
+llvm::Type* VoidDeclaration::getLlvmType() const
 {
     return BaseTypeDeclaration::getLlvmType();
 }
@@ -533,7 +533,7 @@ const TypeDeclaration *ArrayDeclaration::isCompatibleType(const TypeDeclaration 
     }
     return this;
 }
-std::shared_ptr<llvm::Type> ArrayDeclaration::getLlvmType() const
+llvm::Type* ArrayDeclaration::getLlvmType() const
 {
     return CompoundDeclaration::getLlvmType();
 }
@@ -656,7 +656,7 @@ unsigned int BoolDeclaration::bits() const
 {
     return EnumDeclaration::bits();
 }
-std::shared_ptr<llvm::Type> BoolDeclaration::getLlvmType() const
+llvm::Type* BoolDeclaration::getLlvmType() const
 {
     return EnumDeclaration::getLlvmType();
 }
@@ -708,7 +708,7 @@ std::shared_ptr<TypeDeclaration> PointerDeclaration::getSubtype() const
 {
     return CompoundDeclaration::getSubtype();
 }
-std::shared_ptr<llvm::Type> PointerDeclaration::getLlvmType() const
+llvm::Type* PointerDeclaration::getLlvmType() const
 {
     return CompoundDeclaration::getLlvmType();
 }
@@ -887,9 +887,9 @@ void FieldCollection::ensureSized() const
 {
     if (opaqueType && opaqueType->isOpaque())
     {
-        std::shared_ptr<llvm::Type> ty = getLlvmType();
+        llvm::Type* ty = getLlvmType();
         // TODO: REVIEW
-        (void)ty.get();
+        (void)ty;
     }
 }
 bool FieldCollection::isSameAs(const TypeDeclaration *ty) const
@@ -980,7 +980,7 @@ bool VariantDeclaration::isCompound() const
 {
     return FieldCollection::isCompound();
 }
-std::shared_ptr<llvm::Type> VariantDeclaration::getLlvmType() const
+llvm::Type* VariantDeclaration::getLlvmType() const
 {
     return FieldCollection::getLlvmType();
 }
@@ -1049,7 +1049,7 @@ size_t RecordDeclaration::getSize() const
     ensureSized();
     return TypeDeclaration::getSize();
 }
-std::shared_ptr<llvm::Type> RecordDeclaration::getLlvmType() const
+llvm::Type* RecordDeclaration::getLlvmType() const
 {
     return FieldCollection::getLlvmType();
 }
@@ -1163,17 +1163,17 @@ bool FunctionPointerDeclaration::isSameAs(const TypeDeclaration *ty) const
     {
         const FunctionPointerDeclaration *fty = llvm::dyn_cast<FunctionPointerDeclaration>(ty);
         assert(fty && "Expect to convert to function pointer!");
-        return *proto == *fty->proto;
+        return *proto.get() == *fty->proto.get();
     }
     if (ty->getTypeKind() == TypeKind::TYPE_FUNCTION)
     {
         const FunctionPointerDeclaration *fty = llvm::dyn_cast<FunctionPointerDeclaration>(ty);
         assert(fty && "Expect to convert to function declaration");
-        return *proto == *fty->getPrototype();
+        return *proto.get() == *fty->getPrototype().get();
     }
     return false;
 }
-std::shared_ptr<llvm::Type> FunctionPointerDeclaration::getLlvmType() const
+llvm::Type* FunctionPointerDeclaration::getLlvmType() const
 {
     return CompoundDeclaration::getLlvmType();
 }
@@ -1229,7 +1229,7 @@ std::shared_ptr<TypeDeclaration> FileDeclaration::getSubtype() const
 {
     return CompoundDeclaration::getSubtype();
 }
-std::shared_ptr<llvm::Type> FileDeclaration::getLlvmType() const
+llvm::Type* FileDeclaration::getLlvmType() const
 {
     return CompoundDeclaration::getLlvmType();
 }
@@ -1338,7 +1338,7 @@ bool StringDeclaration::isSameAs(const TypeDeclaration *ty) const
 {
     return ArrayDeclaration::isSameAs(ty);
 }
-std::shared_ptr<llvm::Type> StringDeclaration::getLlvmType() const
+llvm::Type* StringDeclaration::getLlvmType() const
 {
     return ArrayDeclaration::getLlvmType();
 }

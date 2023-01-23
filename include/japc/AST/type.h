@@ -178,11 +178,11 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
     virtual bool hasLlvmType() const = 0;
     virtual size_t getSize() const;
     size_t getAllignSize() const;
-    const std::shared_ptr<llvm::Type> &getLtype() const
+    llvm::Type* getLtype() const
     {
         return ltype;
     }
-    void setLtype(const std::shared_ptr<llvm::Type> &ltype)
+    void setLtype(llvm::Type* &ltype)
     {
         TypeDeclaration::ltype = ltype;
     }
@@ -205,9 +205,9 @@ class TypeDeclaration : public std::enable_shared_from_this<TypeDeclaration>
     void setInitial(const std::shared_ptr<ExpressionAST> &initial);
 
   protected:
-    virtual std::shared_ptr<llvm::Type> getLlvmType() const = 0;
+    virtual llvm::Type* getLlvmType() const = 0;
     const TypeKind kind;
-    mutable std::shared_ptr<llvm::Type> ltype;
+    mutable llvm::Type* ltype;
     std::string name;
     std::shared_ptr<ExpressionAST> initial;
 };
@@ -241,7 +241,7 @@ class ForwardDeclaration : public TypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return 0;
     }
@@ -263,9 +263,9 @@ class BaseTypeDeclaration : public TypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
-        return std::shared_ptr<llvm::Type>();
+        return 0;
     }
 };
 
@@ -309,7 +309,7 @@ class RealDeclaration : public BaseTypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return BaseTypeDeclaration::getLlvmType();
     }
@@ -351,7 +351,7 @@ template <int bit, TypeKind tk> class IntegerXDecl : public BaseTypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
     }
 };
@@ -403,7 +403,7 @@ class CharDeclaration : public BaseTypeDeclaration
     virtual std::shared_ptr<TypeDeclaration> clone() const;
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 };
 
 class VoidDeclaration : public BaseTypeDeclaration
@@ -444,7 +444,7 @@ class VoidDeclaration : public BaseTypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+     llvm::Type* getLlvmType() const override;
 };
 
 class CompoundDeclaration : public TypeDeclaration
@@ -486,9 +486,9 @@ class CompoundDeclaration : public TypeDeclaration
     void setBaseType(const std::shared_ptr<TypeDeclaration> &baseType);
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
-        return std::shared_ptr<llvm::Type>();
+        return getLtype();
     }
 
     std::shared_ptr<TypeDeclaration> baseType;
@@ -540,7 +540,7 @@ class ArrayDeclaration : public CompoundDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
     std::vector<std::shared_ptr<RangeDeclaration>> ranges;
 };
 
@@ -620,7 +620,7 @@ class EnumDeclaration : public CompoundDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return baseType->getLtype();
     }
@@ -657,7 +657,7 @@ class BoolDeclaration : public EnumDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 };
 
 class PointerDeclaration : public CompoundDeclaration
@@ -716,7 +716,7 @@ class PointerDeclaration : public CompoundDeclaration
         return isClassOf(e);
     }
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 
   private:
     bool incomplete;
@@ -767,7 +767,7 @@ class FunctionDeclaration : public CompoundDeclaration
     bool isSameAs(const TypeDeclaration *ty) const override;
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return 0;
     }
@@ -831,7 +831,7 @@ class FieldDeclaration : public CompoundDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return baseType->getLtype();
     }
@@ -891,9 +891,9 @@ class FieldCollection : public TypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
-        return std::shared_ptr<llvm::Type>();
+        return 0;
     }
     std::vector<std::shared_ptr<FieldDeclaration>> fields;
     mutable std::shared_ptr<llvm::StructType> opaqueType;
@@ -934,7 +934,7 @@ class VariantDeclaration : public FieldCollection
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 };
 
 class RecordDeclaration : public FieldCollection
@@ -982,7 +982,7 @@ class RecordDeclaration : public FieldCollection
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 
   private:
     std::shared_ptr<VariantDeclaration> variant;
@@ -1016,9 +1016,9 @@ class MemberFunctionDeclaration : public TypeDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
-        return std::shared_ptr<llvm::Type>();
+        return 0;
     }
 };
 
@@ -1057,7 +1057,7 @@ class FunctionPointerDeclaration : public CompoundDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 
   private:
     std::shared_ptr<PrototypeExpression> proto;
@@ -1099,7 +1099,7 @@ class FileDeclaration : public CompoundDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override;
+    llvm::Type* getLlvmType() const override;
 };
 
 class TextDeclaration : public FileDeclaration
@@ -1137,7 +1137,7 @@ class TextDeclaration : public FileDeclaration
     }
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return FileDeclaration::getLlvmType();
     }
@@ -1160,7 +1160,7 @@ class StringDeclaration : public ArrayDeclaration
     virtual bool isSameAs(const TypeDeclaration *ty) const;
 
   protected:
-    virtual std::shared_ptr<llvm::Type> getLlvmType() const;
+    virtual llvm::Type* getLlvmType() const;
 
   public:
     StringDeclaration(unsigned size)
@@ -1239,7 +1239,7 @@ class RangeDeclaration : public TypeDeclaration
     const std::shared_ptr<TypeDeclaration> &getBaseType() const;
 
   protected:
-    std::shared_ptr<llvm::Type> getLlvmType() const override
+    llvm::Type* getLlvmType() const override
     {
         return baseType->getLtype();
     }
@@ -1291,7 +1291,7 @@ class SetDeclaration : public CompoundDeclaration
     }
 
   private:
-    std::shared_ptr<llvm::Type> getLlvmType() const
+    llvm::Type* getLlvmType() const
     {
     }
 

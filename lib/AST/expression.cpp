@@ -3,517 +3,209 @@
 //
 #include "japc/AST/expression.h"
 using namespace Pascal;
+const size_t _MIN_ALIGN_ = 4;
+llvm::Value *Pascal::powerInt(llvm::Value *base, llvm::Value *exp, TypeDeclaration *ty)
+{
+    llvm::BasicBlock *originBlock = builder.GetInsertBlock();
+    llvm::Function *theFunction = originBlock->getParent();
+    llvm::BasicBlock *expNegBB = llvm::BasicBlock::Create(theContext, "expNeg", theFunction);
+    llvm::BasicBlock *oddEvenBB = llvm::BasicBlock::Create(theContext, "oddeven", theFunction);
+    llvm::BasicBlock *loopBB = llvm::BasicBlock::Create(theContext, "loop", theFunction);
+    llvm::BasicBlock *moreBB = llvm::BasicBlock::Create(theContext, "more", theFunction);
+    llvm::BasicBlock *moreOddBB = llvm::BasicBlock::Create(theContext, "moreOdd", theFunction);
+    llvm::BasicBlock *moreEvenBB = llvm::BasicBlock::Create(theContext, "moreEven", theFunction);
+    llvm::BasicBlock *moreMergeBB = llvm::BasicBlock::Create(theContext, "moreMerge", theFunction);
+    llvm::BasicBlock *doneBB = llvm::BasicBlock::Create(theContext, "powdone", theFunction);
 
+    llvm::Constant *one = llvm::ConstantInt::get(getIntegerType()->getLtype(), 1);
+    llvm::Constant *zero = llvm::ConstantInt::get(getIntegerType()->getLtype(), 0);
+    llvm::Value *res = createTempAlloca(ty);
+    builder.CreateStore(one, res);
+
+    llvm::Value *expneg = builder.CreateICmpSLT(exp, zero, "expneg");
+    builder.CreateCondBr(expneg, expNegBB, loopBB);
+    // e < 0 case:
+    builder.SetInsertPoint(expNegBB);
+    llvm::Value *bIsMinus1 =
+        builder.CreateICmpEQ(base, llvm::ConstantInt::get(getIntegerType()->getLtype(), -1), "isNeg1");
+    builder.CreateCondBr(bIsMinus1, oddEvenBB, doneBB);
+
+    builder.SetInsertPoint(oddEvenBB);
+    llvm::Value *isOdd = builder.CreateICmpEQ(builder.CreateAnd(exp, one, "odd"), one, "isOdd");
+    // b = -1 && e & 1 => return b;
+    builder.CreateCondBr(isOdd, doneBB, loopBB);
+
+    builder.SetInsertPoint(loopBB);
+    llvm::PHINode *phiLoop = builder.CreatePHI(ty->getLtype(), 2, "phi");
+    phiLoop->addIncoming(exp, originBlock);
+    phiLoop->addIncoming(exp, oddEvenBB);
+    llvm::Value *expgt0 = builder.CreateICmpSLE(phiLoop, zero, "expgt0");
+    llvm::Value *curVal = builder.CreateLoad(res);
+    builder.CreateCondBr(expgt0, doneBB, moreBB);
+
+    builder.SetInsertPoint(moreBB);
+    llvm::Value *isOdd1 = builder.CreateICmpEQ(builder.CreateAnd(exp, one, "odd1"), one, "isOdd1");
+    builder.CreateCondBr(isOdd1, moreOddBB, moreEvenBB);
+
+    builder.SetInsertPoint(moreOddBB);
+    llvm::Value *valOdd = builder.CreateMul(curVal, base);
+    builder.CreateBr(moreMergeBB);
+
+    builder.SetInsertPoint(moreEvenBB);
+    llvm::Value *valEven = builder.CreateMul(curVal, builder.CreateMul(base, base));
+    builder.CreateBr(moreMergeBB);
+
+    builder.SetInsertPoint(moreMergeBB);
+    llvm::PHINode *phiMerge = builder.CreatePHI(ty->getLtype(), 2, "phi");
+    phiMerge->addIncoming(valEven, moreEvenBB);
+    phiMerge->addIncoming(valOdd, moreOddBB);
+    llvm::PHINode *phiMerge2 = builder.CreatePHI(ty->getLtype(), 2, "phi");
+    phiMerge2->addIncoming(llvm::ConstantInt::get(getIntegerType()->getLtype(),2), moreEvenBB);
+    phiMerge2->addIncoming(one, moreOddBB);
+    builder.CreateStore(phiMerge, res);
+    phiLoop->addIncoming(builder.CreateSub(phiLoop, phiMerge2), moreMergeBB);
+    builder.CreateBr(loopBB);
+
+    builder.SetInsertPoint(doneBB);
+    llvm::PHINode *phi = builder.CreatePHI(ty->getLtype(), 3, "phi");
+    // e < 0, b != -1
+    phi->addIncoming(zero, expNegBB);
+    // e < 0, e is odd, b = -1
+    phi->addIncoming(base, oddEvenBB);
+    // all other cases.
+    phi->addIncoming(curVal, loopBB);
+    return phi;
+}
+
+llvm::Value *Pascal::integerBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType &tokenType,
+                                             TypeDeclaration *type, bool isUnsigned)
+{
+    switch (tokenType)
+    {
+    case TokenType::SYMBOL_PLUS:
+        return builder.CreateAdd(leftValue, rightValue, "addtmp");
+    case TokenType::SYMBOL_MINUS:
+        return builder.CreateSub(leftValue, rightValue, "subtmp");
+    case TokenType::SYMBOL_STAR:
+        return builder.CreateMul(leftValue, rightValue, "multmp");
+    case TokenType::SYMBOL_DIV:
+        return builder.CreateSDiv(leftValue, rightValue, "divtmp");
+    case TokenType::SYMBOL_MOD:
+        return builder.CreateSRem(leftValue, rightValue, "modtmp");
+    // TODO: add support for shl, shr and xor
+    case TokenType::SYMBOL_AND:
+        return builder.CreateAnd(leftValue, rightValue, "andtmp");
+    case TokenType::SYMBOL_OR:
+        return builder.CreateOr(leftValue, rightValue, "ortmp");
+    case TokenType::SYMBOL_POW:
+        return powerInt(leftValue, rightValue, type);
+    case TokenType::SYMBOL_LESS_THAN:
+        if (isUnsigned)
+        {
+            return builder.CreateICmpULT(leftValue, rightValue, "lt");
+        }
+        return builder.CreateICmpSLT(leftValue, rightValue, "lt");
+    case TokenType::SYMBOL_LESS_EQUAL_THAN:
+        if (isUnsigned)
+        {
+            return builder.CreateICmpULE(leftValue, rightValue, "le");
+        }
+        return builder.CreateICmpULE(leftValue, rightValue, "le");
+    case TokenType::SYMBOL_GREATER_THAN:
+        if (isUnsigned)
+        {
+            return builder.CreateICmpUGT(leftValue, rightValue, "gt");
+        }
+        return builder.CreateICmpUGT(leftValue, rightValue, "gt");
+    case TokenType::SYMBOL_GREATER_EQUAL_THAN:
+        if (isUnsigned)
+        {
+            return builder.CreateICmpUGE(leftValue, rightValue, "ge");
+        }
+        return builder.CreateICmpSGE(leftValue, rightValue, "ge");
+    }
+}
+llvm::AllocaInst *Pascal::createTempAlloca(TypeDeclaration *ty)
+{
+    llvm::Function *fn = builder.GetInsertBlock()->getParent();
+    return createNamedAlloca(fn, ty, "tmp");
+}
+llvm::AllocaInst *Pascal::createNamedAlloca(llvm::Function *fn, TypeDeclaration *ty, const std::string &name)
+{
+    llvm::BasicBlock *bb = builder.GetInsertBlock();
+    llvm::BasicBlock::iterator ip = builder.GetInsertPoint();
+
+    llvm::IRBuilder<> bld(&fn->getEntryBlock(), fn->getEntryBlock().begin());
+
+    assert(ty && "Must have type passed in");
+    llvm::Type *type = ty->getLtype();
+
+    llvm::AllocaInst *a = bld.CreateAlloca(type, 0, name);
+    size_t align = std::max(ty->getAllignSize(), _MIN_ALIGN_);
+    if (a->getAlignment() < align)
+    {
+        a->setAlignment(llvm::Align(align));
+    }
+
+    // Now go back to where we were...
+    builder.SetInsertPoint(bb, ip);
+    return a;
+    return nullptr;
+}
+
+// Expression Class
+ExpressionAST::ExpressionAST(const Location &location, ExpressionType expressionType)
+    : location(location), expressionType(expressionType), typeDeclaration(0)
+{
+}
+ExpressionAST::ExpressionAST(const Location &location, ExpressionType expressionType,
+              std::shared_ptr<TypeDeclaration> typeDeclaration)
+    : location(location), expressionType(expressionType), typeDeclaration(typeDeclaration)
+{
+}
 void ExpressionAST::ensureSized() const
 {
 }
 
-// GOTO EXPRESSION CLASS
-std::shared_ptr<llvm::Value> GotoExpression::codeGen()
+void ExpressionAST::accept(ExpressionVisitor &visitor)
 {
-    return ExpressionAST::codeGen();
+    visitor.visit(this);
+}
+llvm::Value *ExpressionAST::codeGen()
+{
+    assert(0 && "WHAT?!");
+    return 0;
+};
+ExpressionAST::ExpressionType ExpressionAST::getExpressionType() const
+{
+    return expressionType;
+}
+void ExpressionAST::setTypeDeclaration(std::shared_ptr<TypeDeclaration> typeDeclaration)
+{
+    this->typeDeclaration = typeDeclaration;
+}
+std::shared_ptr<TypeDeclaration> ExpressionAST::getTypeDeclaration() const
+{
+    return typeDeclaration;
+}
+const Location ExpressionAST::getLocation() const
+{
+    return location;
 }
 
-// CALL FUNCTION EXPRESSION
-std::shared_ptr<llvm::Value> CallFunctExpression::codeGen()
+// UTILS
+
+static llvm::BasicBlock *CreateGotoTarget(int label)
 {
-    return ExpressionAST::codeGen();
-}
-void CallFunctExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
+    std::string name = std::to_string(label);
+    if (Label *lab = labels.find(name))
+    {
+        return lab->getBasicBlock();
+    }
+    llvm::Function *theFunction = builder.GetInsertBlock()->getParent();
+    llvm::BasicBlock *bb = llvm::BasicBlock::Create(theContext, name, theFunction);
+    labels.insert(name, new Label(bb, label));
+    return bb;
 }
 
-// SIZE OF EXPRESSION
-std::shared_ptr<llvm::Value> SizeOfExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// POINTER EXPRESSION
-std::shared_ptr<llvm::Value> PointerExpression::getAddress()
-{
-}
-void PointerExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// WITH EXPRESSION
-std::shared_ptr<llvm::Value> WithExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// LABEL EXPRESSION
-std::shared_ptr<llvm::Value> LabelExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-std::shared_ptr<llvm::Value> LabelExpression::codeGen(std::shared_ptr<llvm::BasicBlock> casebb,
-                                                      std::shared_ptr<llvm::BasicBlock> afterbb)
-{
-    return std::shared_ptr<llvm::Value>();
-}
-
-void LabelExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// ADDRESSABLE EXPRESSION
-std::shared_ptr<llvm::Value> AddressableExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// STRING EXPRESSION
-std::shared_ptr<llvm::Value> StringExpression::codeGen()
-{
-    return AddressableExpression::codeGen();
-}
-std::shared_ptr<llvm::Value> StringExpression::getAddress()
-{
-    return AddressableExpression::getAddress();
-}
-
-// RANGE CHECK
-std::shared_ptr<llvm::Value> RangeCheckExpression::codeGen()
-{
-    return RangeReduceExpression::codeGen();
-}
-
-// VARIANT FIELD EXPRESSION
-std::shared_ptr<llvm::Value> VariantFieldExpression::getAddress()
-{
-    return VariableExpression::getAddress();
-}
-
-// CHAR EXPRESSION
-std::shared_ptr<llvm::Value> CharExpression::codeGen()
-{
-    return IntegerExpression::codeGen();
-}
-
-// ARRAY EXPRESSION
-ArrayExpression::ArrayExpression(const Location &loc, std::shared_ptr<ExpressionAST> v,
-                                 const std::vector<std::shared_ptr<ExpressionAST>> inds,
-                                 const std::vector<std::shared_ptr<RangeDeclaration>> rangeDeclaration,
-                                 std::shared_ptr<TypeDeclaration> typeDeclaration)
-    : AddressableExpression(loc, ExpressionType::TYPE_ARRAY_EXPRE, typeDeclaration)
-{
-}
-std::shared_ptr<llvm::Value> ArrayExpression::getAddress()
-{
-}
-void ArrayExpression::accept(ExpressionVisitor &v)
-{
-    ExpressionAST::accept(v);
-}
-const std::shared_ptr<VariableExpression> &ArrayExpression::getExpression() const
-{
-    return expression;
-}
-const std::vector<std::shared_ptr<ExpressionAST>> &ArrayExpression::getIndices() const
-{
-    return indices;
-}
-const std::vector<std::shared_ptr<RangeDeclaration>> &ArrayExpression::getRanges() const
-{
-    return ranges;
-}
-const std::vector<size_t> &ArrayExpression::getIndexmul() const
-{
-    return indexmul;
-}
-
-// UNARY EXPRESSION
-std::shared_ptr<llvm::Value> UnaryExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// ASSIGN EXPRESSION
-std::shared_ptr<llvm::Value> AssignExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-std::shared_ptr<llvm::Value> AssignExpression::assignStr()
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<llvm::Value> AssignExpression::assignSet()
-{
-    return std::shared_ptr<llvm::Value>();
-}
-const std::shared_ptr<ExpressionAST> &AssignExpression::getLhs() const
-{
-    return lhs;
-}
-const std::shared_ptr<ExpressionAST> &AssignExpression::getRhs() const
-{
-    return rhs;
-}
-void AssignExpression::setLhs(const std::shared_ptr<ExpressionAST> &lhs)
-{
-    AssignExpression::lhs = lhs;
-}
-void AssignExpression::setRhs(const std::shared_ptr<ExpressionAST> &rhs)
-{
-    AssignExpression::rhs = rhs;
-}
-
-// IF EXPRESSION
-std::shared_ptr<llvm::Value> IfExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void IfExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// FILE POINTER EXPRESSION
-std::shared_ptr<llvm::Value> FilePointerExpression::getAddress()
-{
-}
-void FilePointerExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// BINARY EXPRESSION
-std::shared_ptr<llvm::Value> BinaryExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-std::shared_ptr<TypeDeclaration> BinaryExpression::getTypeDeclaration() const
-{
-    return ExpressionAST::getTypeDeclaration();
-}
-std::shared_ptr<llvm::Value> BinaryExpression::setCodeGen()
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<llvm::Value> BinaryExpression::inlineSetFunc(const std::string &name)
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<llvm::Value> BinaryExpression::callSetFunc(const std::string &name, bool resultTypeIsSet)
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<llvm::Value> BinaryExpression::callStrFunc(const std::string &name)
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<llvm::Value> BinaryExpression::callArrFunc(const std::string &name, size_t size)
-{
-    return std::shared_ptr<llvm::Value>();
-}
-Token &BinaryExpression::getOper()
-{
-    return oper;
-}
-std::shared_ptr<ExpressionAST> &BinaryExpression::getLhs()
-{
-    return lhs;
-}
-std::shared_ptr<ExpressionAST> &BinaryExpression::getRhs()
-{
-    return rhs;
-}
-
-// WRITE EXPRESSION
-std::shared_ptr<llvm::Value> WriteExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void WriteExpression::accept(ExpressionVisitor &expressionVisitor)
-{
-    ExpressionAST::accept(expressionVisitor);
-}
-
-// RANGE EXPRESSION
-std::shared_ptr<llvm::Value> RangeExpression::getLow()
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<llvm::Value> RangeExpression::getHigh()
-{
-    return std::shared_ptr<llvm::Value>();
-}
-std::shared_ptr<ExpressionAST> RangeExpression::getLowExpression()
-{
-    return std::shared_ptr<ExpressionAST>();
-}
-std::shared_ptr<ExpressionAST> RangeExpression::getHighExpression()
-{
-    return std::shared_ptr<ExpressionAST>();
-}
-
-// FIELD EXPRESSION
-std::shared_ptr<llvm::Value> FieldExpression::getAddress()
-{
-    return VariableExpression::getAddress();
-}
-void FieldExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// VARIABLE DECLARATION EXPRESSION
-std::shared_ptr<llvm::Value> VariableDeclarationExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// TYPE CAST EXPRESSION
-std::shared_ptr<llvm::Value> TypeCastExpression::codeGen()
-{
-    return AddressableExpression::codeGen();
-}
-std::shared_ptr<llvm::Value> TypeCastExpression::getAddress()
-{
-    return AddressableExpression::getAddress();
-}
-
-// CASE EXPRESSION
-std::shared_ptr<llvm::Value> CaseExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void CaseExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-const std::shared_ptr<ExpressionAST> &CaseExpression::getExpre() const
-{
-    return expre;
-}
-const std::vector<std::shared_ptr<LabelExpression>> &CaseExpression::getLabels() const
-{
-    return labels;
-}
-const std::shared_ptr<ExpressionAST> &CaseExpression::getOtherwise() const
-{
-    return otherwise;
-}
-
-// READ EXPRESSION
-std::shared_ptr<llvm::Value> ReadExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void ReadExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// FUNCTION
-Function::Function(const Location &loc, std::shared_ptr<PrototypeExpression> prototype,
-                   const std::vector<std::shared_ptr<VariableDeclarationExpression>> variablesDecl,
-                   std::shared_ptr<BlockExpression> block)
-    : ExpressionAST(loc, ExpressionType::TYPE_FUNCTION), prototype(prototype), variablesDecl(variablesDecl),
-      body(block), parent(nullptr), returnType(nullptr)
-{
-}
-std::shared_ptr<llvm::Function> Function::codeGen(const std::string &namePrefix)
-{
-    return std::shared_ptr<llvm::Function>();
-}
-std::shared_ptr<TypeDeclaration> Function::getReturnType()
-{
-    return std::shared_ptr<TypeDeclaration>();
-}
-void Function::accept(ExpressionVisitor &v)
-{
-    ExpressionAST::accept(v);
-}
-
-// REAL EXPRESSION
-std::shared_ptr<llvm::Value> RealExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// BUILTINT EXPRESSION
-std::shared_ptr<llvm::Value> BuiltInExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-void BuiltInExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// VARIABLE EXPRESSION
-std::shared_ptr<llvm::Value> VariableExpression::getAddress()
-{
-    return AddressableExpression::getAddress();
-}
-
-// SET EXPRESSION
-std::shared_ptr<llvm::Value> SetExpression::getAddress()
-{
-    return AddressableExpression::getAddress();
-}
-std::shared_ptr<llvm::Value> SetExpression::makeConstantSet(TypeDeclaration *type)
-{
-    return std::shared_ptr<llvm::Value>();
-}
-const std::vector<std::shared_ptr<ExpressionAST>> &SetExpression::getValues() const
-{
-    return values;
-}
-
-// RANGE REDUCE EXPRESSION
-std::shared_ptr<llvm::Value> RangeReduceExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// FOR EXPRESSION
-std::shared_ptr<llvm::Value> ForExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void ForExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-std::shared_ptr<llvm::Value> ForExpression::forInGen()
-{
-    return std::shared_ptr<llvm::Value>();
-}
-bool ForExpression::isStepDown() const
-{
-    return stepDown;
-}
-void ForExpression::setStepDown(bool stepDown)
-{
-    ForExpression::stepDown = stepDown;
-}
-const std::shared_ptr<VariableExpression> &ForExpression::getVariable() const
-{
-    return variable;
-}
-void ForExpression::setVariable(const std::shared_ptr<VariableExpression> &variable)
-{
-    ForExpression::variable = variable;
-}
-const std::shared_ptr<ExpressionAST> &ForExpression::getStart() const
-{
-    return start;
-}
-void ForExpression::setStart(const std::shared_ptr<ExpressionAST> &start)
-{
-    ForExpression::start = start;
-}
-const std::shared_ptr<ExpressionAST> &ForExpression::getEnd() const
-{
-    return end;
-}
-void ForExpression::setEnd(const std::shared_ptr<ExpressionAST> &end)
-{
-    this->end = end;
-}
-const std::shared_ptr<ExpressionAST> &ForExpression::getBody() const
-{
-    return body;
-}
-void ForExpression::setBody(const std::shared_ptr<ExpressionAST> &body)
-{
-    ForExpression::body = body;
-}
-
-// FUNCTION EXPRESSION
-std::shared_ptr<llvm::Value> FunctionExpression::codeGen()
-{
-    return AddressableExpression::codeGen();
-}
-
-// INTEGER EXPRESSION
-std::shared_ptr<llvm::Value> IntegerExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-// BLOCK EXPRESSION
-std::shared_ptr<llvm::Value> BlockExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void BlockExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// REPEAT EXPRESSION
-std::shared_ptr<llvm::Value> RepeatExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-void RepeatExpression::accept(ExpressionVisitor &visitor)
-{
-    ExpressionAST::accept(visitor);
-}
-
-// WHILE EXPRESSION
-std::shared_ptr<llvm::Value> WhileExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-void WhileExpression::accept(ExpressionVisitor &expressionVisitor)
-{
-    ExpressionAST::accept(expressionVisitor);
-}
-
-// PROTOTYPE EXPRESSION
-std::shared_ptr<llvm::Function> PrototypeExpression::create(const std::string &namePrefix)
-{
-    return std::shared_ptr<llvm::Function>();
-}
-void PrototypeExpression::createArgumentsAlloca()
-{
-}
-void PrototypeExpression::addExtraArgsFirst(std::vector<std::shared_ptr<VariableDefinition>> vars)
-{
-}
-bool PrototypeExpression::operator==(const PrototypeExpression &rhs) const
-{
-    return false;
-}
-bool PrototypeExpression::isMatchWithoutClosure(const PrototypeExpression *rhs) const
-{
-    return false;
-}
-
-// NULL EXPRESSION
-std::shared_ptr<llvm::Value> NullExpression::codeGen()
-{
-    return ExpressionAST::codeGen();
-}
-
-std::shared_ptr<llvm::Value> ClosureExpression::codeGen()
-{
-}
-
-// UNIT EXPRESSION
-std::shared_ptr<llvm::Value> UnitExpression::codeGen()
-{
-}
-void UnitExpression::accept(Pascal::ExpressionVisitor &v)
-{
-}
-
-// TRAMPOLINE EXPRESSION
-
-std::shared_ptr<llvm::Value> TrampolineExpression::codeGen()
-{}
-void TrampolineExpression::accept(ExpressionVisitor &v)
-{
-    ExpressionAST::accept(v);
-}
+// other
