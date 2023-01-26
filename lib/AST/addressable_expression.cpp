@@ -12,7 +12,8 @@ AddressableExpression::AddressableExpression(const Location &location, Expressio
 }
 llvm::Value *AddressableExpression::codeGen()
 {
-    return ExpressionAST::codeGen();
+    llvm::Value* value = getAddress();
+    return builder.CreateLoad(value, getName());
 }
 
 llvm::Value *AddressableExpression::getAddress()

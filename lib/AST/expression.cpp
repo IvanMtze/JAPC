@@ -4,6 +4,12 @@
 #include "japc/AST/expression.h"
 using namespace Pascal;
 const size_t _MIN_ALIGN_ = 4;
+llvm::FunctionCallee Pascal::getFunction(llvm::Type *resTy, const std::vector<llvm::Type *> &args,
+                                         const std::string &name)
+{
+    llvm::FunctionType *ft = llvm::FunctionType::get(resTy, args, false);
+    return theModule->getOrInsertFunction(name, ft);
+}
 llvm::Value *Pascal::powerInt(llvm::Value *base, llvm::Value *exp, TypeDeclaration *ty)
 {
     llvm::BasicBlock *originBlock = builder.GetInsertBlock();
@@ -60,7 +66,7 @@ llvm::Value *Pascal::powerInt(llvm::Value *base, llvm::Value *exp, TypeDeclarati
     phiMerge->addIncoming(valEven, moreEvenBB);
     phiMerge->addIncoming(valOdd, moreOddBB);
     llvm::PHINode *phiMerge2 = builder.CreatePHI(ty->getLtype(), 2, "phi");
-    phiMerge2->addIncoming(llvm::ConstantInt::get(getIntegerType()->getLtype(),2), moreEvenBB);
+    phiMerge2->addIncoming(llvm::ConstantInt::get(getIntegerType()->getLtype(), 2), moreEvenBB);
     phiMerge2->addIncoming(one, moreOddBB);
     builder.CreateStore(phiMerge, res);
     phiLoop->addIncoming(builder.CreateSub(phiLoop, phiMerge2), moreMergeBB);
@@ -77,7 +83,7 @@ llvm::Value *Pascal::powerInt(llvm::Value *base, llvm::Value *exp, TypeDeclarati
     return phi;
 }
 
-llvm::Value *Pascal::integerBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType &tokenType,
+llvm::Value *Pascal::integerBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType tokenType,
                                              TypeDeclaration *type, bool isUnsigned)
 {
     switch (tokenType)
@@ -152,6 +158,43 @@ llvm::AllocaInst *Pascal::createNamedAlloca(llvm::Function *fn, TypeDeclaration 
     return a;
     return nullptr;
 }
+llvm::Value *Pascal::doubleBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType tokenType,
+                                    TypeDeclaration *type)
+{
+    switch (tokenType)
+    {
+    case TokenType::SYMBOL_PLUS:
+        return builder.CreateFAdd(leftValue, rightValue, "addtmp");
+    case TokenType::SYMBOL_MINUS:
+        return builder.CreateFSub(leftValue, rightValue, "subtmp");
+    case TokenType::SYMBOL_STAR:
+        return builder.CreateFDiv(leftValue, rightValue, "multmp");
+    case TokenType::SYMBOL_DIV:
+        return builder.CreateFDiv(leftValue, rightValue, "divtmp");
+    case TokenType::SYMBOL_POW: {
+        llvm::Type *ty = type->getLtype();
+        llvm::FunctionCallee fcalle = getFunction(ty, {ty, ty}, "llvm.pow.f64");
+        std::vector<llvm::Value *> args = {leftValue, rightValue};
+        return builder.CreateCall(fcalle, args, "powtmp");
+    }
+    case TokenType::SYMBOL_EQUAL:
+        return builder.CreateFCmpOEQ(leftValue, rightValue, "eq");
+    case TokenType::SYMBOL_GREATER_LESS_THAN:
+        return builder.CreateFCmpONE(leftValue, rightValue, "ne");
+    case TokenType::SYMBOL_LESS_THAN:
+        return builder.CreateFCmpOLT(leftValue, rightValue, "lt");
+    case TokenType::SYMBOL_LESS_EQUAL_THAN:
+        return builder.CreateFCmpOLE(leftValue, rightValue, "le");
+    case TokenType::SYMBOL_GREATER_THAN:
+        return builder.CreateFCmpOGT(leftValue, rightValue, "gt");
+    case TokenType::SYMBOL_GREATER_EQUAL_THAN:
+        return builder.CreateFCmpOGE(leftValue, rightValue, "ge");
+    }
+    return 0;
+}
+llvm::Value *makeAddressable(ExpressionAST *e)
+{
+}
 
 // Expression Class
 ExpressionAST::ExpressionAST(const Location &location, ExpressionType expressionType)
@@ -159,7 +202,7 @@ ExpressionAST::ExpressionAST(const Location &location, ExpressionType expression
 {
 }
 ExpressionAST::ExpressionAST(const Location &location, ExpressionType expressionType,
-              std::shared_ptr<TypeDeclaration> typeDeclaration)
+                             std::shared_ptr<TypeDeclaration> typeDeclaration)
     : location(location), expressionType(expressionType), typeDeclaration(typeDeclaration)
 {
 }
@@ -191,6 +234,9 @@ std::shared_ptr<TypeDeclaration> ExpressionAST::getTypeDeclaration() const
 const Location ExpressionAST::getLocation() const
 {
     return location;
+}
+ExpressionAST::~ExpressionAST()
+{
 }
 
 // UTILS

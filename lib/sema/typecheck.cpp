@@ -1,8 +1,9 @@
 #include "japc/sema/typecheck.h"
+#include <iostream>
 
 using namespace Pascal;
 
-void TypeCheckVisitor::checkBinaryExpr(std::shared_ptr<BinaryExpression> binaryExpression)
+void TypeCheckVisitor::checkBinaryExpr(BinaryExpression* binaryExpression)
 {
     const std::shared_ptr<ExpressionAST> leftSideExpr = binaryExpression->getLhs();
     const std::shared_ptr<ExpressionAST> rightSideExpr = binaryExpression->getRhs();
@@ -25,7 +26,7 @@ void TypeCheckVisitor::checkBinaryExpr(std::shared_ptr<BinaryExpression> binaryE
         }
     }
 }
-void TypeCheckVisitor::checkAssignExpr(std::shared_ptr<AssignExpression> assignExpression)
+void TypeCheckVisitor::checkAssignExpr(AssignExpression* assignExpression)
 {
     std::shared_ptr<TypeDeclaration> leftType = assignExpression->getLhs()->getTypeDeclaration();
     std::shared_ptr<TypeDeclaration> rightType = assignExpression->getRhs()->getTypeDeclaration();
@@ -83,7 +84,7 @@ void TypeCheckVisitor::checkAssignExpr(std::shared_ptr<AssignExpression> assignE
     }
     assignExpression->setRhs(TypecheckUtils::recast(assignExpression->getRhs().get(), ty));
 }
-void TypeCheckVisitor::checkRangeExpr(std::shared_ptr<RangeExpression> rangeExpression)
+void TypeCheckVisitor::checkRangeExpr(RangeExpression* rangeExpression)
 {
     if (rangeExpression->getHighExpression()->getTypeDeclaration() !=
         rangeExpression->getHighExpression()->getTypeDeclaration())
@@ -92,7 +93,7 @@ void TypeCheckVisitor::checkRangeExpr(std::shared_ptr<RangeExpression> rangeExpr
             rangeExpression->getLocation(), "Upper and lower type values in range expression are different");
     }
 }
-void TypeCheckVisitor::checkSetExpr(std::shared_ptr<SetExpression> setExpression)
+void TypeCheckVisitor::checkSetExpr(SetExpression* setExpression)
 {
     std::shared_ptr<Range> range;
     if (!(range = setExpression->getTypeDeclaration()->getRange()))
@@ -133,7 +134,8 @@ std::shared_ptr<RangeDeclaration> TypeCheckVisitor::getRangeDeclaration(
 
     return std::make_shared<RangeDeclaration>(range, base);
 }
-void TypeCheckVisitor::checkArrayExpr(std::shared_ptr<ArrayExpression> arrayExpression)
+
+void TypeCheckVisitor::checkArrayExpr(ArrayExpression* arrayExpression)
 {
     for (size_t i = 0; i < arrayExpression->getIndices().size(); i++)
     {
@@ -152,10 +154,10 @@ void TypeCheckVisitor::checkArrayExpr(std::shared_ptr<ArrayExpression> arrayExpr
         }
     }
 }
-void TypeCheckVisitor::checkBuiltInExpr(std::shared_ptr<BuiltInExpression> builtInExpression)
+void TypeCheckVisitor::checkBuiltInExpr(BuiltInExpression* builtInExpression)
 {
 }
-void TypeCheckVisitor::checkCallExpr(std::shared_ptr<CallFunctExpression> callFunctExpression)
+void TypeCheckVisitor::checkCallExpr(CallFunctExpression* callFunctExpression)
 {
     const std::shared_ptr<PrototypeExpression> prototypeExpression = callFunctExpression->getPrototype();
     if (callFunctExpression->getArgs().size() != prototypeExpression->getArgs().size())
@@ -230,13 +232,13 @@ void TypeCheckVisitor::checkCallExpr(std::shared_ptr<CallFunctExpression> callFu
         idx++;
     }
 }
-void TypeCheckVisitor::checkReadExpr(std::shared_ptr<ReadExpression> readExpression)
+void TypeCheckVisitor::checkReadExpr(ReadExpression* readExpression)
 {
 }
-void TypeCheckVisitor::checkWriteExpr(std::shared_ptr<WriteExpression> writeExpression)
+void TypeCheckVisitor::checkWriteExpr(WriteExpression* writeExpression)
 {
 }
-void TypeCheckVisitor::checkForExpr(std::shared_ptr<ForExpression> forExpression)
+void TypeCheckVisitor::checkForExpr(ForExpression* forExpression)
 {
     std::shared_ptr<TypeDeclaration> vty = forExpression->getVariable()->getTypeDeclaration();
     bool bad = !vty->isIntegral();
@@ -288,7 +290,7 @@ void TypeCheckVisitor::checkForExpr(std::shared_ptr<ForExpression> forExpression
         this->semanticAnalizer->diagnosticsEngine->japc_error_at(forExpression->getLocation(), "Bad for loop");
     }
 }
-void TypeCheckVisitor::checkCaseExpr(std::shared_ptr<CaseExpression> caseExpression)
+void TypeCheckVisitor::checkCaseExpr(CaseExpression* caseExpression)
 {
     if (!caseExpression->getExpre()->getTypeDeclaration()->isIntegral())
     {
@@ -315,46 +317,46 @@ void TypeCheckVisitor::visit(ExpressionAST *elem)
     }
     if (BinaryExpression *b = llvm::dyn_cast<BinaryExpression>(elem))
     {
-        checkBinaryExpr(std::shared_ptr<BinaryExpression>(b));
+        checkBinaryExpr(b);
     }
     else if (AssignExpression *a = llvm::dyn_cast<AssignExpression>(elem))
     {
-        checkAssignExpr(std::shared_ptr<AssignExpression>(a));
+        checkAssignExpr(a);
     }
     else if (RangeExpression *r = llvm::dyn_cast<RangeExpression>(elem))
     {
-        checkRangeExpr(std::shared_ptr<RangeExpression>(r));
+        checkRangeExpr(r);
     }
     else if (SetExpression *s = llvm::dyn_cast<SetExpression>(elem))
     {
-        checkSetExpr(std::shared_ptr<SetExpression>(s));
+        checkSetExpr(s);
     }
     else if (ArrayExpression *a = llvm::dyn_cast<ArrayExpression>(elem))
     {
-        checkArrayExpr(std::shared_ptr<ArrayExpression>(a));
+        checkArrayExpr(a);
     }
     else if (BuiltInExpression *b = llvm::dyn_cast<BuiltInExpression>(elem))
     {
-        checkBuiltInExpr(std::shared_ptr<BuiltInExpression>(b));
+        checkBuiltInExpr(b);
     }
     else if (CallFunctExpression *c = llvm::dyn_cast<CallFunctExpression>(elem))
     {
-        checkCallExpr(std::shared_ptr<CallFunctExpression>(c));
+        checkCallExpr(c);
     }
     else if (ForExpression *f = llvm::dyn_cast<ForExpression>(elem))
     {
-        checkForExpr(std::shared_ptr<ForExpression>(f));
+        checkForExpr(f);
     }
     else if (ReadExpression *r = llvm::dyn_cast<ReadExpression>(elem))
     {
-        checkReadExpr(std::shared_ptr<ReadExpression>(r));
+        checkReadExpr(r);
     }
     else if (WriteExpression *w = llvm::dyn_cast<WriteExpression>(elem))
     {
-        checkWriteExpr(std::shared_ptr<WriteExpression>(w));
+        checkWriteExpr(w);
     }
     else if (CaseExpression *c = llvm::dyn_cast<CaseExpression>(elem))
     {
-        checkCaseExpr(std::shared_ptr<CaseExpression>(c));
+        checkCaseExpr(c);
     }
 }

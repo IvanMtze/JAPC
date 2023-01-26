@@ -1,5 +1,11 @@
 #include "japc/AST/binary_expression.h"
 using namespace Pascal;
+
+static llvm::Value *Pascal::callStrCat(std::shared_ptr<ExpressionAST> lhs, std::shared_ptr<ExpressionAST> rhs)
+{
+    // llvm::Value* rv = makeStringFromExpr(rhs, rhs->getTypeDeclaration());
+    // llvm::Value* lv = makeStringFromExpr(lhs, lhs->getTypeDeclaration());
+}
 static int Pascal::stringishScore(ExpressionAST *expression)
 {
     if (llvm::isa<CharExpression>(expression) || llvm::isa<CharDeclaration>(expression->getTypeDeclaration().get()))
@@ -41,9 +47,53 @@ static llvm::Value *Pascal::shortCtAnd(ExpressionAST *left, ExpressionAST *right
     builder.CreateBr(mergeBB);
     builder.SetInsertPoint(mergeBB);
     llvm::PHINode *phi = builder.CreatePHI(getBooleanType()->getLtype(), 2, "phi");
+    phi->addIncoming(conditionRight, originBlock);
+    phi->addIncoming(conditionLeft, trueBB);
+    return phi;
 }
 llvm::Value *Pascal::makeStrCompare(TokenType oper, llvm::Value *v)
 {
+    llvm::Constant *zero = llvm::ConstantInt::get(getIntegerType()->getLtype(), 0);
+    switch (oper)
+    {
+    case TokenType::SYMBOL_EQUAL:
+        return builder.CreateICmpEQ(v, zero, "eq");
+    case TokenType::SYMBOL_GREATER_LESS_THAN:
+        return builder.CreateICmpNE(v, zero, "ne");
+    case TokenType::SYMBOL_GREATER_EQUAL_THAN:
+        return builder.CreateICmpSGE(v, zero, "ge");
+    case TokenType::SYMBOL_GREATER_THAN:
+        return builder.CreateICmpSGT(v, zero, "gt");
+    case TokenType::SYMBOL_LESS_THAN:
+        return builder.CreateICmpSLT(v, zero, "lt");
+    case TokenType::SYMBOL_LESS_EQUAL_THAN:
+        return builder.CreateICmpSLE(v, zero, "lE");
+    default:
+        assert(0 && "Unexpected operator for char array");
+    }
+}
+static llvm::Value *Pascal::shortCtOr(ExpressionAST *left, ExpressionAST *right)
+{
+    llvm::Value *l = left->codeGen();
+    llvm::BasicBlock *originBlock = builder.GetInsertBlock();
+    llvm::Function *theFunction = originBlock->getParent();
+    llvm::BasicBlock *falseBB = llvm::BasicBlock::Create(theContext, "false", theFunction);
+    llvm::BasicBlock *mergeBB = llvm::BasicBlock::Create(theContext, "merge", theFunction);
+    llvm::Value *bfalse = llvm::ConstantInt::get(getBooleanType()->getLtype(), 0);
+    llvm::Value *btrue = llvm::ConstantInt::get(getBooleanType()->getLtype(), 1);
+
+    llvm::Value *condl = builder.CreateICmpEQ(l, bfalse, "condl");
+    builder.CreateCondBr(condl, falseBB, mergeBB);
+    builder.SetInsertPoint(falseBB);
+    llvm::Value *r = right->codeGen();
+    llvm::Value *condr = builder.CreateICmpNE(r, bfalse, "condr");
+
+    builder.CreateBr(mergeBB);
+
+    builder.SetInsertPoint(mergeBB);
+    llvm::PHINode *phi = builder.CreatePHI(getBooleanType()->getLtype(), 2, "phi");
+    phi->addIncoming(btrue, originBlock);
+    phi->addIncoming(condr, falseBB);
     return nullptr;
 }
 llvm::Value *makeStrCompare(TokenType oper, llvm::Value *v)
@@ -80,6 +130,15 @@ llvm::Value *BinaryExpression::codeGen()
     // Both of them are strings
     if (bothAreString(lhs.get(), rhs.get()))
     {
+        if (oper.getTokenType() == TokenType::SYMBOL_PLUS)
+        {
+            return callStrCat(lhs, rhs);
+        }
+        if (!llvm::isa<CharDeclaration>(lhs->getTypeDeclaration().get()) ||
+            !llvm::isa<CharDeclaration>(rhs->getTypeDeclaration().get()))
+        {
+            return Pascal::makeStrCompare(oper.getTokenType(), callStrFunc("Compare"));
+        }
     }
     //  Both are arrays
     if (llvm::isa<ArrayDeclaration>(rhs->getTypeDeclaration().get()) &&
@@ -103,7 +162,7 @@ llvm::Value *BinaryExpression::codeGen()
     case TokenType::SYMBOL_AND_THEN:
         return shortCtAnd(lhs.get(), rhs.get());
     case TokenType::SYMBOL_OR_ELSE:
-        // return shortCtOr(lhs, rhs);
+        return shortCtOr(lhs.get(), rhs.get());
     default:
         break;
     }
@@ -130,9 +189,21 @@ llvm::Value *BinaryExpression::codeGen()
     if (rtype->isIntegerTy())
     {
         bool isUnsigned = rhs->getTypeDeclaration()->isUnsigned();
-        // if (auto v = IntegerBinExpr())
+        if (auto v =
+                integerBinaryExpression(left, right, oper.getTokenType(), this->getTypeDeclaration().get(), isUnsigned))
+        {
+            return v;
+        }
+        assert(0 && "Unkown token in bin op");
     }
-    return ExpressionAST::codeGen();
+    if (rtype->isDoubleTy())
+    {
+        if (auto v = doubleBinaryExpression(left, right, oper.getTokenType(), this->getTypeDeclaration().get()))
+        {
+            return v;
+        }
+    }
+    return 0;
 }
 std::shared_ptr<TypeDeclaration> BinaryExpression::getTypeDeclaration() const
 {
@@ -144,7 +215,7 @@ llvm::Value *BinaryExpression::setCodeGen()
         oper.getTokenType() == TokenType::SYMBOL_IN)
     {
         llvm::Value *l = lhs->codeGen();
-        llvm::Value *setV = 0; // makeAddressable(rhs);
+        llvm::Value *setV = 0;//makeAddressable(rhs.get());
         TypeDeclaration *type = rhs->getTypeDeclaration().get();
         int start = type->getRange()->getStart();
         l = builder.CreateZExt(l, getIntegerType()->getLtype(), "zext.l");

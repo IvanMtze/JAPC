@@ -17,9 +17,6 @@ template <typename T> class Visitable
 {
   public:
     virtual void accept(Visitor<T> &visitor) = 0;
-    virtual ~Visitable()
-    {
-    }
 };
 
 class ExpressionAST;

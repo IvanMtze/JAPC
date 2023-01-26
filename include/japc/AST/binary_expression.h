@@ -17,11 +17,12 @@
 namespace Pascal
 {
 
-llvm::Value* makeStrCompare(TokenType oper, llvm::Value* v);
+llvm::Value *makeStrCompare(TokenType oper, llvm::Value *v);
 static int stringishScore(ExpressionAST *expression);
 static bool bothAreString(ExpressionAST *left, ExpressionAST *right);
-static llvm::Value* shortCtAnd(ExpressionAST *left, ExpressionAST *right);
-
+static llvm::Value *shortCtAnd(ExpressionAST *left, ExpressionAST *right);
+static llvm::Value *shortCtOr(ExpressionAST *left, ExpressionAST *right);
+static llvm::Value* callStrCat(std::shared_ptr<ExpressionAST> lhs, std::shared_ptr<ExpressionAST> rhs);
 class BinaryExpression : public ExpressionAST
 {
   public:

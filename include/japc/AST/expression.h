@@ -17,15 +17,15 @@
 #include <llvm/IR/DIBuilder.h>
 #include <llvm/IR/DataLayout.h>
 #include <llvm/IR/DerivedTypes.h>
-#include <llvm/IR/IRBuilder.h>
-#include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/Verifier.h>
-#include <llvm/Support/raw_os_ostream.h>
 #include <llvm/IR/Function.h>
+#include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Instructions.h>
+#include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Value.h>
+#include <llvm/IR/Verifier.h>
 #include <llvm/Support/Casting.h>
+#include <llvm/Support/raw_os_ostream.h>
 
 #include <memory>
 #include <set>
@@ -60,11 +60,15 @@ static llvm::LLVMContext theContext;
 static llvm::IRBuilder<> builder(theContext);
 
 // Utils
-llvm::AllocaInst* createTempAlloca(TypeDeclaration* ty);
-static llvm::AllocaInst* createNamedAlloca(llvm::Function* fn, TypeDeclaration* ty, const std::string& name);
-llvm::Value *integerBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType &tokenType,
-                                            TypeDeclaration *type, bool isUnsigned);
+llvm::FunctionCallee getFunction(llvm::Type *resTy, const std::vector<llvm::Type *> &args, const std::string &name);
+llvm::AllocaInst *createTempAlloca(TypeDeclaration *ty);
+static llvm::AllocaInst *createNamedAlloca(llvm::Function *fn, TypeDeclaration *ty, const std::string &name);
+llvm::Value *integerBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType tokenType,
+                                     TypeDeclaration *type, bool isUnsigned);
+llvm::Value *doubleBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType tokenType,
+                                    TypeDeclaration *type);
 llvm::Value *powerInt(llvm::Value *base, llvm::Value *exp, TypeDeclaration *ty);
+llvm::Value *makeAddressable(ExpressionAST *e);
 //
 class ExpressionAST : public Visitable<ExpressionAST>
 {
@@ -132,6 +136,7 @@ class ExpressionAST : public Visitable<ExpressionAST>
     virtual std::shared_ptr<TypeDeclaration> getTypeDeclaration() const;
     const Location getLocation() const;
     void ensureSized() const;
+    ~ExpressionAST();
 
   private:
     const Location location;
