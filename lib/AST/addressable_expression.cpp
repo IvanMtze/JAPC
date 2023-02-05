@@ -5,6 +5,24 @@
 #include "japc/AST/addressable_expression.h"
 
 using namespace Pascal;
+llvm::Value *Pascal::makeAddressable(ExpressionAST *e)
+{
+    if(auto ea = llvm::dyn_cast<AddressableExpression>(e)){
+        llvm::Value* v = ea->getAddress();
+        assert(v && "Expect addressable object to have address");
+        return v;
+    }
+    llvm::Value* store = e->codeGen();
+    if (store->getType()->isPointerTy())
+    {
+        return store;
+    }
+
+    llvm::Value* v = createTempAlloca(e->getTypeDeclaration().get());
+    assert(v && "Expect address to be non-zero");
+    builder.CreateStore(store, v);
+    return v;
+}
 AddressableExpression::AddressableExpression(const Location &location, ExpressionType expressionType,
                       std::shared_ptr<TypeDeclaration> typeDeclaration)
     : ExpressionAST(location, expressionType, typeDeclaration)
@@ -13,6 +31,7 @@ AddressableExpression::AddressableExpression(const Location &location, Expressio
 llvm::Value *AddressableExpression::codeGen()
 {
     llvm::Value* value = getAddress();
+    assert(value && "Expected to get an address");
     return builder.CreateLoad(value, getName());
 }
 

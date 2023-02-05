@@ -12,6 +12,17 @@ ArrayExpression::ArrayExpression(const Location &loc, std::shared_ptr<Expression
                                  std::shared_ptr<TypeDeclaration> typeDeclaration)
     : AddressableExpression(loc, ExpressionType::TYPE_ARRAY_EXPRE, typeDeclaration)
 {
+    size_t mul = 1;
+    for (auto j = ranges.end() - 1; j >= ranges.begin(); j--)
+    {
+        indexmul.push_back(mul);
+        if (j->get()->isDynamic())
+        {
+            break;
+        }
+        mul *= (*j)->getRange()->getSize();
+    }
+    std::reverse(indexmul.begin(), indexmul.end());
 }
 llvm::Value *ArrayExpression::getAddress()
 {

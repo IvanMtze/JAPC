@@ -11,6 +11,8 @@
 
 namespace Pascal
 {
+llvm::Value *makeAddressable(ExpressionAST *e);
+
 class AddressableExpression : public ExpressionAST
 {
   public:

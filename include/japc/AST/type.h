@@ -1192,6 +1192,7 @@ class RangeDeclaration : public TypeDeclaration
   public:
     virtual TypeKind getTypeKind() const;
     virtual bool isIncomplete() const;
+
     virtual bool isStringLike() const;
     virtual std::shared_ptr<TypeDeclaration> getSubtype() const;
     virtual size_t getSize() const;
@@ -1216,6 +1217,9 @@ class RangeDeclaration : public TypeDeclaration
     bool isUnsigned() const override
     {
         return this->range->getStart() >= 0;
+    }
+    bool isDynamic() const{
+        return range == 0;
     }
     static bool isClassOf(const TypeDeclaration *typeDeclaration)
     {

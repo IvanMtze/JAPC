@@ -192,9 +192,6 @@ llvm::Value *Pascal::doubleBinaryExpression(llvm::Value *leftValue, llvm::Value 
     }
     return 0;
 }
-llvm::Value *makeAddressable(ExpressionAST *e)
-{
-}
 
 // Expression Class
 ExpressionAST::ExpressionAST(const Location &location, ExpressionType expressionType)

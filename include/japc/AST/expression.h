@@ -68,7 +68,6 @@ llvm::Value *integerBinaryExpression(llvm::Value *leftValue, llvm::Value *rightV
 llvm::Value *doubleBinaryExpression(llvm::Value *leftValue, llvm::Value *rightValue, TokenType tokenType,
                                     TypeDeclaration *type);
 llvm::Value *powerInt(llvm::Value *base, llvm::Value *exp, TypeDeclaration *ty);
-llvm::Value *makeAddressable(ExpressionAST *e);
 //
 class ExpressionAST : public Visitable<ExpressionAST>
 {

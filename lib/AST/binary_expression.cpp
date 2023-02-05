@@ -215,7 +215,7 @@ llvm::Value *BinaryExpression::setCodeGen()
         oper.getTokenType() == TokenType::SYMBOL_IN)
     {
         llvm::Value *l = lhs->codeGen();
-        llvm::Value *setV = 0;//makeAddressable(rhs.get());
+        llvm::Value *setV = makeAddressable(rhs.get());
         TypeDeclaration *type = rhs->getTypeDeclaration().get();
         int start = type->getRange()->getStart();
         l = builder.CreateZExt(l, getIntegerType()->getLtype(), "zext.l");

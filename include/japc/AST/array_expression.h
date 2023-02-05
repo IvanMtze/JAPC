@@ -12,6 +12,8 @@
 #include "japc/AST/visitor.h"
 #include "japc/scanner/scanner.h"
 #include <llvm/IR/Value.h>
+#include <algorithm>
+#include <vector>
 
 namespace Pascal{
 class ArrayExpression : public AddressableExpression

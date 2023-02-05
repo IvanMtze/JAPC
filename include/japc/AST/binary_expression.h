@@ -5,6 +5,7 @@
 #ifndef JAPC_BINARY_EXPRESSION_H
 #define JAPC_BINARY_EXPRESSION_H
 #include "japc/AST/char_expression.h"
+#include "japc/AST/addressable_expression.h"
 #include "japc/AST/expression.h"
 #include "japc/AST/named_object.h"
 #include "japc/AST/set_expression.h"
