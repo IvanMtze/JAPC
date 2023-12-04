@@ -8,7 +8,7 @@ include(GNUInstallDirs)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
-find_package(LLVM REQUIRED CONFIG)
+find_package(LLVM 12.0 REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
