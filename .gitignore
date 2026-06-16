@@ -14,3 +14,4 @@ _deps
 **/docs/out/**
 *.html
 *.png
+build/
