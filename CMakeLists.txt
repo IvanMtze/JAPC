@@ -1,14 +1,24 @@
 cmake_minimum_required(VERSION 3.5)
+
+if(WIN32 AND NOT CMAKE_C_COMPILER)
+    message(WARNING
+        "On Windows with Ninja, run cmake from a Visual Studio Developer Command Prompt "
+        "or pass -DCMAKE_C_COMPILER and -DCMAKE_CXX_COMPILER explicitly.")
+endif()
+
 project(japc)
 include(CTest) # For testing
 option(BUILD_DOC "Build documentation" OFF)
-option(BUILD_USER_DOC "Build user documentation" PFF)
+option(BUILD_USER_DOC "Build user documentation" OFF)
 
 include(GNUInstallDirs)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
-find_package(LLVM 12.0 REQUIRED CONFIG)
+find_package(LLVM REQUIRED CONFIG)
+if(LLVM_PACKAGE_VERSION VERSION_LESS "12.0")
+    message(FATAL_ERROR "LLVM >= 12.0 required, found ${LLVM_PACKAGE_VERSION}")
+endif()
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
